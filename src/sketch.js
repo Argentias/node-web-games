@@ -18,7 +18,7 @@ if (libs === false) {
 // Create the canvas
 function setup() {
     // put setup code here
-    createCanvas(600, 700);
+    createCanvas(480, 620);
 }
 
 // Create the hand Deck and the caller Decks
@@ -59,17 +59,17 @@ divideDeck();
 //var cardAni = new AniObj()
 
 // Create six CardHandClickAreas for each of the three hands
-var clicks = [new CardHandClickArea(30, 200, "H", hands[0].deck.length, 70),  
-              new CardHandClickArea(30, 270, "H", hands[1].deck.length, 70),
-              new CardHandClickArea(30, 340, "H", hands[2].deck.length, 70),
-              new CardHandClickArea(30, 410, "H", hands[3].deck.length, 70),
-              new CardHandClickArea(30, 480, "H", hands[4].deck.length)];
+var clicks = [new CardHandClickArea(30, 200, "H", hands[0].deck.length, "S", 75),  
+              new CardHandClickArea(30, 275, "H", hands[1].deck.length, "S", 75),
+              new CardHandClickArea(30, 350, "H", hands[2].deck.length, "S", 75),
+              new CardHandClickArea(30, 425, "H", hands[3].deck.length, "S", 75),
+              new CardHandClickArea(30, 500, "H", hands[4].deck.length, "S", 75)];
 
 // Create a RectClickArea to call the next card
-var caller = new RectClickArea(380, 450, 200, 50);
+var caller = new RectClickArea(290, 350, 160, 50);
 
 // Create a RectClickArea to start a new game
-var restarter = new RectClickArea(405, 520, 150, 50);
+var restarter = new RectClickArea(290, 420, 160, 50);
 
 // Compare the two selected cards
 var checkPair = function() {
@@ -104,7 +104,7 @@ var pileCycle = function() {
 var callCard = function() {
     if (toCall.getLength() > 0) {
         called.add(toCall.remove(0));
-        if (called.getLength() > 8) {
+        if (called.getLength() > 5) {
             called.remove(0);
         }
     }
@@ -137,7 +137,7 @@ function draw() {
     pile6.draw(click6.x, click6.y);
     //*/
     for (var i = 0; i < hands.length; i ++) {
-        hands[i].drawHandUpDown(clicks[i].x, clicks[i].y, false);
+        hands[i].drawHandUpDownSmall(clicks[i].x, clicks[i].y, false);
     }
     toCall.drawDown(30, 30, false);
     called.drawHand(175, 30);
@@ -147,7 +147,7 @@ function draw() {
     rect(restarter.x, restarter.y, restarter.w, restarter.h, 5);
     fill(0);
     textSize(36);
-    text("Call Next", caller.x+caller.w/2-textWidth("Call Next")/2, caller.y+35);
+    text("Call Next", caller.x+caller.w/2-textWidth("Call Next")/2, caller.y+37);
     textSize(28);
     text("New Game", restarter.x+restarter.w/2-textWidth("New Game")/2, restarter.y+35);
 }
