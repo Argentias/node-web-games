@@ -7,8 +7,10 @@ var ranks = ["Joker", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack
 var abbr = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 var cardWidth = 100;
 var cardHeight = 150;
-var horzSpace = 40;
-var vertSpace = 60;
+var cardWidthS = 40;
+var cardHeightS = 70;
+var horzSpace = 45;
+var vertSpace = 75;
 var rand = function() { return random() };
 
 function setup() {
@@ -100,6 +102,25 @@ Card.prototype.drawCorner = function(x, y) {
     }
 };
 
+Card.prototype.drawSmall = function(x, y) {
+    stroke(0);
+    strokeWeight(1);
+    fill(255);
+    rect(x, y, cardWidthS, cardHeightS, 10);
+    fill(0);
+    textSize(24);
+    text(abbr[this.rank-1], x+20-textWidth(abbr[this.rank-1])/2, y+25);
+    if (this.suit === 0) {
+        drawClub(x+5, y+30, 30);
+    } else if (this.suit === 1) {
+        drawDiamond(x+5, y+30, 30);
+    } else if (this.suit === 2) {
+        drawHeart(x+5, y+30, 30);
+    } else {
+        drawSpade(x+5, y+30, 30);
+    }
+};
+
 Card.prototype.drawBack = function(x, y) {
     stroke(0);
     strokeWeight(1);
@@ -107,11 +128,26 @@ Card.prototype.drawBack = function(x, y) {
     rect(x, y, cardWidth, cardHeight, 10);
     fill(0);
     stroke(255);
-    for (var i = 25; i < cardWidth; i += 25) {
+    for (var i = cardWidth/4; i < cardWidth; i += cardWidth/4) {
         line(x+i, y, x, y+i);
         line(x+cardWidth-i, y, x+cardWidth, y+i);
         line(x+i, y+cardHeight, x, y+cardHeight-i);
         line(x+cardWidth-i, y+cardHeight, x+cardWidth, y+cardHeight-i);
+    }
+};
+
+Card.prototype.drawBackSmall = function(x, y) {
+    stroke(0);
+    strokeWeight(1);
+    fill(50, 50, 200);
+    rect(x, y, cardWidthS, cardHeightS, 10);
+    fill(0);
+    stroke(255);
+    for (var i = cardWidthS/4; i < cardWidthS; i += cardWidthS/4) {
+        line(x+i, y, x, y+i);
+        line(x+cardWidthS-i, y, x+cardWidthS, y+i);
+        line(x+i, y+cardHeightS, x, y+cardHeightS-i);
+        line(x+cardWidthS-i, y+cardHeightS, x+cardWidthS, y+cardHeightS-i);
     }
 };
    
@@ -239,11 +275,53 @@ Deck.prototype.drawTopCornerUpDown = function(x, y, size) {
     }
 };
 
+Deck.prototype.drawTopSmall = function(x, y, size) {
+    stroke(0);
+    strokeWeight(1);
+    if (this.deck.length > 0) 
+        this.deck[0].drawSmall(x, y);
+    textSize(16);
+    fill(0);
+    if (size) {
+        text("Pile Size: " + this.deck.length, x, y-5);
+    }
+};
+
+Deck.prototype.drawTopSmallUpDown = function(x, y, size) {
+    stroke(0);
+    strokeWeight(1);
+    if (this.deck.length > 0) {
+        var temp = this.deck[0];
+        if (temp.up === true) {
+            temp.drawSmall(x, y);
+        } else {
+            temp.drawBackSmall(x, y);
+        }
+    }
+    textSize(16);
+    fill(0);
+    if (size) {
+        text("Pile Size: " + this.deck.length, x, y-5);
+    }
+};
+
 Deck.prototype.drawDown = function(x, y, size) {
     stroke(0);
     strokeWeight(1);
     if (this.deck.length > 0) 
         this.deck[0].drawBack(x, y);
+    textSize(16);
+    fill(0);
+    if (size) {
+        text("Pile Size: " + this.deck.length, x, y-5);
+    }
+};
+
+Deck.prototype.drawDownSmall = function(x, y, size) {
+    stroke(0);
+    strokeWeight(1);
+    if (this.deck.length > 0) 
+        this.deck[0].drawBackSmall(x, y);
     textSize(16);
     fill(0);
     if (size) {
@@ -272,6 +350,27 @@ Deck.prototype.drawHandUpDown = function(x, y) {
     }
 }
 
+Deck.prototype.drawHandSmall = function(x, y) {
+    stroke(0);
+    strokeWeight(1);
+    for (var i = 0; i < this.deck.length; ++ i) {
+        this.deck[i].drawSmall(x + (horzSpace*i), y);
+    }
+}
+
+Deck.prototype.drawHandUpDownSmall = function(x, y) {
+    stroke(0);
+    strokeWeight(1);
+    for (var i = 0; i < this.deck.length; ++ i) {
+        var temp = this.deck[i];
+        if (temp.up === true) {
+            temp.drawSmall(x + (horzSpace*i), y);
+        } else {
+            temp.drawBackSmall(x + (horzSpace*i), y);
+        }
+    }
+}
+
 Deck.prototype.drawColumn = function(x, y) {
     stroke(0);
     strokeWeight(1);
@@ -289,6 +388,27 @@ Deck.prototype.drawColumnUpDown = function(x, y) {
             temp.drawCorner(x, y + (vertSpace*i));
         } else {
             temp.drawBack(x, y + (vertSpace*i));
+        }
+    }
+}
+
+Deck.prototype.drawColumnSmall = function(x, y) {
+    stroke(0);
+    strokeWeight(1);
+    for (var i = 0; i < this.deck.length; ++ i) {
+        this.deck[i].drawSmall(x, y + (vertSpace*i));
+    }
+}
+
+Deck.prototype.drawColumnUpDownSmall = function(x, y) {
+    stroke(0);
+    strokeWeight(1);
+    for (var i = 0; i < this.deck.length; ++ i) {
+        var temp = this.deck[i];
+        if (temp.up === true) {
+            temp.drawSmall(x, y + (vertSpace*i));
+        } else {
+            temp.drawBackSmall(x, y + (vertSpace*i));
         }
     }
 }
@@ -415,12 +535,17 @@ Deck.prototype.toString = function() {
     return out;
 }
 
-var CardHandClickArea = function(x, y, dir, length, cut) {
+var CardHandClickArea = function(x, y, dir, length, size, cut) {
     this.x = x;
     this.y = y;
     this.dir = dir;
     this.length = length;
     if (arguments.length < 5) {
+        this.size = "L";
+    } else {
+        this.size = size;
+    }
+    if (arguments.length < 6) {
         if (dir === "H") {
             this.cut = cardHeight;
         } else if (dir === "V") {
@@ -432,6 +557,14 @@ var CardHandClickArea = function(x, y, dir, length, cut) {
 };
 
 CardHandClickArea.prototype.clickCheck = function() {
+    var ch, cw;
+    if (this.size === "S") {
+        ch = cardHeightS;
+        cw = cardWidthS;
+    } else {
+        ch = cardHeight;
+        cw = cardWidth;
+    }
     for (var i = 0; i < this.length-1; ++ i) {
         if (this.dir === "H") {
             if (mouseX >= this.x + horzSpace*i && 
@@ -455,7 +588,7 @@ CardHandClickArea.prototype.clickCheck = function() {
     }
     if (this.dir === "H") {
         if (mouseX >= this.x + horzSpace*(this.length-1) &&
-            mouseX <= this.x + horzSpace*(this.length-1) + cardWidth &&
+            mouseX <= this.x + horzSpace*(this.length-1) + cw &&
             mouseY >= this.y &&
             mouseY <= this.y + this.cut
             ) {
@@ -466,7 +599,7 @@ CardHandClickArea.prototype.clickCheck = function() {
         if (mouseX >= this.x &&
             mouseX <= this.x + this.cut &&
             mouseY >= this.y + vertSpace*(this.length-1) &&
-            mouseY <= this.y + vertSpace*(this.length-1) + cardHeight
+            mouseY <= this.y + vertSpace*(this.length-1) + ch
             ) {
             
             return this.length-1;
