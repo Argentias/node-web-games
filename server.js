@@ -39,6 +39,15 @@ Room.prototype.removeMember = function(user) {
     }
 };
 
+Room.prototype.getMember = function(user) {
+	for (var m in this.members) {
+		if (this.members[m] === user) {
+			return m;
+		}
+	}
+	return -1;
+}
+
 var rooms = [];
 
 function getRoom(rcode) {
@@ -114,16 +123,24 @@ io.sockets.on('connection',
 			// Check if a room with the code exists
 			var roomNum = getRoom(data.code);
 			if (roomNum !== -1) {
-				// If so, join it
-				socket.join(data.code);
-				rooms[roomNum].addMember(data.user);
-				var outData = rooms[roomNum];
-				outData.num = roomNum;
-				socket.emit('joinSuccess', outData);
-				console.log("Client " + socket.id + " successfully joined room " + data.code);
+				// If so, check if a member of the same name is in the room
+				var memberNum = rooms[roomNum].getMember(data.user);
+				if (memberNum === -1) {
+					// If not, join the room
+					socket.join(data.code);
+					rooms[roomNum].addMember(data.user);
+					var outData = rooms[roomNum];
+					outData.num = roomNum;
+					socket.emit('joinSuccess', outData);
+					console.log("Client " + socket.id + " successfully joined room " + data.code);
+				} else {
+					// If so, return an error
+					socket.emit('joinFailName', data);
+					console.log("Client " + socket.id + " failed to join room " + data.code);
+				}
 			} else {
 				// If not, return an error
-				socket.emit('joinFail', data);
+				socket.emit('joinFailCode', data);
 				console.log("Client " + socket.id + " failed to join room " + data.code);
 			}
 			

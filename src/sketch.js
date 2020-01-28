@@ -10,7 +10,7 @@ var homeerrmsgcount = 0;
 let socket;
 
 function setup() {
-    createCanvas(660, 660);
+    createCanvas(680, 680);
     
     // SceneManager
     smgr = new SceneManager();
@@ -50,9 +50,16 @@ function setup() {
     // socket and callbacks
     socket = io.connect();
     
-    socket.on('joinFail',
+    socket.on('joinFailCode',
         function(data) {
             homeerrmsg = "No room named " + data.code + " exists.";
+            homeerrmsgcount = 300;
+        }
+    );
+	
+	socket.on('joinFailName',
+        function(data) {
+            homeerrmsg = "Room " + data.code + " already has a user with \nusername " + data.user + ". Plase change \nyour username.";
             homeerrmsgcount = 300;
         }
     );
