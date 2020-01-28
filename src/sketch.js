@@ -133,6 +133,8 @@ function keyPressed() {
 }
 //*/
 
+var sdata;
+
 function Home() {
     this.setup = function() {
         roomIn.show();

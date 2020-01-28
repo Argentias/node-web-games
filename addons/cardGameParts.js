@@ -59,9 +59,15 @@ var drawSpade = function (x, y, size) {
 };
 
 var Card = function(rank, suit, up) {
-    this.suit = suit;
-    this.rank = rank;
-    this.up = up;
+    if (arguments.length === 0) {
+		this.suit = 0;
+		this.rank = 0;
+		this.up = false;
+	} else {
+		this.suit = suit;
+		this.rank = rank;
+		this.up = up;
+	}
 };
 
 Card.prototype.draw = function(x, y) {
@@ -205,6 +211,20 @@ Card.prototype.getColor = function() {
 
 Card.prototype.setUp = function(up) {
 	this.up = up;
+}
+
+Card.prototype.setRank = function(rank) {
+	this.rank = rank;
+}
+
+Card.prototype.setSuit = function(suit) {
+	this.suit = suit;
+}
+
+Card.prototype.clone = function(that) {
+	this.suit = that.suit;
+	this.rank = that.rank;
+	this.up = that.up;
 }
 
 
@@ -484,8 +504,26 @@ Deck.prototype.clear = function() {
 
 Deck.prototype.clone = function(that) {
 	this.clear();
+	
 	for (var i = 0; i < that.getLength(); ++ i) {
-		this.deck.push(that.getCard(i));
+		var thatCard;
+		if (i === 0) {
+			thatCard = that.getTop();
+		} else {
+			thatCard = that.getCard(i);
+		}
+		
+		this.deck.push(thatCard);
+	}
+}
+
+Deck.prototype.cloneGen = function(that) {
+	this.clear();
+	
+	for (var i = 0; i < that.deck.length; ++ i) {	
+		var thatCard = new Card();
+		thatCard.clone(that.deck[i]);
+		this.deck.push(thatCard);
 	}
 }
 

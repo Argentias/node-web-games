@@ -46,9 +46,9 @@ function Bingo() {
 		
 		socket.on('callDeckSync', 
 			function(data) {
-				//toCall.clone(data.toCallDeck);
-				//called.clone(data.calledDeck);
-				toCall.clone(new Deck());
+				toCall.cloneGen(data.toCallDeck);
+				called.cloneGen(data.calledDeck);
+				console.log(data);
 			}
 		);
     };
@@ -142,7 +142,7 @@ function Bingo() {
 		}
 		socket.emit('callSyncReq', data);
     };
-    
+	
     // Start a new game
     var newGame = function() {
         for (var i = 0; i < hands.length; i ++) {
@@ -156,14 +156,14 @@ function Bingo() {
         fullSize = handDeck.getLength();
         divideDeck();
 		
-		var data = {
+		sdata = {
 			rm: room,
 			rmn: roomNum,
 			toCallDeck: toCall,
 			calledDeck: called
 		}
-		console.log(data);
-		socket.emit('callSyncReq', data);
+		console.log(sdata);
+		socket.emit('callSyncReq', sdata);
     };
 	
 	// Get a new board
