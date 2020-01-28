@@ -3,6 +3,7 @@ var username;
 var nameEntered = false;
 var smgr;
 var room = "";
+var roomNum = -1;
 var homeerrmsg = "";
 var homeerrmsgcount = 0;
 
@@ -47,14 +48,52 @@ function setup() {
     roomCreate.hide();
     
     // socket and callbacks
-    socket = io.connect;
+    socket = io.connect();
     
     socket.on('joinFail',
-        function() {
-            homeerrmsg = "No room named " + roomIn.value() + " exists.";
+        function(data) {
+            homeerrmsg = "No room named " + data.code + " exists.";
             homeerrmsgcount = 300;
         }
     );
+	
+	socket.on('joinSuccess', 
+		function(data) {
+			hideHome();
+			roomNum = data.num;
+			room = data.code;
+			if (data.type === "Bingo") {
+				smgr.showScene(Bingo);
+			}
+		}
+	);
+	
+	socket.on('createFail',
+		function(data) {
+			homeerrmsg = "Room named " + data.code + " already exists.";
+			homeerrmsgcount = 300;
+		}
+	);
+	
+	socket.on('createSuccess', 
+		function(data) {
+			hideHome();
+			roomNum = data.num;
+			room = data.code;
+			if (data.type === "Bingo") {
+				smgr.showScene(Bingo);
+			}
+		}
+	);
+}
+
+function hideHome() {
+	nameIn.hide();
+	nameSet.hide();
+	roomIn.hide();
+	roomType.hide();
+	roomJoin.hide();
+	roomCreate.hide();
 }
 
 function setUsername() {
@@ -79,6 +118,20 @@ function createRoom() {
     };
     socket.emit('createRoom', data);
 }
+
+function draw() {
+    smgr.draw();
+}
+
+function mousePressed() {
+    smgr.handleEvent("mousePressed");
+}
+
+/*
+function keyPressed() {
+    smgr.handleEvent("keyPressed");
+}
+//*/
 
 function Home() {
     this.setup = function() {

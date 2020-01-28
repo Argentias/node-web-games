@@ -203,6 +203,11 @@ Card.prototype.getColor = function() {
     }
 }
 
+Card.prototype.setUp = function(up) {
+	this.up = up;
+}
+
+
 var Deck = function(size) {
     if (arguments.length > 0) {
         this.deck = [];
@@ -422,15 +427,20 @@ Deck.prototype.getTop = function() {
         return this.deck[0];
 }
 
+Deck.prototype.getCard = function(n) {
+	if (n > 0 && n < this.deck.length)
+		return this.deck[n];
+}
+
 Deck.prototype.setDown = function(cardNum) {
     if (this.deck.length > cardNum) {
-        this.deck[cardNum].up = false;
+        this.deck[cardNum].setUp(false);
     }
 }
 
 Deck.prototype.setUp = function(cardNum) {
     if (this.deck.length > cardNum) {
-        this.deck[cardNum].up = true;
+        this.deck[cardNum].setUp(true);
     }
 }
    
@@ -470,6 +480,13 @@ Deck.prototype.removeSuit = function(suit) {
 
 Deck.prototype.clear = function() {
     return this.deck.splice(0, this.deck.length);
+}
+
+Deck.prototype.clone = function(that) {
+	this.clear();
+	for (var i = 0; i < that.getLength(); ++ i) {
+		this.deck.push(that.getCard(i));
+	}
 }
 
 Deck.prototype.reload = function(a1, a2) {

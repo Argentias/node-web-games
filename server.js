@@ -23,8 +23,8 @@ var Room = function(code, type) {
 };
 
 Room.prototype.addMember = function(user) {
-    for (var m in members) {
-        if (members[m] === user) {
+    for (var m in this.members) {
+        if (this.members[m] === user) {
             return;
         }
     }
@@ -32,8 +32,8 @@ Room.prototype.addMember = function(user) {
 };
 
 Room.prototype.removeMember = function(user) {
-    for (var m in members) {
-        if (members[m] === user) {
+    for (var m in this.members) {
+        if (this.members[m] === user) {
             members.splice(m, 1);
         }
     }
@@ -102,28 +102,85 @@ io.sockets.on('connection',
     console.log("We have a new client: " + socket.id);
   
     // When this user emits, client side: socket.emit('otherevent',some data);
-    socket.on('join',
-      function(data) {
-        // Data comes in as whatever was sent, including objects
-        console.log("Received: client" + socket.id + " -- 'join' " + data.code);
-      
-        // Check if a room with the code exists
-        var roomNum = getRoom(data.code);
-        if (roomNum !== -1) {
-            socket.join(data.code);
-            rooms[roomNum].addMember(data.user);
-            socket.emit('joinSuccess');
-            console.log("Client " + socket.id + " successfully joined room " + data.code);
-        } else {
-            socket.emit('joinFail');
-            console.log("Client " + socket.id + " failed to join room " + data.code);
-        }
-        
-        // This is a way to send to everyone including sender
-        // io.sockets.emit('message', "this goes to everyone");
-
-      }
+	
+	// Catch a 'joinRoom' event
+    socket.on('joinRoom',
+		function(data) {
+			// Data comes in as whatever was sent, including objects
+			console.log("Received: client " + socket.id + " -- 'joinRoom' " + data.code);
+		
+			// Check if a room with the code exists
+			var roomNum = getRoom(data.code);
+			if (roomNum !== -1) {
+				// If so, join it
+				socket.join(data.code);
+				rooms[roomNum].addMember(data.user);
+				var outData = rooms[roomNum];
+				outData.num = roomNum;
+				socket.emit('joinSuccess', outData);
+				console.log("Client " + socket.id + " successfully joined room " + data.code);
+			} else {
+				// If not, return an error
+				socket.emit('joinFail', data);
+				console.log("Client " + socket.id + " failed to join room " + data.code);
+			}
+			
+			// This is a way to send to everyone including sender
+			// io.sockets.emit('message', "this goes to everyone");
+	
+		}
     );
+	
+	// Catch a 'createRoom' event
+	socket.on('createRoom', 
+		function(data) {
+			// Log attempt
+			console.log("Received: client " + socket.id + " -- 'createRoom' " + data.code);
+			
+			// Check if a room with the code exists
+			var roomNum = getRoom(data.code);
+			if (roomNum === -1) {
+				// If not, create one
+				socket.join(data.code);
+				rooms.push(new Room(data.code, data.type));
+				rooms[rooms.length-1].addMember(data.user);
+				var outData = rooms[rooms.length-1];
+				outData.num = rooms.length-1;
+				socket.emit('createSuccess', outData);
+				console.log("Client " + socket.id + " successfully created room " + data.code);
+			} else {
+				// If so, return an error
+				socket.emit('createFail', data);
+				console.log("Client " + socket.id + " failed to create room " + data.code);
+			}
+		}
+	);
+	
+	// Catch a 'refreshReq' event
+	socket.on('refreshReq', 
+		function(data) {
+			// Log request
+			console.log("Received: client " + socket.id + " -- 'refreshReq' " + data.rm);
+			
+			//console.log(rooms[data.rmn].members);
+			
+			// Emit response
+			io.in(data.rm).emit('memberRefresh', rooms[data.rmn]);
+		}
+	);
+	
+	// Catch a 'callSyncReq' event
+	socket.on('callSyncReq', 
+		function(data) {
+			// Log request
+			console.log("Received: client " + socket.id + " -- 'callSyncReq' " + data.rm);
+			
+			console.log(data);
+			
+			// Emit response
+			socket.in(data.rm).emit('callDeckSync', data);
+		}
+	);
     
     socket.on('disconnect', function() {
       console.log("Client has disconnected");

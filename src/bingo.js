@@ -16,19 +16,45 @@ function Bingo() {
         throw "Library Exception: You are not accessing all necessary libraries.";
     }
     
-    // Create the canvas
-    function setup() {
-        // put setup code here
-        createCanvas(480, 620);
-    }
-    
+	// Create room variables
+	var members = [];
+	var callerUser = false;
+	var roomData = {
+		rm: room,
+		rmn: roomNum
+	}
+	
     // Create the hand Deck and the caller Decks
     var handDeck = new Deck();
     handDeck.reload(true);
     var toCall = new Deck();
     var called = new Deck();
     called.clear();
+	
+    // Create the canvas and setup socket callbacks
+    this.setup = function() {
+        createCanvas(560, 620);
+		
+		socket.on('memberRefresh', 
+			function(data) {
+				members = data.members;
+				if (members[0] === username) {
+					callerUser = true;
+				}
+			}
+		);
+		
+		socket.on('callDeckSync', 
+			function(data) {
+				//toCall.clone(data.toCallDeck);
+				//called.clone(data.calledDeck);
+				toCall.clone(new Deck());
+			}
+		);
+    };
     
+	socket.emit('refreshReq', roomData);
+	
     // Create hands to deal the cards into
     var hands = [];
     for (var i = 0; i < 5; i ++) {
@@ -57,8 +83,6 @@ function Bingo() {
     
     divideDeck();
     
-    //var cardAni = new AniObj()
-    
     // Create six CardHandClickAreas for each of the three hands
     var clicks = [new CardHandClickArea(30, 200, "H", hands[0].deck.length, "S", 75),  
                   new CardHandClickArea(30, 275, "H", hands[1].deck.length, "S", 75),
@@ -67,10 +91,10 @@ function Bingo() {
                   new CardHandClickArea(30, 500, "H", hands[4].deck.length, "S", 75)];
     
     // Create a RectClickArea to call the next card
-    var caller = new RectClickArea(290, 350, 160, 50);
+    var caller = new RectClickArea(290, 200, 160, 50);
     
     // Create a RectClickArea to start a new game
-    var restarter = new RectClickArea(290, 420, 160, 50);
+    var restarter = new RectClickArea(290, 270, 160, 50);
     
     // Compare the two selected cards
     var checkPair = function() {
@@ -109,6 +133,14 @@ function Bingo() {
                 called.remove(0);
             }
         }
+		
+		var data = {
+			rm: room,
+			rmn: roomNum,
+			toCallDeck: toCall,
+			calledDeck: called
+		}
+		socket.emit('callSyncReq', data);
     };
     
     // Start a new game
@@ -123,30 +155,69 @@ function Bingo() {
         called.clear();
         fullSize = handDeck.getLength();
         divideDeck();
+		
+		var data = {
+			rm: room,
+			rmn: roomNum,
+			toCallDeck: toCall,
+			calledDeck: called
+		}
+		console.log(data);
+		socket.emit('callSyncReq', data);
     };
-    
+	
+	// Get a new board
+	var newBoard = function() {
+		for (var i = 0; i < hands.length; i ++) {
+            hands[i].clear();
+        }
+        handDeck.reload(true);
+        handDeck.shuffle();
+		fullSize = handDeck.getLength();
+		divideDeck();
+	}
+	
     // Draw everything
-    function draw() {
+    this.draw = function() {
         background(125);
         
-        for (var i = 0; i < hands.length; i ++) {
+        for (var i = 0; i < hands.length; ++ i) {
             hands[i].drawHandUpDownSmall(clicks[i].x, clicks[i].y, false);
         }
         toCall.drawDown(30, 30, false);
         called.drawHand(175, 30);
         
         fill(255);
-        rect(caller.x, caller.y, caller.w, caller.h, 5);
+		if (callerUser) {
+			rect(caller.x, caller.y, caller.w, caller.h, 5);
+		}
         rect(restarter.x, restarter.y, restarter.w, restarter.h, 5);
         fill(0);
-        textSize(36);
-        text("Call Next", caller.x+caller.w/2-textWidth("Call Next")/2, caller.y+37);
-        textSize(28);
-        text("New Game", restarter.x+restarter.w/2-textWidth("New Game")/2, restarter.y+35);
-    }
+		if (callerUser) {
+			textSize(36);
+			text("Call Next", caller.x+caller.w/2-textWidth("Call Next")/2, caller.y+37);
+			textSize(28);
+			text("New Game", restarter.x+restarter.w/2-textWidth("New Game")/2, restarter.y+35);
+		} else {
+			textSize(28);
+			text("New Board", restarter.x+restarter.w/2-textWidth("New Board")/2, restarter.y+35);
+		}
+		
+		textSize(24);
+		text("Room name: " + room, 300, 350);
+		textSize(20);
+		text("Users in room: ", 300, 385);
+		for (var m = 0; m < members.length; ++ m) {
+			if (m === 0) {
+				text(members[m] + " [caller]", 300, 410)
+			} else {
+				text(members[m], 300, 410 + (25 * m));
+			}
+		}
+    };
     
     // When a card is clicked
-    function mouseClicked() {
+    this.mouseClicked = function() {
         // Loop through each click area
         for (var i = 0; i < clicks.length; i ++) {
             var cardClick = clicks[i].clickCheck();
@@ -155,12 +226,16 @@ function Bingo() {
             }
         }
         
-        if (caller.clickCheck()) {
+        if (caller.clickCheck() && callerUser) {
             callCard();
         }
         
         if (restarter.clickCheck()) {
-            newGame();
+            if (callerUser) {
+				newGame();
+			} else {
+				newBoard();
+			}
         }
     }
 }
