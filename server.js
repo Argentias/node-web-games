@@ -54,7 +54,7 @@ function handleRequest(req, res) {
   // What did we request?
   var pathname = req.url;
   
-  cosole.log(pathname);
+  console.log(pathname);
   
   // If blank let's ask for home.html
   if (pathname == '/') {
