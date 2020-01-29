@@ -25,7 +25,7 @@ function Bingo() {
 	}
 	
 	// Create other variables
-	var maxCallLength = 8;
+	var maxCallLength = 10;
 	
     // Create the hand Deck and the caller Decks
     var handDeck = new Deck();
