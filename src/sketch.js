@@ -103,6 +103,15 @@ function hideHome() {
 	roomCreate.hide();
 }
 
+function showHome() {
+	nameIn.show();
+	nameSet.show();
+	roomIn.show();
+	roomType.show();
+	roomJoin.show();
+	roomCreate.show();
+}
+
 function setUsername() {
     username = nameIn.value();
     nameEntered = true;

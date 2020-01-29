@@ -448,8 +448,9 @@ Deck.prototype.getTop = function() {
 }
 
 Deck.prototype.getCard = function(n) {
-	if (n > 0 && n < this.deck.length)
+	if (n >= 0 && n < this.deck.length) {
 		return this.deck[n];
+	}
 }
 
 Deck.prototype.setDown = function(cardNum) {
@@ -506,13 +507,7 @@ Deck.prototype.clone = function(that) {
 	this.clear();
 	
 	for (var i = 0; i < that.getLength(); ++ i) {
-		var thatCard;
-		if (i === 0) {
-			thatCard = that.getTop();
-		} else {
-			thatCard = that.getCard(i);
-		}
-		
+		var thatCard = that.getCard(i);
 		this.deck.push(thatCard);
 	}
 }

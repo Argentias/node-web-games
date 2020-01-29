@@ -24,6 +24,9 @@ function Bingo() {
 		rmn: roomNum
 	}
 	
+	// Create other variables
+	var maxCallLength = 8;
+	
     // Create the hand Deck and the caller Decks
     var handDeck = new Deck();
     handDeck.reload(true);
@@ -33,7 +36,7 @@ function Bingo() {
 	
     // Create the canvas and setup socket callbacks
     this.setup = function() {
-        createCanvas(560, 620);
+        createCanvas(780, 620);
 		
 		socket.on('memberRefresh', 
 			function(data) {
@@ -48,7 +51,16 @@ function Bingo() {
 			function(data) {
 				toCall.cloneGen(data.toCallDeck);
 				called.cloneGen(data.calledDeck);
-				console.log(data);
+				//console.log(data);
+			}
+		);
+		
+		socket.on('leaveRoom', 
+			function(data) {
+				room = "";
+				roomNum = -1;
+				showHome();
+				smgr.showScene(Home);
 			}
 		);
     };
@@ -60,11 +72,6 @@ function Bingo() {
     for (var i = 0; i < 5; i ++) {
         hands.push(new Deck(0));
     }
-    
-    // Create two placeholder variables to hold the cards
-    //    we need to compare later in the game
-    var first = null;
-    var second = null;
     
     // Get the size of the full deck
     var fullSize = -1;
@@ -94,25 +101,22 @@ function Bingo() {
     var caller = new RectClickArea(290, 200, 160, 50);
     
     // Create a RectClickArea to start a new game
-    var restarter = new RectClickArea(290, 270, 160, 50);
+    var restarter = new RectClickArea(470, 200, 160, 50);
+	
+	// Create a RectClickArea to refresh a board
+	var refresher = new RectClickArea(290, 270, 160, 50);
+	
+	// Create a RectClickArea to leave the room
+	var leaver = new RectClickArea(470, 270, 160, 50);
     
-    // Compare the two selected cards
-    var checkPair = function() {
-        var card1 = piles[firstPile].getTop();
-        var card2 = piles[secondPile].getTop();
-        var dist = card1.rank - card2.rank;
-        if ( !(card1.equals(card2)) &&
-             ((card1.rank       === card2.rank       && card1.getColor() !== card2.getColor()) || 
-              (card1.getColor() === card2.getColor() && (dist === -1 ||  dist === 1)         ) )) {
-            piles[firstPile].remove(0);
-            piles[secondPile].remove(0);
-        }
-        first = null;
-        second = null;
-    };
-    
-    var checkDown = function() {
-        
+	// Check if the card can be flipped, and flip if so
+    var checkFlip = function(card) {
+        for (var i = 0; i < called.getLength(); ++ i) {
+			//console.log(called.getCard(i));
+			if (card.equals(called.getCard(i))) {
+				card.setUp(false);
+			}
+		}
     };
     
     // Cycle each pile
@@ -129,7 +133,7 @@ function Bingo() {
     var callCard = function() {
         if (toCall.getLength() > 0) {
             called.add(toCall.remove(0));
-            if (called.getLength() > 5) {
+            if (called.getLength() > maxCallLength) {
                 called.remove(0);
             }
         }
@@ -145,16 +149,9 @@ function Bingo() {
 	
     // Start a new game
     var newGame = function() {
-        for (var i = 0; i < hands.length; i ++) {
-            hands[i].clear();
-        }
-        handDeck.reload(true);
-        handDeck.shuffle();
         toCall.reload();
         toCall.shuffle();
         called.clear();
-        fullSize = handDeck.getLength();
-        divideDeck();
 		
 		sdata = {
 			rm: room,
@@ -177,6 +174,16 @@ function Bingo() {
 		divideDeck();
 	}
 	
+	// Leave the room
+	var leaveRoom = function() {
+		var ldata = {
+			rm: room,
+			rmn: roomNum,
+			user: username
+		}
+		socket.emit('leaveReq', ldata);
+	}
+	
     // Draw everything
     this.draw = function() {
         background(125);
@@ -190,18 +197,21 @@ function Bingo() {
         fill(255);
 		if (callerUser) {
 			rect(caller.x, caller.y, caller.w, caller.h, 5);
+			rect(restarter.x, restarter.y, restarter.w, restarter.h, 5);
 		}
-        rect(restarter.x, restarter.y, restarter.w, restarter.h, 5);
+		rect(refresher.x, refresher.y, refresher.w, refresher.h, 5);
+		rect(leaver.x, leaver.y, leaver.w, leaver.h, 5);
+		
         fill(0);
 		if (callerUser) {
 			textSize(36);
 			text("Call Next", caller.x+caller.w/2-textWidth("Call Next")/2, caller.y+37);
 			textSize(28);
 			text("New Game", restarter.x+restarter.w/2-textWidth("New Game")/2, restarter.y+35);
-		} else {
-			textSize(28);
-			text("New Board", restarter.x+restarter.w/2-textWidth("New Board")/2, restarter.y+35);
 		}
+		textSize(28);
+		text("New Board", refresher.x+refresher.w/2-textWidth("New Board")/2, refresher.y+35);
+		text("Leave Room", leaver.x+leaver.w/2-textWidth("Leave Room")/2, leaver.y+35);
 		
 		textSize(24);
 		text("Room name: " + room, 300, 350);
@@ -222,7 +232,9 @@ function Bingo() {
         for (var i = 0; i < clicks.length; i ++) {
             var cardClick = clicks[i].clickCheck();
             if (cardClick != -1) {
-                hands[i].setDown(cardClick);
+				var clickCard = hands[i].getCard(cardClick);
+				//console.log(clickCard);
+				checkFlip(clickCard);
             }
         }
         
@@ -230,12 +242,17 @@ function Bingo() {
             callCard();
         }
         
-        if (restarter.clickCheck()) {
-            if (callerUser) {
-				newGame();
-			} else {
-				newBoard();
-			}
+        if (restarter.clickCheck() && callerUser) {
+            newGame();
         }
+		
+		if (refresher.clickCheck()) {
+			newBoard();
+		}
+		
+		if (leaver.clickCheck()) {
+			leaveRoom();
+			//console.log("leaveRoom");
+		}
     }
 }

@@ -34,9 +34,14 @@ Room.prototype.addMember = function(user) {
 Room.prototype.removeMember = function(user) {
     for (var m in this.members) {
         if (this.members[m] === user) {
-            members.splice(m, 1);
+            this.members.splice(m, 1);
+			break;
         }
     }
+	if (this.members.length === 0) {
+		var rmn = getRoom(this.code);
+		rooms.splice(rmn, 1);
+	}
 };
 
 Room.prototype.getMember = function(user) {
@@ -194,13 +199,30 @@ io.sockets.on('connection',
 			// Log request
 			console.log("Received: client " + socket.id + " -- 'callSyncReq' " + data.rm);
 			
-			console.log(data);
+			//console.log(data);
 			
 			// Emit response
 			socket.in(data.rm).emit('callDeckSync', data);
 		}
 	);
+	
+	// Catch a 'leaveReq' event
+	socket.on('leaveReq', 
+		function(data) {
+			// Log request
+			console.log("Received: client " + socket.id + " -- 'leaveReq' " + data.rm);	
+			
+			// Remove the member from the room and send a 'memberRefresh' event to everyone else
+			rooms[data.rmn].removeMember(data.user);
+			socket.leave(data.rm);
+			io.in(data.rm).emit('memberRefresh', rooms[data.rmn]);
+			
+			// Emit response
+			socket.emit('leaveRoom', data);
+		}
+	);
     
+	// Catch a 'diconnect' event
     socket.on('disconnect', function() {
       console.log("Client has disconnected");
     });
