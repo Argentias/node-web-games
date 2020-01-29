@@ -43,6 +43,8 @@ function Bingo() {
 				members = data.members;
 				if (members[0] === username) {
 					callerUser = true;
+				} else {
+					callerUser = false;
 				}
 			}
 		);
