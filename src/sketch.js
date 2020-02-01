@@ -6,6 +6,7 @@ var room = "";
 var roomNum = -1;
 var homeerrmsg = "";
 var homeerrmsgcount = 0;
+var members = [];
 
 let socket;
 
@@ -90,6 +91,12 @@ function setup() {
 			if (data.type === "Bingo") {
 				smgr.showScene(Bingo);
 			}
+		}
+	);
+	
+	socket.on('memberRefresh', 
+		function(data) {
+			members = data.members;
 		}
 	);
 }
