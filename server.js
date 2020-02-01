@@ -137,6 +137,7 @@ io.sockets.on('connection',
 					var outData = rooms[roomNum];
 					outData.num = roomNum;
 					socket.emit('joinSuccess', outData);
+					io.in(data.rm).emit('memberRefresh', rooms[roomNum]);
 					console.log("Client " + socket.id + " successfully joined room " + data.code);
 				} else {
 					// If so, return an error
@@ -171,6 +172,7 @@ io.sockets.on('connection',
 				var outData = rooms[rooms.length-1];
 				outData.num = rooms.length-1;
 				socket.emit('createSuccess', outData);
+				io.in(data.rm).emit('memberRefresh', rooms[rooms.length-1]);
 				console.log("Client " + socket.id + " successfully created room " + data.code);
 			} else {
 				// If so, return an error
