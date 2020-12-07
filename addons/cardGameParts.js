@@ -248,7 +248,7 @@ var Deck = function(size) {
     }
 };
 
-Deck.prototype.drawGen = function(x, y, options[]) {
+Deck.prototype.drawGen = function(x, y, options) {
 	if (options.includes("Hand")) {
 		if (options.includes("Small")) {
 			if (options.includes("Down")) {

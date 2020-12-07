@@ -126,7 +126,7 @@ function setUsername() {
 }
 
 function joinRoom() {
-	String rcode = roomIn.value();
+	var rcode = roomIn.value();
 	if (rcode !== "") {
 		data = {
 			code: rcode,
@@ -140,7 +140,7 @@ function joinRoom() {
 }
 
 function createRoom() {
-	String rcode = roomIn.value();
+	var rcode = roomIn.value();
 	if (rcode !== "") {
 		data = {
 			code: rcode,
