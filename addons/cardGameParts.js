@@ -249,98 +249,98 @@ var Deck = function(size) {
 };
 
 Deck.prototype.drawGen = function(x, y, options[]) {
-	if (options.contains("Hand")) {
-		if (options.contains("Small")) {
-			if (options.contains("Down")) {
+	if (options.includes("Hand")) {
+		if (options.includes("Small")) {
+			if (options.includes("Down")) {
 				this.drawHandSmallDown(x, y);
-			} else if (oprions.contains("UpDown")) {
+			} else if (oprions.includes("UpDown")) {
 				this.drawHandUpDownSmall(x, y);
 			} else {
 				this.drawHandSmall(x, y);
 			}
 		} else {
-			if (options.contains("Down")) {
+			if (options.includes("Down")) {
 				this.drawHandDown(x, y);
-			} else if (oprions.contains("UpDown")) {
+			} else if (oprions.includes("UpDown")) {
 				this.drawHandUpDown(x, y);
 			} else {
 				this.drawHand(x, y);
 			}
 		}
-	} else if (options.contains("Column")) {
-		if (options.contains("Small")) {
-			if (options.contains("Down")) {
+	} else if (options.includes("Column")) {
+		if (options.includes("Small")) {
+			if (options.includes("Down")) {
 				this.drawColumnDownSmall(x, y);
-			} else if (oprions.contains("UpDown")) {
+			} else if (oprions.includes("UpDown")) {
 				this.drawColumnUpDownSmall(x, y);
 			} else {
 				this.drawColumnSmall(x, y);
 			}
 		} else {
-			if (options.contains("Down")) {
+			if (options.includes("Down")) {
 				this.drawColumnDown(x, y);
-			} else if (oprions.contains("UpDown")) {
+			} else if (oprions.includes("UpDown")) {
 				this.drawColumnUpDown(x, y);
 			} else {
 				this.drawColumn(x, y);
 			}
 		}
 	} else {
-		if (options.contains("Small")) {
-			if (options.contains("Down")) {
-				if (options.contains("Size")) {
+		if (options.includes("Small")) {
+			if (options.includes("Down")) {
+				if (options.includes("Size")) {
 					this.drawDownSmall(x, y, true);
 				} else {
 					this.drawDownSmall(x, y, false);
 				}
-			} else if (oprions.contains("UpDown")) {
-				if (options.contains("Size")) {
+			} else if (oprions.includes("UpDown")) {
+				if (options.includes("Size")) {
 					this.drawTopSmallUpDown(x, y, true);
 				} else {
 					this.drawTopSmallUpDown(x, y, false);
 				}
 			} else {
-				if (options.contains("Size")) {
+				if (options.includes("Size")) {
 					this.drawTopSmall(x, y, true);
 				} else {
 					this.drawTopSmall(x, y, false);
 				}
 			}
-		} else if (options.contains("Corner")) {
-			if (options.contains("Down")) {
-				if (options.contains("Size")) {
+		} else if (options.includes("Corner")) {
+			if (options.includes("Down")) {
+				if (options.includes("Size")) {
 					this.drawDown(x, y, true);
 				} else {
 					this.drawDown(x, y, false);
 				}
-			} else if (oprions.contains("UpDown")) {
-				if (options.contains("Size")) {
+			} else if (oprions.includes("UpDown")) {
+				if (options.includes("Size")) {
 					this.drawTopCornerUpDown(x, y, true);
 				} else {
 					this.drawTopCornerUpDown(x, y, true);
 				}
 			} else {
-				if (options.contains("Size")) {
+				if (options.includes("Size")) {
 					this.drawTopCorner(x, y, true);
 				} else {
 					this.drawTopCorner(x, y, false);
 				}
 			}
 		} else {
-			if (options.contains("Down")) {
-				if (options.contains("Size")) {
+			if (options.includes("Down")) {
+				if (options.includes("Size")) {
 					this.drawDown(x, y, true);
 				} else {
 					this.drawDown(x, y, false);
 				}
-			} else if (oprions.contains("UpDown")) {
-				if (options.contains("Size")) {
+			} else if (oprions.includes("UpDown")) {
+				if (options.includes("Size")) {
 					this.drawTopUpDown(x, y, true);
 				} else {
 					this.drawTopUpDown(x, y, false);
 				}
 			} else {
-				if (options.contains("Size")) {
+				if (options.includes("Size")) {
 					this.drawTop(x, y, true);
 				} else {
 					this.drawTop(x, y, false);
