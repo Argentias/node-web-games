@@ -253,7 +253,7 @@ Deck.prototype.drawGen = function(x, y, options) {
 		if (options.includes("Small")) {
 			if (options.includes("Down") && !options.includes("UpDown")) {
 				this.drawHandSmallDown(x, y);
-			} else if (oprions.includes("UpDown")) {
+			} else if (options.includes("UpDown")) {
 				this.drawHandUpDownSmall(x, y);
 			} else {
 				this.drawHandSmall(x, y);
@@ -261,7 +261,7 @@ Deck.prototype.drawGen = function(x, y, options) {
 		} else {
 			if (options.includes("Down") && !options.includes("UpDown")) {
 				this.drawHandDown(x, y);
-			} else if (oprions.includes("UpDown")) {
+			} else if (options.includes("UpDown")) {
 				this.drawHandUpDown(x, y);
 			} else {
 				this.drawHand(x, y);
@@ -271,7 +271,7 @@ Deck.prototype.drawGen = function(x, y, options) {
 		if (options.includes("Small")) {
 			if (options.includes("Down") && !options.includes("UpDown")) {
 				this.drawColumnDownSmall(x, y);
-			} else if (oprions.includes("UpDown")) {
+			} else if (options.includes("UpDown")) {
 				this.drawColumnUpDownSmall(x, y);
 			} else {
 				this.drawColumnSmall(x, y);
@@ -279,7 +279,7 @@ Deck.prototype.drawGen = function(x, y, options) {
 		} else {
 			if (options.includes("Down") && !options.includes("UpDown")) {
 				this.drawColumnDown(x, y);
-			} else if (oprions.includes("UpDown")) {
+			} else if (options.includes("UpDown")) {
 				this.drawColumnUpDown(x, y);
 			} else {
 				this.drawColumn(x, y);
@@ -293,7 +293,7 @@ Deck.prototype.drawGen = function(x, y, options) {
 				} else {
 					this.drawDownSmall(x, y, false);
 				}
-			} else if (oprions.includes("UpDown")) {
+			} else if (options.includes("UpDown")) {
 				if (options.includes("Size")) {
 					this.drawTopSmallUpDown(x, y, true);
 				} else {
@@ -313,7 +313,7 @@ Deck.prototype.drawGen = function(x, y, options) {
 				} else {
 					this.drawDown(x, y, false);
 				}
-			} else if (oprions.includes("UpDown")) {
+			} else if (options.includes("UpDown")) {
 				if (options.includes("Size")) {
 					this.drawTopCornerUpDown(x, y, true);
 				} else {
@@ -333,7 +333,7 @@ Deck.prototype.drawGen = function(x, y, options) {
 				} else {
 					this.drawDown(x, y, false);
 				}
-			} else if (oprions.includes("UpDown")) {
+			} else if (options.includes("UpDown")) {
 				if (options.includes("Size")) {
 					this.drawTopUpDown(x, y, true);
 				} else {
