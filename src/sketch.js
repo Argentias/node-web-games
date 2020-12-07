@@ -60,7 +60,7 @@ function setup() {
 	
 	socket.on('joinFailName',
         function(data) {
-            homeerrmsg = "Room " + data.code + " already has a user with \nusername " + data.user + ". Plase change \nyour username.";
+            homeerrmsg = "Room " + data.code + " already has a user with \nusername " + data.user + ". \nPlase change your username.";
             homeerrmsgcount = 300;
         }
     );
@@ -126,20 +126,32 @@ function setUsername() {
 }
 
 function joinRoom() {
-    data = {
-        code: roomIn.value(),
-        user: username
-    };
-    socket.emit('joinRoom', data);
+	String rcode - roomIn.value();
+	if (rcode != "") {
+		data = {
+			code: rcode,
+			user: username
+		};
+		socket.emit('joinRoom', data);
+	} else {
+		homeerrmsg = "Please enter a room code.";
+		homeerrmsgcount = 300;
+	}
 }
 
 function createRoom() {
-    data = {
-        code: roomIn.value(),
-        type: roomType.value(),
-        user: username
-    };
-    socket.emit('createRoom', data);
+	String rcode = roomIn.value();
+	if (rcode !- "") {
+		data = {
+			code: rcode,
+			type: roomType.value(),
+			user: username
+		};
+		socket.emit('createRoom', data);
+	} else {
+		homeerrmsg = "Please enter a room code.";
+		homeerrmsgcount = 300;
+	}
 }
 
 function draw() {

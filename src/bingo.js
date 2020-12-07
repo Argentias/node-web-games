@@ -191,7 +191,8 @@ function Bingo() {
         background(125);
         
         for (var i = 0; i < hands.length; ++ i) {
-            hands[i].drawHandUpDownSmall(clicks[i].x, clicks[i].y, false);
+            //hands[i].drawHandUpDownSmall(clicks[i].x, clicks[i].y, false);
+			hands[i].drawGen(clicks[i].x, clicks[i].y, {"Hand", "UpDown", "Small"});
         }
         toCall.drawDown(30, 30, false);
         called.drawHand(175, 30);

@@ -23,33 +23,25 @@ function Mao() {
 		rmn: roomNum
 	}
 	
-	// Create other variables
-	var maxCallLength = 8;
-	
     // Create the hand Deck and the caller Decks
-    var handDeck = new Deck();
-    handDeck.reload(true);
-    var toCall = new Deck();
-    var called = new Deck();
-    called.clear();
+    var drawDeck = new Deck();
+	var discDeck = new Deck(0);
 	
     // Create the canvas and setup socket callbacks
     this.setup = function() {
-        createCanvas(780, 620);
+        createCanvas(620, 480);
 		
 		socket.on('memberRefresh', 
 			function(data) {
 				members = data.members;
-				if (members[0] === username) {
-					callerUser = true;
-				}
+				playerNum = members.length;
 			}
 		);
 		
 		socket.on('callDeckSync', 
 			function(data) {
-				toCall.cloneGen(data.toCallDeck);
-				called.cloneGen(data.calledDeck);
+				drawDeck.cloneGen(data.drawDeck);
+				discDeck.cloneGen(data.discDeck);
 				//console.log(data);
 			}
 		);
@@ -66,38 +58,39 @@ function Mao() {
     
 	socket.emit('refreshReq', roomData);
 	
-    // Create hands to deal the cards into
-    var hands = [];
-    for (var i = 0; i < 5; i ++) {
-        hands.push(new Deck(0));
-    }
-    
+    // Create hand to deal the cards into
+    var hand = new Deck(0);
+	
     // Get the size of the full deck
     var fullSize = -1;
     
-    // Shuffle the hand Deck and the toCall Deck
-    handDeck.shuffle();
-    toCall.shuffle();
+    // Shuffle the draw Deck
+    drawDeck.shuffle();
     
     // Deal 5 cards each into the hands
     var divideDeck = function() {
-        fullSize = handDeck.getLength();
+        fullSize = drawDeck.getLength();
         for (var i = 0; i < 5 * hands.length; i ++) {
-            hands[i%hands.length].add(handDeck.remove(0));
+			var temp = drawDeck.remove(0);
+			temp.setUp(true);
+            hands[i%hands.length].add(temp);
         }
     };
     
-    divideDeck();
-    
-    // Create six CardHandClickAreas for each of the three hands
+    /*
+	// Create six CardHandClickAreas for each of the three hands
     var clicks = [new CardHandClickArea(30, 200, "H", hands[0].deck.length, "S", 75),  
                   new CardHandClickArea(30, 275, "H", hands[1].deck.length, "S", 75),
                   new CardHandClickArea(30, 350, "H", hands[2].deck.length, "S", 75),
                   new CardHandClickArea(30, 425, "H", hands[3].deck.length, "S", 75),
                   new CardHandClickArea(30, 500, "H", hands[4].deck.length, "S", 75)];
+	//*/
+	
+	//Create a CardHandClickArea for your hand
+	var click = new CardHandClickArea(30, 440, "H", hand.deck.length);
     
-    // Create a RectClickArea to call the next card
-    var caller = new RectClickArea(290, 200, 160, 50);
+    // Create a CardHandClickArea for the Draw pile
+    var drawer = new CardHandClickArea(200, 200, "H", 1);
     
     // Create a RectClickArea to start a new game
     var restarter = new RectClickArea(470, 200, 160, 50);
@@ -108,24 +101,9 @@ function Mao() {
 	// Create a RectClickArea to leave the room
 	var leaver = new RectClickArea(470, 270, 160, 50);
     
-	// Check if the card can be flipped, and flip if so
-    var checkFlip = function(card) {
-        for (var i = 0; i < called.getLength(); ++ i) {
-			//console.log(called.getCard(i));
-			if (card.equals(called.getCard(i))) {
-				card.setUp(false);
-			}
-		}
-    };
-    
-    // Cycle each pile
-    var pileCycle = function() {
-        for (var i = 0; i < piles.length; i ++) {
-            if (hands[i].getLength() > 0) {
-                hands[i].add(piles[i].remove(0));
-                hands[i].deck[0].up = true;
-            }
-        }
+	// Check if the card can be played, and play if so
+    var checkPlay = function(card) {
+        if (card.equals
     };
     
     // Call the next card

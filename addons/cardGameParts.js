@@ -217,8 +217,16 @@ Card.prototype.setRank = function(rank) {
 	this.rank = rank;
 }
 
+Card.prototype.getRank = function() {
+	return this.rank;
+}
+
 Card.prototype.setSuit = function(suit) {
 	this.suit = suit;
+}
+
+Card.prototype.getSuit = function() {
+	return this.suit;
 }
 
 Card.prototype.clone = function(that) {
@@ -239,6 +247,108 @@ var Deck = function(size) {
         this.reload(1, false);
     }
 };
+
+Deck.prototype.drawGen = function(x, y, options[]) {
+	if (options.contains("Hand")) {
+		if (options.contains("Small")) {
+			if (options.contains("Down")) {
+				this.drawHandSmallDown(x, y);
+			} else if (oprions.contains("UpDown")) {
+				this.drawHandUpDownSmall(x, y);
+			} else {
+				this.drawHandSmall(x, y);
+			}
+		} else {
+			if (options.contains("Down")) {
+				this.drawHandDown(x, y);
+			} else if (oprions.contains("UpDown")) {
+				this.drawHandUpDown(x, y);
+			} else {
+				this.drawHand(x, y);
+			}
+		}
+	} else if (options.contains("Column")) {
+		if (options.contains("Small")) {
+			if (options.contains("Down")) {
+				this.drawColumnDownSmall(x, y);
+			} else if (oprions.contains("UpDown")) {
+				this.drawColumnUpDownSmall(x, y);
+			} else {
+				this.drawColumnSmall(x, y);
+			}
+		} else {
+			if (options.contains("Down")) {
+				this.drawColumnDown(x, y);
+			} else if (oprions.contains("UpDown")) {
+				this.drawColumnUpDown(x, y);
+			} else {
+				this.drawColumn(x, y);
+			}
+		}
+	} else {
+		if (options.contains("Small")) {
+			if (options.contains("Down")) {
+				if (options.contains("Size")) {
+					this.drawDownSmall(x, y, true);
+				} else {
+					this.drawDownSmall(x, y, false);
+				}
+			} else if (oprions.contains("UpDown")) {
+				if (options.contains("Size")) {
+					this.drawTopSmallUpDown(x, y, true);
+				} else {
+					this.drawTopSmallUpDown(x, y, false);
+				}
+			} else {
+				if (options.contains("Size")) {
+					this.drawTopSmall(x, y, true);
+				} else {
+					this.drawTopSmall(x, y, false);
+				}
+			}
+		} else if (options.contains("Corner")) {
+			if (options.contains("Down")) {
+				if (options.contains("Size")) {
+					this.drawDown(x, y, true);
+				} else {
+					this.drawDown(x, y, false);
+				}
+			} else if (oprions.contains("UpDown")) {
+				if (options.contains("Size")) {
+					this.drawTopCornerUpDown(x, y, true);
+				} else {
+					this.drawTopCornerUpDown(x, y, true);
+				}
+			} else {
+				if (options.contains("Size")) {
+					this.drawTopCorner(x, y, true);
+				} else {
+					this.drawTopCorner(x, y, false);
+				}
+			}
+		} else {
+			if (options.contains("Down")) {
+				if (options.contains("Size")) {
+					this.drawDown(x, y, true);
+				} else {
+					this.drawDown(x, y, false);
+				}
+			} else if (oprions.contains("UpDown")) {
+				if (options.contains("Size")) {
+					this.drawTopUpDown(x, y, true);
+				} else {
+					this.drawTopUpDown(x, y, false);
+				}
+			} else {
+				if (options.contains("Size")) {
+					this.drawTop(x, y, true);
+				} else {
+					this.drawTop(x, y, false);
+				}
+			}
+		}
+	}
+}
 
 Deck.prototype.drawTop = function(x, y, size) {
     stroke(0);
@@ -362,6 +472,14 @@ Deck.prototype.drawHand = function(x, y) {
     }
 }
 
+Deck.prototype.drawHandDown = function(x, y) {
+    stroke(0);
+    strokeWeight(1);
+    for (var i = 0; i < this.deck.length; ++ i) {
+        this.deck[i].drawBack(x + (horzSpace*i), y);
+    }
+}
+
 Deck.prototype.drawHandUpDown = function(x, y) {
     stroke(0);
     strokeWeight(1);
@@ -380,6 +498,14 @@ Deck.prototype.drawHandSmall = function(x, y) {
     strokeWeight(1);
     for (var i = 0; i < this.deck.length; ++ i) {
         this.deck[i].drawSmall(x + (horzSpace*i), y);
+    }
+}
+
+Deck.prototype.drawHandSmallDown = function(x, y) {
+    stroke(0);
+    strokeWeight(1);
+    for (var i = 0; i < this.deck.length; ++ i) {
+        this.deck[i].drawBackSmall(x + (horzSpace*i), y);
     }
 }
 
@@ -404,6 +530,14 @@ Deck.prototype.drawColumn = function(x, y) {
     }
 }
 
+Deck.prototype.drawColumnDown = function(x, y) {
+    stroke(0);
+    strokeWeight(1);
+    for (var i = 0; i < this.deck.length; ++ i) {
+        this.deck[i].drawBack(x, y + (vertSpace*i));
+    }
+}
+
 Deck.prototype.drawColumnUpDown = function(x, y) {
     stroke(0);
     strokeWeight(1);
@@ -422,6 +556,14 @@ Deck.prototype.drawColumnSmall = function(x, y) {
     strokeWeight(1);
     for (var i = 0; i < this.deck.length; ++ i) {
         this.deck[i].drawSmall(x, y + (vertSpace*i));
+    }
+}
+
+Deck.prototype.drawColumnDownSmall = function(x, y) {
+    stroke(0);
+    strokeWeight(1);
+    for (var i = 0; i < this.deck.length; ++ i) {
+        this.deck[i].drawBackSmall(x, y + (vertSpace*i));
     }
 }
 
