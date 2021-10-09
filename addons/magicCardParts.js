@@ -132,7 +132,7 @@ MagicPlayer.prototype.draw = function(x, y) {
     if (this.isSelf === true) { size = 1.5; } else { size = 0.75; }
     this.mana.draw(x, y, size);
     fill(0, 255, 255);
-    rect(x, y-mCardHeight*size, (mCardWidthS+mcHorzSpace)*size*5, mCardHeightS*size, 10);
+    rect(x, y-mCardHeightS*size/2-5, mcHorzSpace*size*5, mCardHeightS*size/2, 10);
     fill(0);
     textSize(28*size);
     text(this.life, x+5, y-mCardHeight*size/2);
