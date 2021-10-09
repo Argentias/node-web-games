@@ -83,7 +83,9 @@ function Magic() {
     
     var player2 = new MagicPlayer(false, 25);
     
-    function syncBoardState
+    function syncBoardState() {
+        
+    }
 	
 	
 	
