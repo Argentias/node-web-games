@@ -215,14 +215,14 @@ function Magic() {
 		//text("Leave Room", leaver.x+leaver.w/2-textWidth("Leave Room")/2, leaver.y+35);
 		
 		textSize(24);
-		text("Room code: " + room, roomW-150, 50);
+		text("Room code: " + room, roomW-300, 50);
 		textSize(20);
-		text("Users in room: ", roomW-150, 90);
+		text("Users in room: ", roomW-300, 90);
 		for (var m = 0; m < members.length; ++ m) {
 			if (m === 0) {
-				text(members[m] + " [VIP]", roomW-150, 130);
+				text(members[m] + " [VIP]", roomW-300, 130);
 			} else {
-				text(members[m], roomW-150, 130 + (25 * m));
+				text(members[m], roomW-300, 130 + (25 * m));
 			}
 		}
 		

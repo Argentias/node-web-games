@@ -274,7 +274,7 @@ MagicPlayer.prototype.genLifeMinus = function(x, y) {
 };
 
 
-var mCardHandClickArea = function(x, y, dir, length, size, cut) {
+var SpellHandClickArea = function(x, y, dir, length, size, cut) {
     this.x = x;
     this.y = y;
     this.dir = dir;
@@ -307,7 +307,7 @@ SpellHandClickArea.prototype.clickCheck = function(size) {
     return -1;
 }
 
-mCardHandClickArea.prototype.matchLength = function(Deck) {
+SpellHandClickArea.prototype.matchLength = function(Deck) {
     this.length = Deck.deck.length;
 }
 
