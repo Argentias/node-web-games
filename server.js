@@ -195,16 +195,16 @@ io.sockets.on('connection',
 		}
 	);
 	
-	// Catch a 'callSyncReq' event
-	socket.on('callSyncReq', 
+	// Catch a 'syncReq' event
+	socket.on('syncReq', 
 		function(data) {
 			// Log request
-			console.log("Received: client " + socket.id + " -- 'callSyncReq' " + data.rm);
+			console.log("Received: client " + socket.id + " -- 'syncReq' " + data.rm);
 			
 			//console.log(data);
 			
 			// Emit response
-			socket.in(data.rm).emit('callDeckSync', data);
+			socket.in(data.rm).emit('syncAnswer', data);
 		}
 	);
 	

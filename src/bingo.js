@@ -49,7 +49,7 @@ function Bingo() {
 			}
 		);
 		
-		socket.on('callDeckSync', 
+		socket.on('syncAnswer', 
 			function(data) {
 				toCall.cloneGen(data.toCallDeck);
 				called.cloneGen(data.calledDeck);
@@ -146,7 +146,7 @@ function Bingo() {
 			toCallDeck: toCall,
 			calledDeck: called
 		}
-		socket.emit('callSyncReq', data);
+		socket.emit('syncReq', data);
     };
 	
     // Start a new game
@@ -162,7 +162,7 @@ function Bingo() {
 			calledDeck: called
 		}
 		console.log(sdata);
-		socket.emit('callSyncReq', sdata);
+		socket.emit('syncReq', sdata);
     };
 	
 	// Get a new board

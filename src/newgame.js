@@ -21,14 +21,14 @@ function Magic() {
     
 	// Create room variables
 	var members = [];
-	//var callerUser = false;
-	//var roomData = {
-	//	rm: room,
-	//	rmn: roomNum
-	//};
+	var VIP = false;
+	var roomData = {
+		rm: room,
+		rmn: roomNum
+	};
 	
     // Create the hand Deck and the caller Decks
-    var player = new MagicPlayer(25, true);
+    var player = new MagicPlayer(true, 25);
     console.log(player);
     
     // Create the canvas and setup socket callbacks
@@ -36,27 +36,26 @@ function Magic() {
     //function setup() {
         createCanvas(1280, 720);
 		
-		/*
 		socket.on('memberRefresh', 
 			function(data) {
 				members = data.members;
 				if (members[0] === username) {
-					//callerUser = true;
+					VIP = true;
 				} else {
-					//callerUser = false;
+					VIP = false;
 				}
 			}
 		);
 		
-		
 		socket.on('callDeckSync', 
 			function(data) {
+				/*
 				toCall.cloneGen(data.toCallDeck);
 				called.cloneGen(data.calledDeck);
 				//console.log(data);
+				*/
 			}
 		);
-		
 		
 		socket.on('leaveRoom', 
 			function(data) {
@@ -66,10 +65,9 @@ function Magic() {
 				smgr.showScene(Home);
 			}
 		);
-		*/
     };
     
-	//socket.emit('refreshReq', roomData);
+	socket.emit('refreshReq', roomData);
 	
 	/*
 	
