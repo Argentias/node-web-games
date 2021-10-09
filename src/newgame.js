@@ -296,6 +296,12 @@ function Magic() {
                 console.log("Clicked Mana");
                 player.mana.N.add(new ManaCard());
             }
+            if (lifeUp.clickCheck()) {
+                player.life.increment();
+            }
+            if (lifeDown.clickCheck()) {
+                player.life.decrement();
+            }
             /*
     		
     		if (leaver.clickCheck()) {
@@ -308,4 +314,13 @@ function Magic() {
 		return false;
     };
     
+    
+    this.keyPressed = function() {
+        if (key === 'q') {
+            player.life.increment();
+        }
+        if (key === 'a') {
+            player.life.decrement();
+        }
+    };
 }

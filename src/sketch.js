@@ -66,7 +66,7 @@ function setup() {
         }
     );
 	
-	socket.on('joinSuccess', 
+	socket.on('joinSuccess',
 		function(data) {
 			hideHome();
 			roomNum = data.num;
@@ -86,7 +86,7 @@ function setup() {
 		}
 	);
 	
-	socket.on('createSuccess', 
+	socket.on('createSuccess',
 		function(data) {
 			hideHome();
 			roomNum = data.num;
@@ -99,7 +99,7 @@ function setup() {
 		}
 	);
 	
-	socket.on('memberRefresh', 
+	socket.on('memberRefresh',
 		function(data) {
 			members = data.members;
 		}
@@ -165,6 +165,10 @@ function draw() {
 
 function mousePressed() {
     smgr.handleEvent("mousePressed");
+}
+
+function keyPressed() {
+    smgr.handleEvent("keyPressed");
 }
 
 /*
