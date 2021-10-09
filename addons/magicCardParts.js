@@ -223,7 +223,7 @@ SpellDeck.prototype.draw = function(x, y, size) {
 };
 
 SpellDeck.prototype.instantiate = function() {
-    loopN(50, () => { this.add(new SpellCard("Shock", "NNRR", "Deal 2 damage to any opponent.", false)); });
+    loopN(50, () => { this.add(new SpellCard("Zippety Zap", "NNRR", "Deal 2 damage to any opponent.", false)); });
 };
 
 SpellDeck.prototype.shuffle = function() {

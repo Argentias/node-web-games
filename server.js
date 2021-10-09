@@ -141,7 +141,7 @@ io.sockets.on('connection',
 				var memberNum = rooms[roomNum].getMember(data.user);
 				if (memberNum === -1) {
 					// If not, check if there are fewer than the max number of members
-				    if (rooms[roomNum].numMem < maxMembers[rooms[roomNum].type]) {
+				    //if (rooms[roomNum].numMem < maxMembers[rooms[roomNum].type]) {
 				        //If not, join the room
     					socket.join(data.code);
     					rooms[roomNum].addMember(data.user);
@@ -150,11 +150,11 @@ io.sockets.on('connection',
     					socket.emit('joinSuccess', outData);
     					io.in(data.rm).emit('memberRefresh', rooms[roomNum]);
     					console.log("Client " + socket.id + " successfully joined room " + data.code);
-				    } else {
-				        //If so, return an error
-				        socket.emit('joinFailMax', data);
-				        console.log("Client " + socket.id + " failed to join room " + data.code + ": Max Members Reached");
-				    }
+				    //} else {
+				    //    //If so, return an error
+				    //    socket.emit('joinFailMax', data);
+				    //    console.log("Client " + socket.id + " failed to join room " + data.code + ": Max Members Reached");
+				    //}
 				} else {
 					// If so, return an error
 					socket.emit('joinFailName', data);
