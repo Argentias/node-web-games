@@ -36,7 +36,7 @@ function setup() {
     roomType.position(500, 20);
     roomType.size(90);
     roomType.option("Bingo");
-    roomType.option("Magic")
+    roomType.option("Magic");
     roomType.hide();
     
     roomJoin = createButton("Join Room");
