@@ -1,9 +1,9 @@
 var testForComponents = function() { return true; };
 
-var Incrementer = function(value, x, y, min, max, step) {
+var Incrementer = function(value, min, max, step) {
     this.value = value;
-    this.x = x;
-    this.y = y;
+    //this.x = x;
+    //this.y = y;
     this.min = min;
     this.max = max;
     this.step = step;
@@ -16,13 +16,17 @@ Incrementer.prototype.increment = function() {
     }
 };
 
-var IncDec = function(value, x, y, min, max, step) {
+var IncDec = function(value, min, max, step) {
     this.value = value;
-    this.x = x;
-    this.y = y;
+    //this.x = x;
+    //this.y = y;
     this.min = min;
     this.max = max;
     this.step = step;
+};
+
+IncDec.prototype.getVal = function() {
+    return this.value;
 };
 
 IncDec.prototype.increment = function() {
@@ -64,6 +68,15 @@ RectClickArea.prototype.clickCheck = function() {
     } else {
         return false;
     }
+};
+
+RectClickArea.prototype.draw = function(t) {
+    fill(255);
+    rect(this.x, this.y, this.w, this.h, 5);
+    textAlign(CENTER, CENTER);
+    fill(0);
+    text(t, this.x+this.w/2, this.y+this.h/2);
+    textAlign(LEFT, BASELINE);
 };
 
 var CircClickArea = function(x, y, r) {
@@ -148,7 +161,7 @@ TimelineEvent.prototype.do = function() {
  *  @param attributes An optional array of attributes a variant has (e.g. ["NumVal", "CharVal"])
  *  @param avals An optional array of sets of values for the attributes of the enum (e.g. [[1, 2, 3, 4], ['U', 'D', 'L', 'R']])
  *  @return A frozen object containing the given enum values as well as attributes
- * 
+ *
  *  ~~ Example Output for (["Up, Down"], ["asNum", "asChar"], [[1, 2], ['U', 'D']]) ~~
  *  {
         Up: "Up",
@@ -158,7 +171,7 @@ TimelineEvent.prototype.do = function() {
         Up_asChar: 'U',
         Down_asChar: 'D'
     };
- * 
+ *
 **/
 function createEnum(values, attributes, avals) {
     const enumObject = {};
@@ -196,7 +209,7 @@ function createEnum(values, attributes, avals) {
  *  @param attributes An optional array of attributes a variant has (e.g. ["NumVal", "CharVal"])
  *  @param avals An optional array of sets of values for the attributes of the enum (e.g. [[1, 2, 3, 4], ['U', 'D', 'L', 'R']])
  *  @return A frozen object containing the given enum values as well as attributes
- * 
+ *
  *  ~~ Example Output for (["Up, Down"], ["asNum", "asChar"], [[1, 2], ['U', 'D']]) ~~
  *  {
         Up: {
@@ -210,7 +223,7 @@ function createEnum(values, attributes, avals) {
             asChar: 'D'
         }
     };
- * 
+ *
 **/
 function createNestedEnum(values, attributes, avals) {
     const enumObject = {};
@@ -243,7 +256,7 @@ function createNestedEnum(values, attributes, avals) {
 
 /** @func enumHasVariant
  *  Returns the variant of the given enum with the given attribute if it exists
- *  
+ *
 **/
 function enumHas(en, a1, a2) {
     if (arguments.length < 2) {

@@ -1,4 +1,4 @@
-function Magic() {
+//function Magic() {
     // Variable for checking libraries
     var libs = true;
     
@@ -19,24 +19,24 @@ function Magic() {
         throw "Library Exception: You are not accessing all necessary libraries.";
     }
     
-	// Create room variables
+    // Create room variables
 	var members = [];
 	var VIP = false;
+	var room="NULL"; var roomNum=-1;
 	var roomData = {
 		rm: room,
 		rmn: roomNum
 	};
+	var roomW = 1280;
+	var roomH = 860;
 	
-    // Create the hand Deck and the caller Decks
-    var player = new MagicPlayer(true, 25);
-    console.log(player);
-    
-    // Create the canvas and setup socket callbacks
-    this.setup = function() {
-    //function setup() {
-        createCanvas(1280, 720);
+	// Create the canvas and setup socket callbacks
+    //this.setup = function() {
+    function setup() {
+        createCanvas(1280, 860);
 		
-		socket.on('memberRefresh', 
+		/*
+		socket.on('memberRefresh',
 			function(data) {
 				members = data.members;
 				if (members[0] === username) {
@@ -47,17 +47,17 @@ function Magic() {
 			}
 		);
 		
-		socket.on('callDeckSync', 
+		socket.on('callDeckSync',
 			function(data) {
 				/*
 				toCall.cloneGen(data.toCallDeck);
 				called.cloneGen(data.calledDeck);
 				//console.log(data);
-				*/
+				
 			}
 		);
 		
-		socket.on('leaveRoom', 
+		socket.on('leaveRoom',
 			function(data) {
 				room = "";
 				roomNum = -1;
@@ -65,9 +65,28 @@ function Magic() {
 				smgr.showScene(Home);
 			}
 		);
-    };
+    }//;
     
 	socket.emit('refreshReq', roomData);
+	*/
+	}
+	
+    // Create the hand Deck and the caller Decks
+    var player = new MagicPlayer(true, 25);
+    player.hand.add(new SpellCard("", "", ""));
+    player.hand.add(new SpellCard("Shock", "NRR", "Deal 2 damage to any opponent", true));
+    player.hand.addUp(new SpellCard("Gods Willing", "NRBGWU", "Cantrip. Target enchantment you control gains protection until end of turn."));
+    var selfX = roomW/50;
+    var selfY = roomH-(roomH/6);
+    var lifeUp = player.genLifePlus(selfX, selfY);
+    var lifeDown = player.genLifeMinus(selfX, selfY);
+    console.log(player);
+    console.log(lifeUp);
+    console.log(lifeDown);
+    
+    var player2 = new MagicPlayer(false, 25);
+    
+    
 	
 	/*
 	
@@ -95,7 +114,7 @@ function Magic() {
     divideDeck();
     
     // Create six CardHandClickAreas for each of the three hands
-    var clicks = [new CardHandClickArea(30, 200, "H", hands[0].deck.length, "S", 75),  
+    var clicks = [new CardHandClickArea(30, 200, "H", hands[0].deck.length, "S", 75),
                   new CardHandClickArea(30, 275, "H", hands[1].deck.length, "S", 75),
                   new CardHandClickArea(30, 350, "H", hands[2].deck.length, "S", 75),
                   new CardHandClickArea(30, 425, "H", hands[3].deck.length, "S", 75),
@@ -189,11 +208,12 @@ function Magic() {
 	*/
 	
     // Draw everything
-    this.draw = function() {
-    //function draw() {
+    //this.draw = function() {
+    function draw() {
         background(125);
         
-        player.draw(width/15, height-height/4);
+        player.draw(roomW/50, roomH-roomH/6);
+        player2.draw(roomW/50, roomH/10);
         /*
         for (var i = 0; i < hands.length; ++ i) {
             //hands[i].drawHandUpDownSmall(clicks[i].x, clicks[i].y, false);
@@ -209,6 +229,8 @@ function Magic() {
 			rect(restarter.x, restarter.y, restarter.w, restarter.h, 5);
 		}
 		*/
+		rect(lifeUp.x, lifeUp.y, lifeUp.w, lifeUp.h, 5);
+		rect(lifeDown.x, lifeDown.y, lifeDown.w, lifeDown.h, 5);
 		rect(caller.x, caller.y, caller.w, caller.h, 5);
 		rect(refresher.x, refresher.y, refresher.w, refresher.h, 5);
 		//rect(leaver.x, leaver.y, leaver.w, leaver.h, 5);
@@ -221,9 +243,13 @@ function Magic() {
 		}
 		*/
 		textSize(36);
-		text("Turn Void", caller.x+caller.w/2-textWidth("Turn Void`")/2, caller.y+37);
+		lifeUp.draw("+");
+		lifeDown.draw("-");
 		textSize(28);
-		text("Add Mana", refresher.x+refresher.w/2-textWidth("Add Mana")/2, refresher.y+35);
+		//text("Turn Void", caller.x+caller.w/2-textWidth("Turn Void`")/2, caller.y+37);
+		//text("Add Mana", refresher.x+refresher.w/2-textWidth("Add Mana")/2, refresher.y+35);
+		caller.draw("Null to Void");
+		refresher.draw("Add Mana");
 		/*
 		text("Leave Room", leaver.x+leaver.w/2-textWidth("Leave Room")/2, leaver.y+35);
 		
@@ -239,11 +265,11 @@ function Magic() {
 			}
 		}
 		*/
-    };
+    }//;
     
     // When a card is clicked
-    this.mouseClicked = function() {
-    //function mouseClicked() {
+    //this.mouseClicked = function() {
+    function mouseClicked() {
         console.log("Clicky clicky");
         /*
         // Loop through each click area
@@ -259,7 +285,7 @@ function Magic() {
         
         if (caller.clickCheck()) {
             console.log("Clicked Change");
-            player.mana.change("N", "B");
+            player.mana.change("N", "W");
         }
         
         if (refresher.clickCheck()) {
@@ -273,6 +299,7 @@ function Magic() {
 			//console.log("leaveRoom");
 		}
 		*/
-    };
+		return false;
+    }//;
     
-}
+//}

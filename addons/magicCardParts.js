@@ -16,11 +16,34 @@ function setup() {
     rand = function() { return random() };
 }
 
-var ManaType = createNestedEnum(["Null", "Aggression", "Apathy", "Stability", "Disruption", "Continuity"], 
+function drawMagicCardBack(x, y, size) {
+    var w = mCardWidth*size;
+    var h = mCardHeight*size;
+    
+    fill(200, 150, 0);
+    stroke(0);
+    rect(x, y, w, h, 10);
+    fill(0);
+    stroke(255);
+    for (var i = w/4; i < w; i += w/4) {
+        line(x+i, y, x, y+i);
+        line(x+w-i, y, x+w, y+i);
+        line(x+i, y+h, x, y+h-i);
+        line(x+w-i, y+h, x+w, y+h-i);
+    }
+    stroke(0);
+    strokeWeight(2);
+    noFill();
+    rect(x, y, w, h, 10);
+}
+
+
+
+var ManaType = createNestedEnum(["Null", "Aggression", "Apathy", "Stability", "Disruption", "Continuity"],
                           ["Color", "Alias", "RGB"],
                           [["None", "Red", "Black", "Green", "White", "Blue"],
                            ["N", "R", "B", "G", "W", "U"],
-                           [[105, 105, 105], [255, 0, 0], [0, 0, 0], [50, 255, 50], [255, 255, 255], [0, 0, 255]]]);
+                           [[105, 105, 105], [255, 0, 0], [0, 0, 0], [0, 255, 0], [255, 255, 255], [0, 0, 255]]]);
 
 console.log(ManaType);
 
@@ -35,6 +58,8 @@ var ManaCard = function(attribute) {
         this.attribute = variant;
     }
 };
+
+
 
 var ManaDeck = function(attribute) {
     try {
@@ -52,7 +77,7 @@ ManaDeck.prototype.length = function() {
 
 ManaDeck.prototype.add = function(/*ManaCard*/card) {
     if (this.attribute.val != card.attribute.val) {
-        throw ("Type Mismatch Exception: Found " + card.attribute.val + "; Expected " + this.attribute.val); 
+        throw ("Type Mismatch Exception: Found " + card.attribute.val + "; Expected " + this.attribute.val);
     }
     this.deck.push(card);
 };
@@ -73,6 +98,8 @@ ManaDeck.prototype.draw = function(x, y, size) {
     var l = this.length();
     text(l, x+mCardWidthS*size/2-textWidth(l)/2, y+mCardHeightS*size+30*size);
 };
+
+
 
 var ManaBase = function() {
     this.N = new ManaDeck("N");
@@ -103,39 +130,135 @@ ManaBase.prototype.change = function(attr1, attr2) {
     }
 };
 
-var Spell = function(cost, effect, up) {
-    if (arguments.length === 0) {
-		this.cost = "";
-		this.effect = () => {};
-		this.up = false;
-	} else {
-		this.cost = cost;
-		this.effect = effect;
+
+
+var SpellCard = function(name, cost, effect, up) {
+    if (arguments.length < 4) {
+        this.up = false;
+    } else {
 		this.up = up;
-	}
+    }
+    
+    this.name = name;
+	this.cost = cost;
+	this.effect = effect;
 };
 
-var SpellDeck = function() {
-    // TODO: Make a deck of Spell cards
+var manaSymSize = 10;
+
+function drawManaSym(sym, x, y, size) {
+    var v = enumHas(ManaType, sym);
+    if (v === null) {
+        throw ("Invalid Value Exception: " + sym + " is not associated with a ManaType");
+    }
+    var c = v.RGB;
+    fill(c[0], c[1], c[2]);
+    ellipse(x, y, manaSymSize*size);
+}
+
+SpellCard.prototype.draw = function(x, y, size) {
+    if (this.up) {
+        stroke(0);
+        strokeWeight(1);
+        var w = mCardWidth*size;
+        var h = mCardHeight*size;
+        fill(255);
+        rect(x, y, w, h, 10);
+        fill(0);
+        textSize(14*size);
+        text(this.name, x+3*size, y+16*size);
+        
+        var clen = this.cost.length;
+        for (var i = 0; i < clen; ++i) {
+            drawManaSym(this.cost.substr(i, 1), x+w-(manaSymSize+1.5)*size*(clen-i), y+28*size, size);
+        }
+        fill(0);
+        textSize(10*size);
+        text(this.effect, x+5*size, y+46*size, w-15*size, h-25*size);
+        
+    } else {
+        drawMagicCardBack(x, y, size);
+    }
 };
+
+
+
+var SpellDeck = function() {
+    this.deck = [];
+    this.length = 0;
+};
+
+SpellDeck.prototype.length = function() {
+    return this.deck.length;
+};
+
+SpellDeck.prototype.add = function(/*SpellCard*/ card) {
+    this.deck.push(card);
+};
+
+SpellDeck.prototype.addUp = function(/*SpellCard*/ card) {
+    card.up = true;
+    this.deck.push(card);
+};
+
+SpellDeck.prototype.draw = function(x, y, size) {
+    stroke(0);
+    strokeWeight(1);
+    var l = this.deck.length;
+    for (var i = 0; i < l; ++ i) {
+        this.deck[i].draw(x + (mCardWidth+5)*i*size, y, size);
+    }
+};
+
+
 
 var MagicPlayer = function(isSelf, life) {
     this.mana = new ManaBase();
     this.isSelf = isSelf;
-    this.life = life;
+    this.life = new IncDec(life, 0, 99, 1);
     this.turn = false;
-    //this.hand = new SpellDeck();
+    this.hand = new SpellDeck();
+    this.battlefield = new SpellDeck();
 };
 
-MagicPlayer.prototype.draw = function(x, y) {
+MagicPlayer.prototype.draw = function(x, y, plus, minus) {
     var size;
-    if (this.isSelf === true) { size = 1.5; } else { size = 0.75; }
+    if (this.isSelf === true) { size = 1.2; } else { size = 0.75; }
     this.mana.draw(x, y, size);
+    var handX = x+(mcHorzSpace*6+10)*size;
+    var handY = y+mCardHeightS-mCardHeight+20;
+    if (this.isSelf) {
+        this.hand.draw(handX, handY, size);
+    } else {
+        drawMagicCardBack(handX, handY, size);
+        strokeWeight(1*size);
+        textSize(56*size);
+        fill(0);
+        var hl = this.hand.deck.length;
+        text(hl, handX+mCardWidth*size/2-textWidth(hl)/2, handY+mCardHeight*size/2+16);
+    }
+    
+    strokeWeight(1*size);
     fill(0, 255, 255);
-    rect(x, y-mCardHeightS*size/2-5, mcHorzSpace*size*5, mCardHeightS*size/2, 10);
+    rect(x, y-mCardHeightS*size/2-5, mcHorzSpace*size*3+5*size, mCardHeightS*size/2, 8*size);
     fill(0);
-    textSize(20*size);
-    text(this.life, x+5, y-mCardHeightS*size/3+10);
+    textSize(24*size);
+    text(this.life.getVal(), x+9*size, y-mCardHeightS*size/3+10*size);
+};
+
+MagicPlayer.prototype.genLifePlus = function(x, y) {
+    var size;
+    if (this.isSelf === true) { size = 1.2; } else { return; }
+    console.log(mCardHeightS*size/3);
+    console.log(10*size+2*size);
+    console.log(y);
+    return new RectClickArea(x+mcHorzSpace*size+2*size, y-mCardHeightS*size/2-2*size, mcHorzSpace*size-8*size, mCardHeightS*size/2-4*size);
+};
+
+MagicPlayer.prototype.genLifeMinus = function(x, y) {
+    var size;
+    if (this.isSelf === true) { size = 1.2; } else { return; }
+    return new RectClickArea(x+mcHorzSpace*size*2+2*size, y-mCardHeightS*size/2-2*size, mcHorzSpace*size-8*size, mCardHeightS*size/2-4*size);
 };
 
 
@@ -424,7 +547,7 @@ Deck.prototype.drawGen = function(x, y, options) {
 Deck.prototype.drawTop = function(x, y, size) {
     stroke(0);
     strokeWeight(1);
-    if (this.deck.length > 0) 
+    if (this.deck.length > 0)
         this.deck[0].draw(x, y);
     textSize(16);
     fill(0);
@@ -454,7 +577,7 @@ Deck.prototype.drawTopUpDown = function(x, y, size) {
 Deck.prototype.drawTopCorner = function(x, y, size) {
     stroke(0);
     strokeWeight(1);
-    if (this.deck.length > 0) 
+    if (this.deck.length > 0)
         this.deck[0].drawCorner(x, y);
     textSize(16);
     fill(0);
@@ -484,7 +607,7 @@ Deck.prototype.drawTopCornerUpDown = function(x, y, size) {
 Deck.prototype.drawTopSmall = function(x, y, size) {
     stroke(0);
     strokeWeight(1);
-    if (this.deck.length > 0) 
+    if (this.deck.length > 0)
         this.deck[0].drawSmall(x, y);
     textSize(16);
     fill(0);
@@ -514,7 +637,7 @@ Deck.prototype.drawTopSmallUpDown = function(x, y, size) {
 Deck.prototype.drawDown = function(x, y, size) {
     stroke(0);
     strokeWeight(1);
-    if (this.deck.length > 0) 
+    if (this.deck.length > 0)
         this.deck[0].drawBack(x, y);
     textSize(16);
     fill(0);
@@ -526,7 +649,7 @@ Deck.prototype.drawDown = function(x, y, size) {
 Deck.prototype.drawDownSmall = function(x, y, size) {
     stroke(0);
     strokeWeight(1);
-    if (this.deck.length > 0) 
+    if (this.deck.length > 0)
         this.deck[0].drawBackSmall(x, y);
     textSize(16);
     fill(0);
@@ -728,7 +851,7 @@ Deck.prototype.clone = function(that) {
 Deck.prototype.cloneGen = function(that) {
 	this.clear();
 	
-	for (var i = 0; i < that.deck.length; ++ i) {	
+	for (var i = 0; i < that.deck.length; ++ i) {
 		var thatCard = new Card();
 		thatCard.clone(that.deck[i]);
 		this.deck.push(thatCard);
@@ -830,18 +953,18 @@ mCardHandClickArea.prototype.clickCheck = function() {
     }
     for (var i = 0; i < this.length-1; ++ i) {
         if (this.dir === "H") {
-            if (mouseX >= this.x + mcHorzSpace*i && 
-                mouseX <= this.x + mcHorzSpace*(i+1) && 
-                mouseY >= this.y && 
+            if (mouseX >= this.x + mcHorzSpace*i &&
+                mouseX <= this.x + mcHorzSpace*(i+1) &&
+                mouseY >= this.y &&
                 mouseY <= this.y + this.cut
                 ) {
                     
                 return i;
             }
         } else if (this.dir === "V") {
-            if (mouseX >= this.x && 
-                mouseX <= this.x + this.cut && 
-                mouseY >= this.y + mcVertSpace*i && 
+            if (mouseX >= this.x &&
+                mouseX <= this.x + this.cut &&
+                mouseY >= this.y + mcVertSpace*i &&
                 mouseY <= this.y + mcVertSpace*(i+1)
                 ) {
                     
