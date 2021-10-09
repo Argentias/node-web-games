@@ -303,7 +303,7 @@ function Magic() {
     			//console.log("leaveRoom");
     		}
     		*/
-    		window.setTimeout(resetClick, 10);
+    		window.setTimeout(resetClick, 100);
         }
 		return false;
     };
