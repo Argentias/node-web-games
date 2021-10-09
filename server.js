@@ -160,7 +160,7 @@ io.sockets.on('connection',
 	socket.on('createRoom', 
 		function(data) {
 			// Log attempt
-			console.log("Received: client " + socket.id + " -- 'createRoom' " + data.code);
+			console.log("Received: client " + socket.id + " -- 'createRoom' " + data.type + " " + data.code);
 			
 			// Check if a room with the code exists
 			var roomNum = getRoom(data.code);
