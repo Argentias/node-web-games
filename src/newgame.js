@@ -1,4 +1,4 @@
-//function Magic() {
+function Magic() {
     // Variable for checking libraries
     var libs = true;
     
@@ -31,11 +31,10 @@
 	var roomH = 860;
 	
 	// Create the canvas and setup socket callbacks
-    //this.setup = function() {
-    function setup() {
+    this.setup = function() {
+    //function setup() {
         createCanvas(1280, 860);
 		
-		/*
 		socket.on('memberRefresh',
 			function(data) {
 				members = data.members;
@@ -49,11 +48,11 @@
 		
 		socket.on('callDeckSync',
 			function(data) {
-				/*
+			    /*
 				toCall.cloneGen(data.toCallDeck);
 				called.cloneGen(data.calledDeck);
 				//console.log(data);
-				
+				*/
 			}
 		);
 		
@@ -65,11 +64,9 @@
 				smgr.showScene(Home);
 			}
 		);
-    }//;
+    };
     
 	socket.emit('refreshReq', roomData);
-	*/
-	}
 	
     // Create the hand Deck and the caller Decks
     var player = new MagicPlayer(true, 25);
@@ -208,8 +205,8 @@
 	*/
 	
     // Draw everything
-    //this.draw = function() {
-    function draw() {
+    this.draw = function() {
+    //function draw() {
         background(125);
         
         player.draw(roomW/50, roomH-roomH/6);
@@ -268,8 +265,8 @@
     }//;
     
     // When a card is clicked
-    //this.mouseClicked = function() {
-    function mouseClicked() {
+    this.mouseClicked = function() {
+    //function mouseClicked() {
         console.log("Clicky clicky");
         /*
         // Loop through each click area
@@ -300,6 +297,6 @@
 		}
 		*/
 		return false;
-    }//;
+    };
     
-//}
+}
