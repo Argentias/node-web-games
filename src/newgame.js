@@ -272,7 +272,7 @@ function Magic() {
     this.mouseClicked = function() {
     //function mouseClicked() {
         if (alreadyClicked === false) {
-            alreadyClickec = true;
+            alreadyClicked = true;
             
             console.log("Clicky clicky");
             /*
