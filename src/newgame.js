@@ -22,7 +22,6 @@ function Magic() {
     // Create room variables
 	var members = [];
 	var VIP = false;
-	var room="NULL"; var roomNum=-1;
 	var roomData = {
 		rm: room,
 		rmn: roomNum
@@ -48,11 +47,10 @@ function Magic() {
 		
 		socket.on('syncAnswer',
 			function(data) {
-			    /*
-				toCall.cloneGen(data.toCallDeck);
-				called.cloneGen(data.calledDeck);
-				//console.log(data);
-				*/
+			    var s = getSelfInMem();
+                playerStates = data.players;
+                player = data.players[s];
+                deck = data.syncDeck;
 			}
 		);
 		
@@ -68,26 +66,57 @@ function Magic() {
     
 	socket.emit('refreshReq', roomData);
 	
-    // Create the hand Deck and the caller Decks
+    // Create the personal board state
     var player = new MagicPlayer(true, 25);
-    player.hand.add(new SpellCard("", "", ""));
-    player.hand.add(new SpellCard("Shock", "NRR", "Deal 2 damage to any opponent", true));
-    player.hand.addUp(new SpellCard("Gods Willing", "NRBGWU", "Cantrip. Target enchantment you control gains protection until end of turn."));
+    //player.hand.add(new SpellCard("", "", ""));
+    //player.hand.add(new SpellCard("Shock", "NRR", "Deal 2 damage to any opponent", true));
+    //player.hand.addUp(new SpellCard("Gods Willing", "NRBGWU", "Cantrip. Target enchantment you control gains protection until end of turn."));
     var selfX = roomW/50;
     var selfY = roomH-(roomH/6);
     var lifeUp = player.genLifePlus(selfX, selfY);
     var lifeDown = player.genLifeMinus(selfX, selfY);
-    console.log(player);
-    console.log(lifeUp);
-    console.log(lifeDown);
+    //console.log(player);
+    //console.log(lifeUp);
+    //console.log(lifeDown);
+    
+    // Create all players' board states
+    var playerStates = [player];
+    
+    // Create the deck
+    var deck = new SpellDeck();
+    deck.instantiate();
+    deck.shuffle();
     
     var player2 = new MagicPlayer(false, 25);
     
-    function syncBoardState() {
-        var selfInMem = -1;
+    // Find the index of yourself in the list of members
+    function getSelfInMem() {
         for (var i = 0; i < members.length; ++i) {
-            
+            if (members[i] === username) {
+                return i;
+            }
         }
+    }
+    
+    // Sync the board state with the other players (do after every move)
+    function syncBoardState() {
+        playerStates[i] = player;
+        var outData = {
+            syncDeck: deck,
+            players: playerStates
+        };
+        socket.emit('syncReq', outData);
+    }
+    
+    // Start a game
+    function startGame() {
+        playerStates = [];
+        for (var m in members) {
+            playerStates.push(new MagicPlayer(false, 25));
+        }
+        var s = getSelfInMem();
+        playerStates[i].setSelf(true);
+        player = playerStates[i];
     }
 	
 	
@@ -174,7 +203,14 @@ function Magic() {
         background(125);
         
         player.draw(roomW/50, roomH-roomH/6);
-        player2.draw(roomW/50, roomH/10);
+        //player2.draw(roomW/50, roomH/10);
+        
+        var s = getSelfInMem();
+        var ml = members.length;
+        for (var i = 1; i < ml; ++i) {
+            playerStates[(s+i)%ml].draw(roomW/50, roomH/10+200*i);
+        }
+        
         /*
         for (var i = 0; i < hands.length; ++ i) {
             //hands[i].drawHandUpDownSmall(clicks[i].x, clicks[i].y, false);

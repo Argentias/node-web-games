@@ -233,6 +233,10 @@ var MagicPlayer = function(isSelf, life) {
     this.battlefield = new SpellDeck();
 };
 
+MagicPlayer.prototype.setSelf = function(isSelf) {
+    this.isSelf = isSelf;
+};
+
 MagicPlayer.prototype.draw = function(x, y, plus, minus) {
     var size;
     if (this.isSelf === true) { size = 1.2; } else { size = 0.75; }
