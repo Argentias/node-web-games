@@ -193,7 +193,7 @@ function Magic() {
     //function draw() {
         background(125);
         
-        player.draw(width/15, height-height/5);
+        player.draw(width/15, height-height/4);
         /*
         for (var i = 0; i < hands.length; ++ i) {
             //hands[i].drawHandUpDownSmall(clicks[i].x, clicks[i].y, false);

@@ -95,7 +95,7 @@ ManaBase.prototype.change = function(attr1, attr2) {
     if (v1 === null || v2 === null) {
         throw ("Invalid Value Exception: " + attr1 + " or " + attr2 + " is not associated with a ManaType");
     }
-    if (this[v1.Alias] === 0) {
+    if (this[v1.Alias].length < 1) {
         return;
     } else {
         this[v1.Alias].remove();
@@ -135,7 +135,7 @@ MagicPlayer.prototype.draw = function(x, y) {
     rect(x, y-mCardHeightS*size/2-5, mcHorzSpace*size*5, mCardHeightS*size/2, 10);
     fill(0);
     textSize(20*size);
-    text(this.life, x+5, y-mCardHeightS*size/2);
+    text(this.life, x+5, y-mCardHeightS*size/3);
 };
 
 
