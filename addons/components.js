@@ -288,3 +288,10 @@ function enumHas(en, a1, a2) {
     });
     return out;
 }
+
+
+function loopN(n, func) {
+    for (var i = 0; i < n; ++i) {
+        func();
+    }
+}

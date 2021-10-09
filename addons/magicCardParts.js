@@ -222,6 +222,25 @@ SpellDeck.prototype.draw = function(x, y, size) {
     }
 };
 
+SpellDeck.prototype.instantiate = function() {
+    loopN(50, () => { this.add(new SpellCard("Shock", "NNRR", "Deal 2 damage to any opponent.", false)); });
+};
+
+SpellDeck.prototype.shuffle = function() {
+    var newDeck = [];
+    for (var i = 0; i < this.deck.length; i ++) {
+        newDeck.push(null);
+    }
+    var randomSpot;
+    for (var i = 0; i < this.deck.length; i ++) {
+        do {
+            randomSpot = floor(random() * this.deck.length);
+        } while (newDeck[randomSpot] !== null);
+        //System.out.println("Putting " + deck[i] + " in spot " + randomSpot);
+        newDeck[randomSpot] = this.deck[i];
+    }
+    this.deck = newDeck;
+};
 
 
 var MagicPlayer = function(isSelf, life) {
