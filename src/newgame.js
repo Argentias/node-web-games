@@ -84,7 +84,10 @@ function Magic() {
     var player2 = new MagicPlayer(false, 25);
     
     function syncBoardState() {
-        
+        var selfInMem = -1;
+        for (var i = 0; i < members.length; ++i) {
+            
+        }
     }
 	
 	

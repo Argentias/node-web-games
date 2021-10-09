@@ -51,7 +51,16 @@ Room.prototype.getMember = function(user) {
 		}
 	}
 	return -1;
-}
+};
+
+Room.prototype.numMem = function() {
+    return this.members.length;
+};
+
+var maxMembers = {
+    Bingo: 10,
+    Magic: 5,
+};
 
 var rooms = [];
 
@@ -131,23 +140,30 @@ io.sockets.on('connection',
 				// If so, check if a member of the same name is in the room
 				var memberNum = rooms[roomNum].getMember(data.user);
 				if (memberNum === -1) {
-					// If not, join the room
-					socket.join(data.code);
-					rooms[roomNum].addMember(data.user);
-					var outData = rooms[roomNum];
-					outData.num = roomNum;
-					socket.emit('joinSuccess', outData);
-					io.in(data.rm).emit('memberRefresh', rooms[roomNum]);
-					console.log("Client " + socket.id + " successfully joined room " + data.code);
+					// If not, check if there are fewer than the max number of members
+				    if (rooms[roomNum].numMem < maxMembers[rooms[roomNum].type]) {
+				        //If not, join the room
+    					socket.join(data.code);
+    					rooms[roomNum].addMember(data.user);
+    					var outData = rooms[roomNum];
+    					outData.num = roomNum;
+    					socket.emit('joinSuccess', outData);
+    					io.in(data.rm).emit('memberRefresh', rooms[roomNum]);
+    					console.log("Client " + socket.id + " successfully joined room " + data.code);
+				    } else {
+				        //If so, return an error
+				        socket.emit('joinFailMax', data);
+				        console.log("Client " + socket.id + " failed to join room " + data.code + ": Max Members Reached");
+				    }
 				} else {
 					// If so, return an error
 					socket.emit('joinFailName', data);
-					console.log("Client " + socket.id + " failed to join room " + data.code);
+					console.log("Client " + socket.id + " failed to join room " + data.code + ": Same Username as Member");
 				}
 			} else {
 				// If not, return an error
 				socket.emit('joinFailCode', data);
-				console.log("Client " + socket.id + " failed to join room " + data.code);
+				console.log("Client " + socket.id + " failed to join room " + data.code + ": Bad Room Code");
 			}
 			
 			// This is a way to send to everyone including sender
@@ -157,7 +173,7 @@ io.sockets.on('connection',
     );
 	
 	// Catch a 'createRoom' event
-	socket.on('createRoom', 
+	socket.on('createRoom',
 		function(data) {
 			// Log attempt
 			console.log("Received: client " + socket.id + " -- 'createRoom' " + data.type + " " + data.code);
@@ -183,7 +199,7 @@ io.sockets.on('connection',
 	);
 	
 	// Catch a 'refreshReq' event
-	socket.on('refreshReq', 
+	socket.on('refreshReq',
 		function(data) {
 			// Log request
 			console.log("Received: client " + socket.id + " -- 'refreshReq' " + data.rm);
@@ -196,7 +212,7 @@ io.sockets.on('connection',
 	);
 	
 	// Catch a 'syncReq' event
-	socket.on('syncReq', 
+	socket.on('syncReq',
 		function(data) {
 			// Log request
 			console.log("Received: client " + socket.id + " -- 'syncReq' " + data.rm);
@@ -209,10 +225,10 @@ io.sockets.on('connection',
 	);
 	
 	// Catch a 'leaveReq' event
-	socket.on('leaveReq', 
+	socket.on('leaveReq',
 		function(data) {
 			// Log request
-			console.log("Received: client " + socket.id + " -- 'leaveReq' " + data.rm);	
+			console.log("Received: client " + socket.id + " -- 'leaveReq' " + data.rm);
 			
 			// Remove the member from the room and send a 'memberRefresh' event to everyone else
 			rooms[data.rmn].removeMember(data.user);

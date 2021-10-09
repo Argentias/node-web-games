@@ -61,7 +61,14 @@ function setup() {
 	
 	socket.on('joinFailName',
         function(data) {
-            homeerrmsg = "Room " + data.code + " already has a user with \nusername " + data.user + ". \nPlase change your username.";
+            homeerrmsg = "Room " + data.code + " already has a user with \nusername " + data.user + ". \nPlease change your username.";
+            homeerrmsgcount = 300;
+        }
+    );
+    
+    socket.on('joinFailMax',
+        function(data) {
+            homeerrmsg = "Room " + data.code + " already has the maximum number of members in it. \nPlease join a different room.";
             homeerrmsgcount = 300;
         }
     );
