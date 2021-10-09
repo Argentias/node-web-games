@@ -93,6 +93,8 @@ function setup() {
 			room = data.code;
 			if (data.type === "Bingo") {
 				smgr.showScene(Bingo);
+			} else if (data.type === "Magic") {
+			    smgr.showScene(Magic);
 			}
 		}
 	);
