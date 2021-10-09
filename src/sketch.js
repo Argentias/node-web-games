@@ -36,6 +36,7 @@ function setup() {
     roomType.position(500, 20);
     roomType.size(90);
     roomType.option("Bingo");
+    roomType.option("Magic")
     roomType.hide();
     
     roomJoin = createButton("Join Room");
@@ -72,6 +73,8 @@ function setup() {
 			room = data.code;
 			if (data.type === "Bingo") {
 				smgr.showScene(Bingo);
+			} else if (data.type === "Magic") {
+			    smgr.showScene(Magic);
 			}
 		}
 	);

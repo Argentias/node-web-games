@@ -248,6 +248,8 @@ var Deck = function(size) {
     }
 };
 
+/*** ~~~~~~~ Deck Draw Functions ~~~~~~~ ***/
+
 Deck.prototype.drawGen = function(x, y, options) {
 	if (options.includes("Hand")) {
 		if (options.includes("Small")) {
@@ -579,6 +581,8 @@ Deck.prototype.drawColumnUpDownSmall = function(x, y) {
         }
     }
 }
+
+/*** ~~~~~~~ End Deck Draw Functions ~~~~~~~ ***/
 
 Deck.prototype.getLength = function() {
     return this.deck.length;

@@ -140,3 +140,138 @@ TimelineEvent.prototype.do = function() {
         this.done = true;
     }
 };
+
+
+/** @func createEnum
+ *  Creates a basic enum object, with the option of added pseudo-attributes
+ *  @param values The array of (String) values to turn into an enum (e.g. ["Up", "Down", "Left", "Right"])
+ *  @param attributes An optional array of attributes a variant has (e.g. ["NumVal", "CharVal"])
+ *  @param avals An optional array of sets of values for the attributes of the enum (e.g. [[1, 2, 3, 4], ['U', 'D', 'L', 'R']])
+ *  @return A frozen object containing the given enum values as well as attributes
+ * 
+ *  ~~ Example Output for (["Up, Down"], ["asNum", "asChar"], [[1, 2], ['U', 'D']]) ~~
+ *  {
+        Up: "Up",
+        Down: "Down",
+        Up_asNum: 1,
+        Down_asNum: 2,
+        Up_asChar: 'U',
+        Down_asChar: 'D'
+    };
+ * 
+**/
+function createEnum(values, attributes, avals) {
+    const enumObject = {};
+    var vlen = values.length;
+    for (var i = 0; i < vlen; ++i) {
+        var val = values[i];
+        enumObject[val] = val;
+    }
+    
+    if (arguments.length > 1) {
+        var alen = attributes.length;
+        if (alen != avals.length) {
+            throw "Enum Exception: The given number of attributes doesn't match the number of value sets";
+        }
+        
+        for (var i = 0; i < alen; ++i) {
+            var av = avals[i];
+            if (av.length != vlen) {
+                throw "Enum Exception: One of the variants has a missing attribute";
+            }
+            var att = attributes[i];
+            
+            for (var j = 0; j < vlen; ++j) {
+                var val = values[j];
+                enumObject[(val+"_"+att)] = av[j];
+            }
+        }
+    }
+    return Object.freeze(enumObject);
+}
+
+/** @func createNestedEnum
+ *  Creates an enum object where the variants are also objects containing the value and attributes of that enum.
+ *  @param values The array of (String) values to turn into an enum (e.g. ["Up", "Down", "Left", "Right"])
+ *  @param attributes An optional array of attributes a variant has (e.g. ["NumVal", "CharVal"])
+ *  @param avals An optional array of sets of values for the attributes of the enum (e.g. [[1, 2, 3, 4], ['U', 'D', 'L', 'R']])
+ *  @return A frozen object containing the given enum values as well as attributes
+ * 
+ *  ~~ Example Output for (["Up, Down"], ["asNum", "asChar"], [[1, 2], ['U', 'D']]) ~~
+ *  {
+        Up: {
+            val: "Up",
+            asNum: 1,
+            asChar:'U'
+        },
+        Down: {
+            val: "Down",
+            asNum: 2,
+            asChar: 'D'
+        }
+    };
+ * 
+**/
+function createNestedEnum(values, attributes, avals) {
+    const enumObject = {};
+    var vlen = values.length;
+    var alen = attributes.length;
+    if (alen != avals.length) {
+        throw "Enum Exception: The given number of attributes doesn't match the number of value sets";
+    }
+        
+    for (var i = 0; i < vlen; ++i) {
+        var val = values[i];
+        const nestedObject = {};
+        nestedObject["val"] = val;
+        
+        for (var j = 0; j < alen; ++j) {
+            var av = avals[j];
+            if (av.length != vlen) {
+                throw "Enum Exception: One of the variants has a missing attribute";
+            }
+            var att = attributes[j];
+            nestedObject[att] = av[i];
+        }
+        
+        enumObject[val] = nestedObject;
+    }
+    
+    
+    return Object.freeze(enumObject);
+}
+
+/** @func enumHasVariant
+ *  Returns the variant of the given enum with the given attribute if it exists
+ *  
+**/
+function enumHas(en, a1, a2) {
+    if (arguments.length < 2) {
+        throw "Argument Length Exception: Incorrect number of arguments passed";
+    }
+    
+    var lookFor;
+    var attribute;
+    if (arguments.length == 2) {
+        lookFor = a1;
+        attribute = "";
+    } else {
+        lookFor = a2;
+        attribute = a1;
+    }
+    
+    var out = null;
+    
+    Object.keys(en).forEach((key, index) => {
+        var variant = en[key];
+        Object.keys(variant).forEach((att, ind2) => {
+            var a = variant[att];
+            if (a == lookFor) {
+                if (attribute.length == 0 || attribute == att) {
+                    out = variant;
+                }
+            }
+        });
+    });
+    return out;
+}

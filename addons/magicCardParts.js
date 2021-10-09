@@ -1,22 +1,22 @@
-var testForCardGameParts = function() { return true; };
+var testForMagicCardParts = function() { return true; };
+
+try { testForComponents() } catch(e) { throw "Library Exception: Module 'magicCardParts' requires module 'components'" }
 
 new p5();
 
-var suits = ["Clubs", "Diamonds", "Hearts", "Spades"];
-var ranks = ["Joker", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"];
-var abbr = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-var cardWidth = 100;
-var cardHeight = 150;
-var cardWidthS = 40;
-var cardHeightS = 70;
-var horzSpace = 45;
-var vertSpace = 75;
+var mmcardWidth = 100;
+var mmcardHeight = 150;
+var mmcardWidthS = 40;
+var mmcardHeightS = 70;
+var mchorzSpace = 45;
+var mcvertSpace = 75;
 var rand = function() { return random() };
 
 function setup() {
     rand = function() { return random() };
 }
 
+/*
 var drawClub = function(x, y, size) {
     fill(0);
     stroke(0);
@@ -57,27 +57,133 @@ var drawSpade = function (x, y, size) {
     quad(x+size/4-l, y+o+4*size/7-l, x+3*size/4+l, y+o+4*size/7-l, x+3*size/4, y+o+4*size/7, x+size/4, y+o+4*size/7);
     triangle(x+size/2, y-o/4+size/2, x+2*size/3, y-o/4+size, x+size/3, y-o/4+size);
 };
+//*/
 
-var Card = function(rank, suit, up) {
+var ManaType = createNestedEnum(["Null", "Aggression", "Apathy", "Stability", "Disruption", "Continuity"], 
+                          ["Color", "Alias", "RGB"],
+                          [["None", "Red", "Black", "Green", "White", "Blue"],
+                           ["N", "R", "B", "G", "W", "U"],
+                           [[105, 105, 105], [255, 0, 0], [0, 0, 0], [50, 255, 50], [255, 255, 255], [0, 0, 255]]]);
+
+console.log(ManaType);
+
+var ManaCard = function(attribute) {
     if (arguments.length === 0) {
-		this.suit = 0;
-		this.rank = 0;
+        this.attribute = ManaType.Null;
+    } else {
+        var variant = enumHas(ManaType, attribute);
+        if (variant === null) {
+            throw ("Invalid Value Exception: " + attribute + " is not a ManaType");
+        }
+        this.attribute = variant;
+    }
+};
+
+var ManaDeck = function(attribute) {
+    try {
+        new ManaCard(attribute);
+    } catch (e) {
+        throw e;
+    }
+    this.attribute = enumHas(ManaType, attribute);
+    this.deck = [];
+};
+
+ManaDeck.prototype.length = function() {
+    return this.deck.length;
+};
+
+ManaDeck.prototype.add = function(/*ManaCard*/card) {
+    if (this.attribute.val != card.attribute.val) {
+        throw ("Type Mismatch Exception: Found " + card.attribute.val + "; Expected " + this.attribute.val); 
+    }
+    this.deck.push(card);
+};
+
+ManaDeck.prototype.remove = function() {
+    return this.deck.pop();
+};
+
+ManaDeck.prototype.draw = function(x, y, size) {
+    var c = this.attribute.RGB;
+    //console.log(c);
+    fill(c[0], c[1], c[2]);
+    stroke(0);
+    strokeWeight(1);
+    rect(x, y, mmcardWidthS*size, mmcardHeightS*size, 10);
+    fill(0);
+    textSize(28*size);
+    var l = this.length();
+    text(l, x+mmcardWidthS*size/2-textWidth(l)/2, y+mmcardHeightS*size+30*size);
+};
+
+var ManaBase = function() {
+    this.N = new ManaDeck("N");
+    this.R = new ManaDeck("R");
+    this.B = new ManaDeck("B");
+    this.G = new ManaDeck("G");
+    this.W = new ManaDeck("W");
+    this.U = new ManaDeck("U");
+};
+
+ManaBase.prototype.draw = function(x, y, size) {
+    Object.keys(this).forEach((a, i) => {
+        this[a].draw(x+mchorzSpace*size*i, y, size);
+    });
+};
+
+ManaBase.prototype.change = function(attr1, attr2) {
+    var v1 = enumHas(ManaType, attr1);
+    var v2 = enumHas(ManaType, attr2);
+    if (v1 === null || v2 === null) {
+        throw ("Invalid Value Exception: " + attr1 + " or " + attr2 + " is not a ManaType");
+    }
+    if (this[v1.Alias] === 0) {
+        return;
+    } else {
+        this[v1.Alias].remove();
+        this[v2.Alias].add(new ManaCard(attr2));
+    }
+};
+
+var Spell = function(cost, effect, up) {
+    if (arguments.length === 0) {
+		this.cost = "";
+		this.effect = () => {};
 		this.up = false;
 	} else {
-		this.suit = suit;
-		this.rank = rank;
+		this.cost = cost;
+		this.effect = effect;
 		this.up = up;
 	}
+};
+
+var SpellDeck = function() {
+    // TODO: Make a deck of Spell cards
+};
+
+var MagicPlayer = function(isSelf, life) {
+    this.mana = new ManaBase();
+    this.isSelf = isSelf;
+    this.life = life;
+    this.turn = false;
+};
+
+MagicPlayer.prototype.draw = function(x, y) {
+    var size;
+    if (this.isSelf === true) { size = 1.5; } else { size = 0.75; }
+    this.mana.draw(x, y, size);
+    
 };
 
 Card.prototype.draw = function(x, y) {
     stroke(0);
     strokeWeight(1);
     fill(255);
-    rect(x, y, cardWidth, cardHeight, 10);
+    rect(x, y, mcardWidth, mcardHeight, 10);
     fill(0);
     textSize(48);
-    text(abbr[this.rank-1], x+50-textWidth(abbr[this.rank-1])/2, y+50);
+    //text(abbr[this.rank-1], x+50-textWidth(abbr[this.rank-1])/2, y+50);
     if (this.suit === 0) {
         drawClub(x+20, y+65, 60);
     } else if (this.suit === 1) {
@@ -93,7 +199,7 @@ Card.prototype.drawCorner = function(x, y) {
     stroke(0);
     strokeWeight(1);
     fill(255);
-    rect(x, y, cardWidth, cardHeight, 10);
+    rect(x, y, mcardWidth, mcardHeight, 10);
     fill(0);
     textSize(24);
     text(abbr[this.rank-1], x+20-textWidth(abbr[this.rank-1])/2, y+25);
@@ -112,7 +218,7 @@ Card.prototype.drawSmall = function(x, y) {
     stroke(0);
     strokeWeight(1);
     fill(255);
-    rect(x, y, cardWidthS, cardHeightS, 10);
+    rect(x, y, mcardWidthS, mcardHeightS, 10);
     fill(0);
     textSize(24);
     text(abbr[this.rank-1], x+20-textWidth(abbr[this.rank-1])/2, y+25);
@@ -131,14 +237,14 @@ Card.prototype.drawBack = function(x, y) {
     stroke(0);
     strokeWeight(1);
     fill(50, 50, 200);
-    rect(x, y, cardWidth, cardHeight, 10);
+    rect(x, y, mcardWidth, mcardHeight, 10);
     fill(0);
     stroke(255);
-    for (var i = cardWidth/4; i < cardWidth; i += cardWidth/4) {
+    for (var i = mcardWidth/4; i < mcardWidth; i += mcardWidth/4) {
         line(x+i, y, x, y+i);
-        line(x+cardWidth-i, y, x+cardWidth, y+i);
-        line(x+i, y+cardHeight, x, y+cardHeight-i);
-        line(x+cardWidth-i, y+cardHeight, x+cardWidth, y+cardHeight-i);
+        line(x+mcardWidth-i, y, x+mcardWidth, y+i);
+        line(x+i, y+mcardHeight, x, y+mcardHeight-i);
+        line(x+mcardWidth-i, y+mcardHeight, x+mcardWidth, y+mcardHeight-i);
     }
 };
 
@@ -146,14 +252,14 @@ Card.prototype.drawBackSmall = function(x, y) {
     stroke(0);
     strokeWeight(1);
     fill(50, 50, 200);
-    rect(x, y, cardWidthS, cardHeightS, 10);
+    rect(x, y, mcardWidthS, mcardHeightS, 10);
     fill(0);
     stroke(255);
-    for (var i = cardWidthS/4; i < cardWidthS; i += cardWidthS/4) {
+    for (var i = mcardWidthS/4; i < mcardWidthS; i += mcardWidthS/4) {
         line(x+i, y, x, y+i);
-        line(x+cardWidthS-i, y, x+cardWidthS, y+i);
-        line(x+i, y+cardHeightS, x, y+cardHeightS-i);
-        line(x+cardWidthS-i, y+cardHeightS, x+cardWidthS, y+cardHeightS-i);
+        line(x+mcardWidthS-i, y, x+mcardWidthS, y+i);
+        line(x+i, y+mcardHeightS, x, y+mcardHeightS-i);
+        line(x+mcardWidthS-i, y+mcardHeightS, x+mcardWidthS, y+mcardHeightS-i);
     }
 };
    
@@ -468,7 +574,7 @@ Deck.prototype.drawHand = function(x, y) {
     stroke(0);
     strokeWeight(1);
     for (var i = 0; i < this.deck.length; ++ i) {
-        this.deck[i].drawCorner(x + (horzSpace*i), y);
+        this.deck[i].drawCorner(x + (mchorzSpace*i), y);
     }
 }
 
@@ -476,7 +582,7 @@ Deck.prototype.drawHandDown = function(x, y) {
     stroke(0);
     strokeWeight(1);
     for (var i = 0; i < this.deck.length; ++ i) {
-        this.deck[i].drawBack(x + (horzSpace*i), y);
+        this.deck[i].drawBack(x + (mchorzSpace*i), y);
     }
 }
 
@@ -486,9 +592,9 @@ Deck.prototype.drawHandUpDown = function(x, y) {
     for (var i = 0; i < this.deck.length; ++ i) {
         var temp = this.deck[i];
         if (temp.up === true) {
-            temp.drawCorner(x + (horzSpace*i), y);
+            temp.drawCorner(x + (mchorzSpace*i), y);
         } else {
-            temp.drawBack(x + (horzSpace*i), y);
+            temp.drawBack(x + (mchorzSpace*i), y);
         }
     }
 }
@@ -497,7 +603,7 @@ Deck.prototype.drawHandSmall = function(x, y) {
     stroke(0);
     strokeWeight(1);
     for (var i = 0; i < this.deck.length; ++ i) {
-        this.deck[i].drawSmall(x + (horzSpace*i), y);
+        this.deck[i].drawSmall(x + (mchorzSpace*i), y);
     }
 }
 
@@ -505,7 +611,7 @@ Deck.prototype.drawHandSmallDown = function(x, y) {
     stroke(0);
     strokeWeight(1);
     for (var i = 0; i < this.deck.length; ++ i) {
-        this.deck[i].drawBackSmall(x + (horzSpace*i), y);
+        this.deck[i].drawBackSmall(x + (mchorzSpace*i), y);
     }
 }
 
@@ -515,9 +621,9 @@ Deck.prototype.drawHandUpDownSmall = function(x, y) {
     for (var i = 0; i < this.deck.length; ++ i) {
         var temp = this.deck[i];
         if (temp.up === true) {
-            temp.drawSmall(x + (horzSpace*i), y);
+            temp.drawSmall(x + (mchorzSpace*i), y);
         } else {
-            temp.drawBackSmall(x + (horzSpace*i), y);
+            temp.drawBackSmall(x + (mchorzSpace*i), y);
         }
     }
 }
@@ -526,7 +632,7 @@ Deck.prototype.drawColumn = function(x, y) {
     stroke(0);
     strokeWeight(1);
     for (var i = 0; i < this.deck.length; ++ i) {
-        this.deck[i].drawCorner(x, y + (vertSpace*i));
+        this.deck[i].drawCorner(x, y + (mcvertSpace*i));
     }
 }
 
@@ -534,7 +640,7 @@ Deck.prototype.drawColumnDown = function(x, y) {
     stroke(0);
     strokeWeight(1);
     for (var i = 0; i < this.deck.length; ++ i) {
-        this.deck[i].drawBack(x, y + (vertSpace*i));
+        this.deck[i].drawBack(x, y + (mcvertSpace*i));
     }
 }
 
@@ -544,9 +650,9 @@ Deck.prototype.drawColumnUpDown = function(x, y) {
     for (var i = 0; i < this.deck.length; ++ i) {
         var temp = this.deck[i];
         if (temp.up === true) {
-            temp.drawCorner(x, y + (vertSpace*i));
+            temp.drawCorner(x, y + (mcvertSpace*i));
         } else {
-            temp.drawBack(x, y + (vertSpace*i));
+            temp.drawBack(x, y + (mcvertSpace*i));
         }
     }
 }
@@ -555,7 +661,7 @@ Deck.prototype.drawColumnSmall = function(x, y) {
     stroke(0);
     strokeWeight(1);
     for (var i = 0; i < this.deck.length; ++ i) {
-        this.deck[i].drawSmall(x, y + (vertSpace*i));
+        this.deck[i].drawSmall(x, y + (mcvertSpace*i));
     }
 }
 
@@ -563,7 +669,7 @@ Deck.prototype.drawColumnDownSmall = function(x, y) {
     stroke(0);
     strokeWeight(1);
     for (var i = 0; i < this.deck.length; ++ i) {
-        this.deck[i].drawBackSmall(x, y + (vertSpace*i));
+        this.deck[i].drawBackSmall(x, y + (mcvertSpace*i));
     }
 }
 
@@ -573,9 +679,9 @@ Deck.prototype.drawColumnUpDownSmall = function(x, y) {
     for (var i = 0; i < this.deck.length; ++ i) {
         var temp = this.deck[i];
         if (temp.up === true) {
-            temp.drawSmall(x, y + (vertSpace*i));
+            temp.drawSmall(x, y + (mcvertSpace*i));
         } else {
-            temp.drawBackSmall(x, y + (vertSpace*i));
+            temp.drawBackSmall(x, y + (mcvertSpace*i));
         }
     }
 }
@@ -727,7 +833,7 @@ Deck.prototype.toString = function() {
     return out;
 }
 
-var CardHandClickArea = function(x, y, dir, length, size, cut) {
+var mcardHandClickArea = function(x, y, dir, length, size, cut) {
     this.x = x;
     this.y = y;
     this.dir = dir;
@@ -739,28 +845,28 @@ var CardHandClickArea = function(x, y, dir, length, size, cut) {
     }
     if (arguments.length < 6) {
         if (dir === "H") {
-            this.cut = cardHeight;
+            this.cut = mcardHeight;
         } else if (dir === "V") {
-            this.cut = cardWidth;
+            this.cut = mcardWidth;
         }
     } else {
         this.cut = cut;
     }
 };
 
-CardHandClickArea.prototype.clickCheck = function() {
+mcardHandClickArea.prototype.clickCheck = function() {
     var ch, cw;
     if (this.size === "S") {
-        ch = cardHeightS;
-        cw = cardWidthS;
+        ch = mcardHeightS;
+        cw = mcardWidthS;
     } else {
-        ch = cardHeight;
-        cw = cardWidth;
+        ch = mcardHeight;
+        cw = mcardWidth;
     }
     for (var i = 0; i < this.length-1; ++ i) {
         if (this.dir === "H") {
-            if (mouseX >= this.x + horzSpace*i && 
-                mouseX <= this.x + horzSpace*(i+1) && 
+            if (mouseX >= this.x + mchorzSpace*i && 
+                mouseX <= this.x + mchorzSpace*(i+1) && 
                 mouseY >= this.y && 
                 mouseY <= this.y + this.cut
                 ) {
@@ -770,8 +876,8 @@ CardHandClickArea.prototype.clickCheck = function() {
         } else if (this.dir === "V") {
             if (mouseX >= this.x && 
                 mouseX <= this.x + this.cut && 
-                mouseY >= this.y + vertSpace*i && 
-                mouseY <= this.y + vertSpace*(i+1)
+                mouseY >= this.y + mcvertSpace*i && 
+                mouseY <= this.y + mcvertSpace*(i+1)
                 ) {
                     
                 return i;
@@ -779,8 +885,8 @@ CardHandClickArea.prototype.clickCheck = function() {
         }
     }
     if (this.dir === "H") {
-        if (mouseX >= this.x + horzSpace*(this.length-1) &&
-            mouseX <= this.x + horzSpace*(this.length-1) + cw &&
+        if (mouseX >= this.x + mchorzSpace*(this.length-1) &&
+            mouseX <= this.x + mchorzSpace*(this.length-1) + cw &&
             mouseY >= this.y &&
             mouseY <= this.y + this.cut
             ) {
@@ -790,8 +896,8 @@ CardHandClickArea.prototype.clickCheck = function() {
     } else if (this.dir === "V") {
         if (mouseX >= this.x &&
             mouseX <= this.x + this.cut &&
-            mouseY >= this.y + vertSpace*(this.length-1) &&
-            mouseY <= this.y + vertSpace*(this.length-1) + ch
+            mouseY >= this.y + mcvertSpace*(this.length-1) &&
+            mouseY <= this.y + mcvertSpace*(this.length-1) + ch
             ) {
             
             return this.length-1;
@@ -800,6 +906,6 @@ CardHandClickArea.prototype.clickCheck = function() {
     return -1;
 }
 
-CardHandClickArea.prototype.matchLength = function(Deck) {
+mcardHandClickArea.prototype.matchLength = function(Deck) {
     this.length = Deck.deck.length;
 }
