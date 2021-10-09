@@ -46,7 +46,7 @@ function Magic() {
 			}
 		);
 		
-		socket.on('callDeckSync',
+		socket.on('syncAnswer',
 			function(data) {
 			    /*
 				toCall.cloneGen(data.toCallDeck);
@@ -83,41 +83,10 @@ function Magic() {
     
     var player2 = new MagicPlayer(false, 25);
     
-    
+    function syncBoardState
 	
-	/*
 	
-    // Create hands to deal the cards into
-    var hands = [];
-    for (var i = 0; i < 5; i ++) {
-        hands.push(new Deck(0));
-    }
-    
-    // Get the size of the full deck
-    var fullSize = -1;
-    
-    // Shuffle the hand Deck and the toCall Deck
-    handDeck.shuffle();
-    toCall.shuffle();
-    
-    // Deal 5 cards each into the hands
-    var divideDeck = function() {
-        fullSize = handDeck.getLength();
-        for (var i = 0; i < 5 * hands.length; i ++) {
-            hands[i%hands.length].add(handDeck.remove(0));
-        }
-    };
-    
-    divideDeck();
-    
-    // Create six CardHandClickAreas for each of the three hands
-    var clicks = [new CardHandClickArea(30, 200, "H", hands[0].deck.length, "S", 75),
-                  new CardHandClickArea(30, 275, "H", hands[1].deck.length, "S", 75),
-                  new CardHandClickArea(30, 350, "H", hands[2].deck.length, "S", 75),
-                  new CardHandClickArea(30, 425, "H", hands[3].deck.length, "S", 75),
-                  new CardHandClickArea(30, 500, "H", hands[4].deck.length, "S", 75)];
-    
-    */
+	
     // Create a RectClickArea to call the next card
     var caller = new RectClickArea(290, 200, 160, 50);
     
@@ -136,16 +105,6 @@ function Magic() {
 				card.setUp(false);
 			}
 		}
-    };
-    
-    // Cycle each pile
-    var pileCycle = function() {
-        for (var i = 0; i < piles.length; i ++) {
-            if (hands[i].getLength() > 0) {
-                hands[i].add(piles[i].remove(0));
-                hands[i].deck[0].up = true;
-            }
-        }
     };
     
     // Call the next card
@@ -247,21 +206,21 @@ function Magic() {
 		//text("Add Mana", refresher.x+refresher.w/2-textWidth("Add Mana")/2, refresher.y+35);
 		caller.draw("Null to Void");
 		refresher.draw("Add Mana");
-		/*
-		text("Leave Room", leaver.x+leaver.w/2-textWidth("Leave Room")/2, leaver.y+35);
+		
+		//text("Leave Room", leaver.x+leaver.w/2-textWidth("Leave Room")/2, leaver.y+35);
 		
 		textSize(24);
-		text("Room name: " + room, 300, 350);
+		text("Room code: " + room, roomW-150, 50);
 		textSize(20);
-		text("Users in room: ", 300, 385);
+		text("Users in room: ", roomW-150, 90);
 		for (var m = 0; m < members.length; ++ m) {
 			if (m === 0) {
-				text(members[m] + " [caller]", 300, 410)
+				text(members[m] + " [VIP]", roomW-150, 130);
 			} else {
-				text(members[m], 300, 410 + (25 * m));
+				text(members[m], roomW-150, 130 + (25 * m));
 			}
 		}
-		*/
+		
     };
     
     var alreadyClicked = false;

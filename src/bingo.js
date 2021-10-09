@@ -38,7 +38,7 @@ function Bingo() {
     this.setup = function() {
         createCanvas(780, 620);
 		
-		socket.on('memberRefresh', 
+		socket.on('memberRefresh',
 			function(data) {
 				members = data.members;
 				if (members[0] === username) {
@@ -49,7 +49,7 @@ function Bingo() {
 			}
 		);
 		
-		socket.on('syncAnswer', 
+		socket.on('syncAnswer',
 			function(data) {
 				toCall.cloneGen(data.toCallDeck);
 				called.cloneGen(data.calledDeck);
@@ -57,7 +57,7 @@ function Bingo() {
 			}
 		);
 		
-		socket.on('leaveRoom', 
+		socket.on('leaveRoom',
 			function(data) {
 				room = "";
 				roomNum = -1;
@@ -93,7 +93,7 @@ function Bingo() {
     divideDeck();
     
     // Create six CardHandClickAreas for each of the three hands
-    var clicks = [new CardHandClickArea(30, 200, "H", hands[0].deck.length, "S", 75),  
+    var clicks = [new CardHandClickArea(30, 200, "H", hands[0].deck.length, "S", 75),
                   new CardHandClickArea(30, 275, "H", hands[1].deck.length, "S", 75),
                   new CardHandClickArea(30, 350, "H", hands[2].deck.length, "S", 75),
                   new CardHandClickArea(30, 425, "H", hands[3].deck.length, "S", 75),
@@ -119,16 +119,6 @@ function Bingo() {
 				card.setUp(false);
 			}
 		}
-    };
-    
-    // Cycle each pile
-    var pileCycle = function() {
-        for (var i = 0; i < piles.length; i ++) {
-            if (hands[i].getLength() > 0) {
-                hands[i].add(piles[i].remove(0));
-                hands[i].deck[0].up = true;
-            }
-        }
     };
     
     // Call the next card
