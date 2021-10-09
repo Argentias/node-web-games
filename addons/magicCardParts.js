@@ -30,7 +30,7 @@ var ManaCard = function(attribute) {
     } else {
         var variant = enumHas(ManaType, attribute);
         if (variant === null) {
-            throw ("Invalid Value Exception: " + attribute + " is not a ManaType");
+            throw ("Invalid Value Exception: " + attribute + " is not associated with a ManaType");
         }
         this.attribute = variant;
     }
@@ -93,7 +93,7 @@ ManaBase.prototype.change = function(attr1, attr2) {
     var v1 = enumHas(ManaType, attr1);
     var v2 = enumHas(ManaType, attr2);
     if (v1 === null || v2 === null) {
-        throw ("Invalid Value Exception: " + attr1 + " or " + attr2 + " is not a ManaType");
+        throw ("Invalid Value Exception: " + attr1 + " or " + attr2 + " is not associated with a ManaType");
     }
     if (this[v1.Alias] === 0) {
         return;
@@ -134,8 +134,8 @@ MagicPlayer.prototype.draw = function(x, y) {
     fill(0, 255, 255);
     rect(x, y-mCardHeightS*size/2-5, mcHorzSpace*size*5, mCardHeightS*size/2, 10);
     fill(0);
-    textSize(28*size);
-    text(this.life, x+5, y-mCardHeight*size/2);
+    textSize(20*size);
+    text(this.life, x+5, y-mCardHeightS*size/2);
 };
 
 

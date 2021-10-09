@@ -101,13 +101,10 @@ function Magic() {
                   new CardHandClickArea(30, 425, "H", hands[3].deck.length, "S", 75),
                   new CardHandClickArea(30, 500, "H", hands[4].deck.length, "S", 75)];
     
+    */
     // Create a RectClickArea to call the next card
     var caller = new RectClickArea(290, 200, 160, 50);
     
-    // Create a RectClickArea to start a new game
-    var restarter = new RectClickArea(470, 200, 160, 50);
-	
-	*/
 	// Create a RectClickArea to refresh a board
 	var refresher = new RectClickArea(290, 270, 160, 50);
 	/*
@@ -209,22 +206,22 @@ function Magic() {
         fill(255);
 		/*
 		if (callerUser) {
-			rect(caller.x, caller.y, caller.w, caller.h, 5);
 			rect(restarter.x, restarter.y, restarter.w, restarter.h, 5);
 		}
 		*/
+		rect(caller.x, caller.y, caller.w, caller.h, 5);
 		rect(refresher.x, refresher.y, refresher.w, refresher.h, 5);
 		//rect(leaver.x, leaver.y, leaver.w, leaver.h, 5);
 		
         fill(0);
 		/*
 		if (callerUser) {
-			textSize(36);
-			text("Call Next", caller.x+caller.w/2-textWidth("Call Next")/2, caller.y+37);
 			textSize(28);
 			text("New Game", restarter.x+restarter.w/2-textWidth("New Game")/2, restarter.y+35);
 		}
 		*/
+		textSize(36);
+		text("Turn Void", caller.x+caller.w/2-textWidth("Turn Void`")/2, caller.y+37);
 		textSize(28);
 		text("Add Mana", refresher.x+refresher.w/2-textWidth("Add Mana")/2, refresher.y+35);
 		/*
@@ -258,12 +255,13 @@ function Magic() {
 				checkFlip(clickCard);
             }
         }
+        */
         
-        if (caller.clickCheck() && callerUser) {
-            callCard();
+        if (caller.clickCheck()) {
+            console.log("Clicked Change");
+            player.mana.change("N", "B");
         }
         
-        */
         if (refresher.clickCheck()) {
             console.log("Clicked Mana");
             player.mana.N.add(new ManaCard());
