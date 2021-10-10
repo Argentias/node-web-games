@@ -336,6 +336,8 @@ SpellHandClickArea.prototype.matchLength = function(Deck) {
 
 /** ***************************************** END New Code ***************************************** **/
 
+/*
+
 Card.prototype.draw = function(x, y) {
     stroke(0);
     strokeWeight(1);
@@ -737,3 +739,6 @@ mCardHandClickArea.prototype.clickCheck = function() {
 mCardHandClickArea.prototype.matchLength = function(Deck) {
     this.length = Deck.deck.length;
 }
+
+
+*/
