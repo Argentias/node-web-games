@@ -35,7 +35,7 @@ function setup() {
     roomType = createSelect();
     roomType.position(500, 20);
     roomType.size(90);
-    roomType.option("Bingo");
+    //roomType.option("Bingo");
     roomType.option("Magic");
     roomType.hide();
     
@@ -79,7 +79,7 @@ function setup() {
 			roomNum = data.num;
 			room = data.code;
 			if (data.type === "Bingo") {
-				smgr.showScene(Bingo);
+				//smgr.showScene(Bingo);
 			} else if (data.type === "Magic") {
 			    smgr.showScene(Magic);
 			}
@@ -99,7 +99,7 @@ function setup() {
 			roomNum = data.num;
 			room = data.code;
 			if (data.type === "Bingo") {
-				smgr.showScene(Bingo);
+				//smgr.showScene(Bingo);
 			} else if (data.type === "Magic") {
 			    smgr.showScene(Magic);
 			}

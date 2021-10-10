@@ -135,7 +135,7 @@ function Bingo() {
 			rmn: roomNum,
 			toCallDeck: toCall,
 			calledDeck: called
-		}
+		};
 		socket.emit('syncReq', data);
     };
 	
@@ -150,7 +150,7 @@ function Bingo() {
 			rmn: roomNum,
 			toCallDeck: toCall,
 			calledDeck: called
-		}
+		};
 		console.log(sdata);
 		socket.emit('syncReq', sdata);
     };
@@ -164,7 +164,7 @@ function Bingo() {
         handDeck.shuffle();
 		fullSize = handDeck.getLength();
 		divideDeck();
-	}
+	};
 	
 	// Leave the room
 	var leaveRoom = function() {
@@ -172,9 +172,9 @@ function Bingo() {
 			rm: room,
 			rmn: roomNum,
 			user: username
-		}
+		};
 		socket.emit('leaveReq', ldata);
-	}
+	};
 	
     // Draw everything
     this.draw = function() {
