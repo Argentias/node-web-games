@@ -40,8 +40,6 @@ function Home() {
         roomCreate.mousePressed(createRoom);
         roomCreate.hide();
         
-        showHome();
-        
         Global.socket.on('joinFailCode',
             function(data) {
                 homeerrmsg = "No room named " + data.code + " exists.";
@@ -124,9 +122,9 @@ function Home() {
     }
     
     function setUsername() {
-        username = nameIn.value();
+        Global.username = nameIn.value();
         nameEntered = true;
-        smgr.showScene(Home);
+        showHome();
     }
     
     function joinRoom() {
@@ -134,7 +132,7 @@ function Home() {
     	if (rcode !== "") {
     		data = {
     			code: rcode,
-    			user: username
+    			user: Global.username
     		};
     		Global.socket.emit('joinRoom', data);
     	} else {

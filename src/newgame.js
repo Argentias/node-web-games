@@ -36,8 +36,8 @@ function Magic() {
 		
 		Global.socket.on('memberRefresh',
 			function(data) {
-				members = data.members;
-				if (members[0] === username) {
+				Global.members = data.members;
+				if (Global.members[0] === Global.username) {
 					VIP = true;
 				} else {
 					VIP = false;
@@ -91,8 +91,8 @@ function Magic() {
     
     // Find the index of yourself in the list of members
     function getSelfInMem() {
-        for (var i = 0; i < members.length; ++i) {
-            if (members[i] === username) {
+        for (var i = 0; i < Global.members.length; ++i) {
+            if (Global.members[i] === username) {
                 return i;
             }
         }
@@ -111,7 +111,7 @@ function Magic() {
     // Start a game
     function startGame() {
         playerStates = [];
-        for (var m in members) {
+        for (var m in Global.members) {
             playerStates.push(new MagicPlayer(false, 25));
         }
         var s = getSelfInMem();
@@ -206,7 +206,7 @@ function Magic() {
         //player2.draw(roomW/50, roomH/10);
         
         var s = getSelfInMem();
-        var ml = members.length;
+        var ml = Global.members.length;
         for (var i = 1; i < ml; ++i) {
             playerStates[(s+i)%ml].draw(roomW/50, roomH/10+200*i);
         }
@@ -254,11 +254,11 @@ function Magic() {
 		text("Room code: " + room, roomW-300, 50);
 		textSize(20);
 		text("Users in room: ", roomW-300, 90);
-		for (var m = 0; m < members.length; ++ m) {
+		for (var m = 0; m < Global.members.length; ++ m) {
 			if (m === 0) {
-				text(members[m] + " [VIP]", roomW-300, 130);
+				text(Global.members[m] + " [VIP]", roomW-300, 130);
 			} else {
-				text(members[m], roomW-300, 130 + (25 * m));
+				text(Global.members[m], roomW-300, 130 + (25 * m));
 			}
 		}
 		

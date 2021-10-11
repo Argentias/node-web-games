@@ -17,12 +17,11 @@ function Bingo() {
     }
     
 	// Create room variables
-	var members = [];
 	var callerUser = false;
 	var roomData = {
-		rm: room,
-		rmn: roomNum
-	}
+		rm: Global.room,
+		rmn: Global.roomNum
+	};
 	
 	// Create other variables
 	var maxCallLength = 10;
@@ -40,8 +39,8 @@ function Bingo() {
 		
 		Global.socket.on('memberRefresh',
 			function(data) {
-				members = data.members;
-				if (members[0] === username) {
+				Global.members = data.members;
+				if (Global.members[0] === Global.username) {
 					callerUser = true;
 				} else {
 					callerUser = false;
@@ -210,11 +209,11 @@ function Bingo() {
 		text("Room name: " + room, 300, 350);
 		textSize(20);
 		text("Users in room: ", 300, 385);
-		for (var m = 0; m < members.length; ++ m) {
+		for (var m = 0; m < Global.members.length; ++ m) {
 			if (m === 0) {
-				text(members[m] + " [caller]", 300, 410)
+				text(Global.members[m] + " [caller]", 300, 410)
 			} else {
-				text(members[m], 300, 410 + (25 * m));
+				text(Global.members[m], 300, 410 + (25 * m));
 			}
 		}
     };
