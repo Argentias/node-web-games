@@ -264,53 +264,46 @@ function Magic() {
 		
     };
     
-    var alreadyClicked = false;
-    function resetClick() {
-        alreadyClicked = true;
-    }
+    
     // When a card is clicked
     this.mouseClicked = function() {
     //function mouseClicked() {
-        if (alreadyClicked === false) {
-            alreadyClicked = true;
-            
-            console.log("Clicky clicky");
-            /*
-            // Loop through each click area
-            for (var i = 0; i < clicks.length; i ++) {
-                var cardClick = clicks[i].clickCheck();
-                if (cardClick != -1) {
-    				var clickCard = hands[i].getCard(cardClick);
-    				//console.log(clickCard);
-    				checkFlip(clickCard);
-                }
+    
+        console.log("Clicky clicky");
+        /*
+        // Loop through each click area
+        for (var i = 0; i < clicks.length; i ++) {
+            var cardClick = clicks[i].clickCheck();
+            if (cardClick != -1) {
+				var clickCard = hands[i].getCard(cardClick);
+				//console.log(clickCard);
+				checkFlip(clickCard);
             }
-            */
-            
-            if (caller.clickCheck()) {
-                console.log("Clicked Change");
-                player.mana.change("N", "W");
-            }
-            
-            if (refresher.clickCheck()) {
-                console.log("Clicked Mana");
-                player.mana.N.add(new ManaCard());
-            }
-            if (lifeUp.clickCheck()) {
-                player.life.increment();
-            }
-            if (lifeDown.clickCheck()) {
-                player.life.decrement();
-            }
-            /*
-    		
-    		if (leaver.clickCheck()) {
-    			leaveRoom();
-    			//console.log("leaveRoom");
-    		}
-    		*/
-    		window.setTimeout(resetClick, 100);
         }
+        */
+        
+        if (caller.clickCheck()) {
+            console.log("Clicked Change");
+            player.mana.change("N", "W");
+        }
+        
+        if (refresher.clickCheck()) {
+            console.log("Clicked Mana");
+            player.mana.N.add(new ManaCard());
+        }
+        if (lifeUp.clickCheck()) {
+            player.life.increment();
+        }
+        if (lifeDown.clickCheck()) {
+            player.life.decrement();
+        }
+        /*
+		
+		if (leaver.clickCheck()) {
+			leaveRoom();
+			//console.log("leaveRoom");
+		}
+		*/
 		return false;
     };
     
