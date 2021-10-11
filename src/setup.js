@@ -24,5 +24,5 @@ function draw() {
 }
 
 function mousePressed() {
-    smgr.handleEvent("mousePressed");
+    //smgr.handleEvent("mousePressed");
 }

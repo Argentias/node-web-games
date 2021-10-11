@@ -315,5 +315,6 @@ function Magic() {
         if (key === 'a') {
             player.life.decrement();
         }
+        return false;
     };
 }
