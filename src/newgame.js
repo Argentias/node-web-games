@@ -56,8 +56,8 @@ function Magic() {
 		
 		Global.socket.on('leaveRoom',
 			function(data) {
-				room = "";
-				roomNum = -1;
+				Global.room = "";
+				Global.roomNum = -1;
 				showHome();
 				smgr.showScene(Home);
 			}
@@ -151,8 +151,8 @@ function Magic() {
         }
 		
 		var data = {
-			rm: room,
-			rmn: roomNum,
+			rm: Global.room,
+			rmn: Global.roomNum,
 			toCallDeck: toCall,
 			calledDeck: called
 		};
@@ -166,8 +166,8 @@ function Magic() {
         called.clear();
 		
 		sdata = {
-			rm: room,
-			rmn: roomNum,
+			rm: Global.room,
+			rmn: Global.roomNum,
 			toCallDeck: toCall,
 			calledDeck: called
 		};
@@ -189,9 +189,9 @@ function Magic() {
 	// Leave the room
 	var leaveRoom = function() {
 		var ldata = {
-			rm: room,
-			rmn: roomNum,
-			user: username
+			rm: Global.room,
+			rmn: Global.roomNum,
+			user: Global.username
 		};
 		Global.socket.emit('leaveReq', ldata);
 	};
@@ -251,7 +251,7 @@ function Magic() {
 		//text("Leave Room", leaver.x+leaver.w/2-textWidth("Leave Room")/2, leaver.y+35);
 		
 		textSize(24);
-		text("Room code: " + room, roomW-300, 50);
+		text("Room code: " + Global.room, roomW-300, 50);
 		textSize(20);
 		text("Users in room: ", roomW-300, 90);
 		for (var m = 0; m < Global.members.length; ++ m) {
