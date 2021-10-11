@@ -92,7 +92,7 @@ function Magic() {
     // Find the index of yourself in the list of members
     function getSelfInMem() {
         for (var i = 0; i < Global.members.length; ++i) {
-            if (Global.members[i] === username) {
+            if (Global.members[i] === Global.username) {
                 return i;
             }
         }
