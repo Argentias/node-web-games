@@ -20,11 +20,11 @@ function Magic() {
     }
     
     // Create room variables
-	var members = [];
+	Global.members = [];
 	var VIP = false;
 	var roomData = {
-		rm: room,
-		rmn: roomNum
+		rm: Global.room,
+		rmn: Global.roomNum
 	};
 	var roomW = 1280;
 	var roomH = 860;

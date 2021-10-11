@@ -147,6 +147,7 @@ io.sockets.on('connection',
     					rooms[roomNum].addMember(data.user);
     					var outData = rooms[roomNum];
     					outData.num = roomNum;
+    					outData.user = data.user;
     					socket.emit('joinSuccess', outData);
     					io.in(data.rm).emit('memberRefresh', rooms[roomNum]);
     					console.log("Client " + socket.id + " successfully joined room " + data.code);
