@@ -6,23 +6,31 @@ Global.username = "";
 Global.room = "";
 Global.roomNum = -1;
 Global.socket;
-
-var smgr;
+Global.smgr;
 
 function setup() {
     // set up the socket
     Global.socket = io.connect();
     
     // set up the scene manager
-    smgr = new SceneManager();
-    smgr.wire();
-    smgr.showScene(Home);
+    Global.smgr = new SceneManager();
+    Global.smgr.wire();
+    Global.smgr.addScene(Home);
+    //Global.smgr.addScene(Bingo);
+    Global.smgr.addScene(Magic);
+    Global.smgr.showScene(Home);
 }
-    
+
+/*
 function draw() {
-    smgr.draw();
+    Global.smgr.draw();
 }
 
 function mousePressed() {
-    //smgr.handleEvent("mousePressed");
+    Global.smgr.handleEvent("mousePressed");
 }
+
+function keyPressed() {
+    Global.smgr.handleEvent("keyPressed");
+}
+*/

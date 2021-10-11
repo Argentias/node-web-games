@@ -61,7 +61,7 @@ function Bingo() {
 				room = "";
 				roomNum = -1;
 				showHome();
-				smgr.showScene(Home);
+				Global.smgr.showScene(Home);
 			}
 		);
     };

@@ -45,7 +45,7 @@ var ManaType = createNestedEnum(["Null", "Aggression", "Apathy", "Stability", "D
                            ["N", "R", "B", "G", "W", "U"],
                            [[105, 105, 105], [255, 0, 0], [0, 0, 0], [0, 255, 0], [255, 255, 255], [0, 0, 255]]]);
 
-console.log(ManaType);
+//console.log(ManaType);
 
 var ManaCard = function(attribute) {
     if (arguments.length === 0) {

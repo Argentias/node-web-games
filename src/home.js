@@ -68,9 +68,9 @@ function Home() {
     			Global.room = data.code;
     			Global.username = data.user;
     			if (data.type === "Bingo") {
-    				//smgr.showScene(Bingo);
+    				//Global.smgr.showScene(Bingo);
     			} else if (data.type === "Magic") {
-    			    smgr.showScene(Magic);
+    			    Global.smgr.showScene(Magic);
     			}
     		}
     	);
@@ -89,9 +89,9 @@ function Home() {
     			Global.room = data.code;
     			Global.username = data.user;
     			if (data.type === "Bingo") {
-    				//smgr.showScene(Bingo);
+    				//Global.smgr.showScene(Bingo);
     			} else if (data.type === "Magic") {
-    			    smgr.showScene(Magic);
+    			    Global.smgr.showScene(Magic);
     			}
     		}
     	);

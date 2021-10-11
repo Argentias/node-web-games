@@ -59,7 +59,7 @@ function Magic() {
 				Global.room = "";
 				Global.roomNum = -1;
 				showHome();
-				smgr.showScene(Home);
+				Global.smgr.showScene(Home);
 			}
 		);
     };
