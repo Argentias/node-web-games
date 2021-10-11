@@ -2,7 +2,7 @@
 var Global = {};
 
 Global.members = [];
-Global.username;
+Global.username = "";
 Global.room = "";
 Global.roomNum = -1;
 Global.socket;

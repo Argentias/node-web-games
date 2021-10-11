@@ -147,7 +147,7 @@ function Home() {
     		data = {
     			code: rcode,
     			type: roomType.value(),
-    			user: username
+    			user: Global.username
     		};
     		Global.socket.emit('createRoom', data);
     	} else {
@@ -160,7 +160,13 @@ function Home() {
         background(255);
         
         textSize(20);
-        text("Your username is: " + Global.username, 20, 120);
+        var userText;
+        if (Global.username === "") {
+            userText = "Please set a username.";
+        } else {
+            userText = "Your username is: " + Global.username;
+        }
+        text(userText, 20, 120);
         
         if (homeerrmsgcount !== 0) {
             text(homeerrmsg, 300, 120);
