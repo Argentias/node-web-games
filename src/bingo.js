@@ -38,7 +38,7 @@ function Bingo() {
     this.setup = function() {
         createCanvas(780, 620);
 		
-		socket.on('memberRefresh',
+		Global.socket.on('memberRefresh',
 			function(data) {
 				members = data.members;
 				if (members[0] === username) {
@@ -49,7 +49,7 @@ function Bingo() {
 			}
 		);
 		
-		socket.on('syncAnswer',
+		Global.socket.on('syncAnswer',
 			function(data) {
 				toCall.cloneGen(data.toCallDeck);
 				called.cloneGen(data.calledDeck);
@@ -57,7 +57,7 @@ function Bingo() {
 			}
 		);
 		
-		socket.on('leaveRoom',
+		Global.socket.on('leaveRoom',
 			function(data) {
 				room = "";
 				roomNum = -1;
@@ -67,7 +67,7 @@ function Bingo() {
 		);
     };
     
-	socket.emit('refreshReq', roomData);
+	Global.socket.emit('refreshReq', roomData);
 	
     // Create hands to deal the cards into
     var hands = [];
@@ -136,7 +136,7 @@ function Bingo() {
 			toCallDeck: toCall,
 			calledDeck: called
 		};
-		socket.emit('syncReq', data);
+		Global.socket.emit('syncReq', data);
     };
 	
     // Start a new game
@@ -152,7 +152,7 @@ function Bingo() {
 			calledDeck: called
 		};
 		console.log(sdata);
-		socket.emit('syncReq', sdata);
+		Global.socket.emit('syncReq', sdata);
     };
 	
 	// Get a new board
@@ -173,7 +173,7 @@ function Bingo() {
 			rmn: roomNum,
 			user: username
 		};
-		socket.emit('leaveReq', ldata);
+		Global.socket.emit('leaveReq', ldata);
 	};
 	
     // Draw everything

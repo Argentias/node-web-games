@@ -5,8 +5,6 @@ function Home() {
     var homeerrmsg = "";
     var homeerrmsgcount = 0;
     
-    let socket;
-    
     this.setup = function() {
         createCanvas(680, 680);
         
@@ -44,28 +42,28 @@ function Home() {
         
         showHome();
         
-        socket.on('joinFailCode',
+        Global.socket.on('joinFailCode',
             function(data) {
                 homeerrmsg = "No room named " + data.code + " exists.";
                 homeerrmsgcount = 300;
             }
         );
     	
-    	socket.on('joinFailName',
+    	Global.socket.on('joinFailName',
             function(data) {
                 homeerrmsg = "Room " + data.code + " already has a user with \nusername " + data.user + ". \nPlease change your username.";
                 homeerrmsgcount = 300;
             }
         );
         
-        socket.on('joinFailMax',
+        Global.socket.on('joinFailMax',
             function(data) {
                 homeerrmsg = "Room " + data.code + " already has the maximum number of members in it. \nPlease join a different room.";
                 homeerrmsgcount = 300;
             }
         );
     	
-    	socket.on('joinSuccess',
+    	Global.socket.on('joinSuccess',
     		function(data) {
     			hideHome();
     			Global.roomNum = data.num;
@@ -79,14 +77,14 @@ function Home() {
     		}
     	);
     	
-    	socket.on('createFail',
+    	Global.socket.on('createFail',
     		function(data) {
     			homeerrmsg = "Room named " + data.code + " already exists.";
     			homeerrmsgcount = 300;
     		}
     	);
     	
-    	socket.on('createSuccess',
+    	Global.socket.on('createSuccess',
     		function(data) {
     			hideHome();
     			Global.roomNum = data.num;
@@ -100,7 +98,7 @@ function Home() {
     		}
     	);
     	
-    	socket.on('memberRefresh',
+    	Global.socket.on('memberRefresh',
     		function(data) {
     			Global.members = data.members;
     		}
@@ -138,7 +136,7 @@ function Home() {
     			code: rcode,
     			user: username
     		};
-    		socket.emit('joinRoom', data);
+    		Global.socket.emit('joinRoom', data);
     	} else {
     		homeerrmsg = "Please enter a room code.";
     		homeerrmsgcount = 300;
@@ -153,7 +151,7 @@ function Home() {
     			type: roomType.value(),
     			user: username
     		};
-    		socket.emit('createRoom', data);
+    		Global.socket.emit('createRoom', data);
     	} else {
     		homeerrmsg = "Please enter a room code.";
     		homeerrmsgcount = 300;

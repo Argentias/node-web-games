@@ -34,7 +34,7 @@ function Magic() {
     //function setup() {
         createCanvas(1280, 860);
 		
-		socket.on('memberRefresh',
+		Global.socket.on('memberRefresh',
 			function(data) {
 				members = data.members;
 				if (members[0] === username) {
@@ -45,7 +45,7 @@ function Magic() {
 			}
 		);
 		
-		socket.on('syncAnswer',
+		Global.socket.on('syncAnswer',
 			function(data) {
 			    var s = getSelfInMem();
                 playerStates = data.players;
@@ -54,7 +54,7 @@ function Magic() {
 			}
 		);
 		
-		socket.on('leaveRoom',
+		Global.socket.on('leaveRoom',
 			function(data) {
 				room = "";
 				roomNum = -1;
@@ -64,7 +64,7 @@ function Magic() {
 		);
     };
     
-	socket.emit('refreshReq', roomData);
+	Global.socket.emit('refreshReq', roomData);
 	
     // Create the personal board state
     var player = new MagicPlayer(true, 25);
@@ -105,7 +105,7 @@ function Magic() {
             syncDeck: deck,
             players: playerStates
         };
-        socket.emit('syncReq', outData);
+        Global.socket.emit('syncReq', outData);
     }
     
     // Start a game
@@ -156,7 +156,7 @@ function Magic() {
 			toCallDeck: toCall,
 			calledDeck: called
 		};
-		socket.emit('callSyncReq', data);
+		Global.socket.emit('callSyncReq', data);
     };
 	
     // Start a new game
@@ -172,7 +172,7 @@ function Magic() {
 			calledDeck: called
 		};
 		console.log(sdata);
-		socket.emit('callSyncReq', sdata);
+		Global.socket.emit('callSyncReq', sdata);
     };
 	
 	// Get a new board
@@ -193,7 +193,7 @@ function Magic() {
 			rmn: roomNum,
 			user: username
 		};
-		socket.emit('leaveReq', ldata);
+		Global.socket.emit('leaveReq', ldata);
 	};
 	*/
 	
