@@ -162,7 +162,7 @@ function Home() {
         background(255);
         
         textSize(20);
-        text("Your username is: " + username, 20, 120);
+        text("Your username is: " + Global.username, 20, 120);
         
         if (homeerrmsgcount !== 0) {
             text(homeerrmsg, 300, 120);
