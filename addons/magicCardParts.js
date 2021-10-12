@@ -284,9 +284,9 @@ MagicPlayer.prototype.draw = function(x, y, plus, minus) {
 MagicPlayer.prototype.genLifePlus = function(x, y) {
     var size;
     if (this.isSelf === true) { size = 1.2; } else { return; }
-    console.log(mCardHeightS*size/3);
-    console.log(10*size+2*size);
-    console.log(y);
+    //console.log(mCardHeightS*size/3);
+    //console.log(10*size+2*size);
+    //console.log(y);
     return new RectClickArea(x+mcHorzSpace*size+2*size, y-mCardHeightS*size/2-2*size, mcHorzSpace*size-8*size, mCardHeightS*size/2-4*size);
 };
 

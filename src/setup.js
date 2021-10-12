@@ -7,8 +7,12 @@ Global.room = "";
 Global.roomNum = -1;
 Global.socket;
 Global.smgr;
+var n = 0;
 
 function setup() {
+    ++n;
+    console.log("Been here " + n + " times");
+    
     // set up the socket
     Global.socket = io.connect();
     
