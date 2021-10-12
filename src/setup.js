@@ -21,13 +21,14 @@ function setup() {
     Global.smgr.showScene(Home);
 }
 
+function mousePressed() {
+    if (event.type != 'touchstart') { return true; }
+    Global.smgr.handleEvent("mousePressed");
+}
+
 /*
 function draw() {
     Global.smgr.draw();
-}
-
-function mousePressed() {
-    Global.smgr.handleEvent("mousePressed");
 }
 
 function keyPressed() {
