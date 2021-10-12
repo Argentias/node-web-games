@@ -150,8 +150,8 @@ io.sockets.on('connection',
     					outData.num = roomNum;
     					outData.user = data.user;
     					socket.emit('joinSuccess', outData);
-    					io.in(data.rm).emit('memberRefresh', rooms[roomNum]);
     					console.log("Client " + socket.id + " (username " + data.user + ") successfully joined room " + data.code);
+    					io.in(data.rm).emit('memberRefresh', rooms[roomNum]);
 				    //} else {
 				    //    //If so, return an error
 				    //    socket.emit('joinFailMax', data);
@@ -189,9 +189,10 @@ io.sockets.on('connection',
 				rooms[rooms.length-1].addMember(data.user);
 				var outData = rooms[rooms.length-1];
 				outData.num = rooms.length-1;
+				outData.user = data.user;
 				socket.emit('createSuccess', outData);
 				io.in(data.rm).emit('memberRefresh', rooms[rooms.length-1]);
-				console.log("Client " + socket.id + " successfully created room " + data.code);
+				console.log("Client " + socket.id + " (username " + data.user + ") successfully created room " + data.code);
 			} else {
 				// If so, return an error
 				socket.emit('createFail', data);
