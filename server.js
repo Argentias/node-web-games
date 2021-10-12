@@ -151,7 +151,7 @@ io.sockets.on('connection',
     					outData.user = data.user;
     					socket.emit('joinSuccess', outData);
     					io.in(data.rm).emit('memberRefresh', rooms[roomNum]);
-    					console.log("Client " + socket.id + " successfully joined room " + data.code);
+    					console.log("Client " + socket.id + " (username " + data.user + ") successfully joined room " + data.code);
 				    //} else {
 				    //    //If so, return an error
 				    //    socket.emit('joinFailMax', data);

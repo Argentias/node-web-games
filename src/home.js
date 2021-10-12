@@ -134,6 +134,7 @@ function Home() {
     			code: rcode,
     			user: Global.username
     		};
+    		console.log("sent join under name " + data.user);
     		Global.socket.emit('joinRoom', data);
     	} else {
     		homeerrmsg = "Please enter a room code.";
@@ -149,6 +150,7 @@ function Home() {
     			type: roomType.value(),
     			user: Global.username
     		};
+    		console.log("set create under name " + data.user);
     		Global.socket.emit('createRoom', data);
     	} else {
     		homeerrmsg = "Please enter a room code.";
