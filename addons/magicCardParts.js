@@ -2,7 +2,7 @@ var testForMagicCardParts = function() { return true; };
 
 try { testForComponents() } catch(e) { throw "Library Exception: Module 'magicCardParts' requires module 'components'" }
 
-new p5();
+//new p5();
 
 var mCardWidth = 100;
 var mCardHeight = 150;

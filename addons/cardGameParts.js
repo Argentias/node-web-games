@@ -1,6 +1,6 @@
 var testForCardGameParts = function() { return true; };
 
-new p5();
+//new p5();
 
 var suits = ["Clubs", "Diamonds", "Hearts", "Spades"];
 var ranks = ["Joker", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"];
@@ -355,7 +355,7 @@ Deck.prototype.drawGen = function(x, y, options) {
 Deck.prototype.drawTop = function(x, y, size) {
     stroke(0);
     strokeWeight(1);
-    if (this.deck.length > 0) 
+    if (this.deck.length > 0)
         this.deck[0].draw(x, y);
     textSize(16);
     fill(0);
@@ -385,7 +385,7 @@ Deck.prototype.drawTopUpDown = function(x, y, size) {
 Deck.prototype.drawTopCorner = function(x, y, size) {
     stroke(0);
     strokeWeight(1);
-    if (this.deck.length > 0) 
+    if (this.deck.length > 0)
         this.deck[0].drawCorner(x, y);
     textSize(16);
     fill(0);
@@ -415,7 +415,7 @@ Deck.prototype.drawTopCornerUpDown = function(x, y, size) {
 Deck.prototype.drawTopSmall = function(x, y, size) {
     stroke(0);
     strokeWeight(1);
-    if (this.deck.length > 0) 
+    if (this.deck.length > 0)
         this.deck[0].drawSmall(x, y);
     textSize(16);
     fill(0);
@@ -445,7 +445,7 @@ Deck.prototype.drawTopSmallUpDown = function(x, y, size) {
 Deck.prototype.drawDown = function(x, y, size) {
     stroke(0);
     strokeWeight(1);
-    if (this.deck.length > 0) 
+    if (this.deck.length > 0)
         this.deck[0].drawBack(x, y);
     textSize(16);
     fill(0);
@@ -457,7 +457,7 @@ Deck.prototype.drawDown = function(x, y, size) {
 Deck.prototype.drawDownSmall = function(x, y, size) {
     stroke(0);
     strokeWeight(1);
-    if (this.deck.length > 0) 
+    if (this.deck.length > 0)
         this.deck[0].drawBackSmall(x, y);
     textSize(16);
     fill(0);
@@ -661,7 +661,7 @@ Deck.prototype.clone = function(that) {
 Deck.prototype.cloneGen = function(that) {
 	this.clear();
 	
-	for (var i = 0; i < that.deck.length; ++ i) {	
+	for (var i = 0; i < that.deck.length; ++ i) {
 		var thatCard = new Card();
 		thatCard.clone(that.deck[i]);
 		this.deck.push(thatCard);
@@ -763,18 +763,18 @@ CardHandClickArea.prototype.clickCheck = function() {
     }
     for (var i = 0; i < this.length-1; ++ i) {
         if (this.dir === "H") {
-            if (mouseX >= this.x + horzSpace*i && 
-                mouseX <= this.x + horzSpace*(i+1) && 
-                mouseY >= this.y && 
+            if (mouseX >= this.x + horzSpace*i &&
+                mouseX <= this.x + horzSpace*(i+1) &&
+                mouseY >= this.y &&
                 mouseY <= this.y + this.cut
                 ) {
                     
                 return i;
             }
         } else if (this.dir === "V") {
-            if (mouseX >= this.x && 
-                mouseX <= this.x + this.cut && 
-                mouseY >= this.y + vertSpace*i && 
+            if (mouseX >= this.x &&
+                mouseX <= this.x + this.cut &&
+                mouseY >= this.y + vertSpace*i &&
                 mouseY <= this.y + vertSpace*(i+1)
                 ) {
                     
