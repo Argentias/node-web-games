@@ -33,6 +33,7 @@ function Magic() {
     this.setup = function() {
     //function setup() {
         createCanvas(1280, 860);
+		Global.members.push(Global.username);
 		
 		Global.socket.on('memberRefresh',
 			function(data) {
@@ -62,9 +63,10 @@ function Magic() {
 				Global.smgr.showScene(Home);
 			}
 		);
+		
+	    Global.socket.emit('refreshReq', roomData);
     };
     
-	Global.socket.emit('refreshReq', roomData);
 	
     // Create the personal board state
     var player = new MagicPlayer(true, 25);

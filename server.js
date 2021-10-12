@@ -145,6 +145,7 @@ io.sockets.on('connection',
 				        //If not, join the room
     					socket.join(data.code);
     					rooms[roomNum].addMember(data.user);
+    					console.log(rooms[roomNum]);
     					var outData = rooms[roomNum];
     					outData.num = roomNum;
     					outData.user = data.user;
@@ -205,7 +206,8 @@ io.sockets.on('connection',
 			// Log request
 			console.log("Received: client " + socket.id + " -- 'refreshReq' " + data.rm);
 			
-			//console.log(rooms[data.rmn].members);
+			console.log(rooms[data.rmn].members);
+			
 			
 			// Emit response
 			io.in(data.rm).emit('memberRefresh', rooms[data.rmn]);
