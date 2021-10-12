@@ -22,18 +22,18 @@ var Room = function(code, type) {
     this.members = [];
 };
 
-Room.prototype.addMember = function(user) {
+Room.prototype.addMember = function(user, client) {
     for (var m in this.members) {
-        if (this.members[m] === user) {
+        if (this.members[m][0] === user) {
             return;
         }
     }
-    this.members.push(user);
+    this.members.push([user, client]);
 };
 
 Room.prototype.removeMember = function(user) {
     for (var m in this.members) {
-        if (this.members[m] === user) {
+        if (this.members[m][0] === user) {
             this.members.splice(m, 1);
 			break;
         }
@@ -41,12 +41,29 @@ Room.prototype.removeMember = function(user) {
 	if (this.members.length === 0) {
 		var rmn = getRoom(this.code);
 		rooms.splice(rmn, 1);
+		return false;
 	}
+	return true;
+};
+
+Room.prototype.removeClient = function(client) {
+    for (var m in this.members) {
+        if (this.members[m][1] === client) {
+            this.members.splice(m, 1);
+			break;
+        }
+    }
+	if (this.members.length === 0) {
+		var rmn = getRoom(this.code);
+		rooms.splice(rmn, 1);
+		return false;
+	}
+	return true;
 };
 
 Room.prototype.getMember = function(user) {
 	for (var m in this.members) {
-		if (this.members[m] === user) {
+		if (this.members[m][0] === user) {
 			return m;
 		}
 	}
@@ -186,7 +203,7 @@ io.sockets.on('connection',
 				// If not, create one
 				socket.join(data.code);
 				rooms.push(new Room(data.code, data.type));
-				rooms[rooms.length-1].addMember(data.user);
+				rooms[rooms.length-1].addMember(data.user, socket.id);
 				var outData = rooms[rooms.length-1];
 				outData.num = rooms.length-1;
 				outData.user = data.user;
@@ -246,7 +263,14 @@ io.sockets.on('connection',
     
 	// Catch a 'diconnect' event
     socket.on('disconnect', function() {
-      console.log("Client has disconnected");
+        console.log("Client " + socket.id + " has disconnected");
+        var ri = 0;
+        while (ri < rooms.length) {
+            var stillExists = rooms[ri].removeClient(socket.id);
+            if (stillExists) {
+                ++ri;
+            }
+        }
     });
   }
 );
