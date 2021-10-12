@@ -270,8 +270,8 @@ function Magic() {
     // When a card is clicked
     this.mouseClicked = function() {
     //function mouseClicked() {
-    
-        console.log("Clicky clicky");
+        ++Global.numM;
+        console.log("Clicky clicky " + Global.numM);
         /*
         // Loop through each click area
         for (var i = 0; i < clicks.length; i ++) {

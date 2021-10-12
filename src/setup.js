@@ -8,6 +8,7 @@ Global.roomNum = -1;
 Global.socket;
 Global.smgr;
 var n = 0;
+Global.numM = 0;
 
 function setup() {
     ++n;
