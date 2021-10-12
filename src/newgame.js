@@ -272,6 +272,7 @@ function Magic() {
     //function mouseClicked() {
         ++Global.numM;
         console.log("Clicky clicky " + Global.numM);
+        //if (Global.numM % 2 === 0) { return false; }
         /*
         // Loop through each click area
         for (var i = 0; i < clicks.length; i ++) {
