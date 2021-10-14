@@ -168,6 +168,7 @@ io.sockets.on('connection',
     					outData.user = data.user;
     					socket.emit('joinSuccess', outData);
     					console.log("Client " + socket.id + " (username " + data.user + ") successfully joined room " + data.code);
+    					console.log(rooms);
     					io.in(data.rm).emit('memberRefresh', rooms[roomNum]);
 				    //} else {
 				    //    //If so, return an error
@@ -210,6 +211,7 @@ io.sockets.on('connection',
 				socket.emit('createSuccess', outData);
 				io.in(data.rm).emit('memberRefresh', rooms[rooms.length-1]);
 				console.log("Client " + socket.id + " (username " + data.user + ") successfully created room " + data.code);
+				console.log(rooms);
 			} else {
 				// If so, return an error
 				socket.emit('createFail', data);
