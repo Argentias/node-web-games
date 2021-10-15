@@ -309,7 +309,7 @@ function loopN(n, func) {
  *  @param arr The array to randomize
  *  @return A new array with the same elements as the original, but in a random order
 **/
-function randomizeArray(arr)
+function randomizeArray(arr) {
     var newArr = [];
     var len = arr.length;
     // Instantiate the new array with nulls

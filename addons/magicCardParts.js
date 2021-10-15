@@ -38,7 +38,7 @@ function drawMagicCardBack(x, y, size) {
 }
 
 
-
+// Alternate Mana Names:        ["Null", "Chaos",      "Void",   "Structure", "Disruption", "Time"]
 var ManaType = createNestedEnum(["Null", "Aggression", "Apathy", "Stability", "Disruption", "Continuity"],
                           ["Color", "Alias", "RGB"],
                           [["None", "Red", "Black", "Green", "White", "Blue"],
