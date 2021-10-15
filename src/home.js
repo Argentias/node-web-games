@@ -90,6 +90,7 @@ function Home() {
     			Global.room = data.code;
     			//Global.username = data.user;
     			console.log("Created room " + data.code + " (number " + data.num + ") under username " + data.user);
+    			console.log("Created room " + Global.room + " (number " + Global.roomNum + ") under username " + Global.username);
     			if (data.type === "Bingo") {
     				//Global.smgr.showScene(Bingo);
     			} else if (data.type === "Magic") {
