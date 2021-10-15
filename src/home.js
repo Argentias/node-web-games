@@ -66,7 +66,7 @@ function Home() {
     			hideHome();
     			Global.roomNum = data.num;
     			Global.room = data.code;
-    			Global.username = data.user;
+    			//Global.username = data.user;
     			console.log("Joined room " + data.code + " (number " + data.num + ") as username " + data.user);
     			if (data.type === "Bingo") {
     				//Global.smgr.showScene(Bingo);
@@ -88,7 +88,7 @@ function Home() {
     			hideHome();
     			Global.roomNum = data.num;
     			Global.room = data.code;
-    			Global.username = data.user;
+    			//Global.username = data.user;
     			console.log("Created room " + data.code + " (number " + data.num + ") under username " + data.user);
     			if (data.type === "Bingo") {
     				//Global.smgr.showScene(Bingo);

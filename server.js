@@ -16,10 +16,15 @@ server.listen(process.env.PORT || 8080);
 
 console.log('Server started on port 8080');
 
-var Room = function(code, type) {
+var Room = function(code, type, num) {
     this.code = code;
     this.type = type;
     this.members = [];
+    this.num = num;
+};
+
+Room.prototype.setNum = function(num) {
+    this.num = num;
 };
 
 Room.prototype.addMember = function(user, client) {
@@ -164,8 +169,8 @@ io.sockets.on('connection',
     					rooms[roomNum].addMember(data.user);
     					console.log(rooms[roomNum]);
     					var outData = rooms[roomNum];
-    					outData.num = roomNum;
-    					outData.user = data.user;
+    					//outData.num = roomNum;
+    					//outData.user = data.user;
     					socket.emit('joinSuccess', outData);
     					console.log("Client " + socket.id + " (username " + data.user + ") successfully joined room " + data.code);
     					console.log(rooms);
@@ -203,11 +208,13 @@ io.sockets.on('connection',
 			if (roomNum === -1) {
 				// If not, create one
 				socket.join(data.code);
-				rooms.push(new Room(data.code, data.type));
-				rooms[rooms.length-1].addMember(data.user, socket.id);
+				rooms.push(new Room(data.code, data.type, rooms.length));
+				var newRoomNum = rooms.length-1;
+				rooms[newRoomNum].addMember(data.user, socket.id);
+				//rooms[newRoomNum].setNum(newRoomNum);
 				var outData = rooms[rooms.length-1];
-				outData.num = rooms.length-1;
-				outData.user = data.user;
+				//outData.num = rooms.length-1;
+				//outData.user = data.user;
 				socket.emit('createSuccess', outData);
 				io.in(data.rm).emit('memberRefresh', rooms[rooms.length-1]);
 				console.log("Client " + socket.id + " (username " + data.user + ") successfully created room " + data.code);
@@ -230,7 +237,7 @@ io.sockets.on('connection',
 			
 			
 			// Emit response
-			io.in(data.rm).emit('memberRefresh', rooms[data.rmn]);
+			io.in(data.rm).emit('refreshAns', rooms[data.rmn]);
 		}
 	);
 	

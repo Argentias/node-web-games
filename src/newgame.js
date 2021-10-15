@@ -33,9 +33,9 @@ function Magic() {
     this.setup = function() {
     //function setup() {
         createCanvas(1280, 860);
-		Global.members.push(Global.username);
+		//Global.members.push(Global.username);
 		
-		Global.socket.on('memberRefresh',
+		Global.socket.on('refreshAns',
 			function(data) {
 				Global.members = data.members;
 				if (Global.members[0] === Global.username) {

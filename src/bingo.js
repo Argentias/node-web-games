@@ -37,7 +37,7 @@ function Bingo() {
     this.setup = function() {
         createCanvas(780, 620);
 		
-		Global.socket.on('memberRefresh',
+		Global.socket.on('refreshAns',
 			function(data) {
 				Global.members = data.members;
 				if (Global.members[0] === Global.username) {
