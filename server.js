@@ -234,6 +234,10 @@ io.sockets.on('connection',
 			console.log("Received: client " + socket.id + " -- 'refreshReq' " + data.rm);
 			
 			console.log(data.rm + " / " + data.rmn)
+			if (data.rmn < 0 || data.rmn >= rooms.length) {
+			    console.log("refreshReq failed -- no room with code " + data.rmn)
+			    return;
+			}
 			console.log(rooms[data.rmn].members);
 			
 			

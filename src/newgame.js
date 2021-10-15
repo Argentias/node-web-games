@@ -22,10 +22,7 @@ function Magic() {
     // Create room variables
 	Global.members = [];
 	var VIP = false;
-	var roomData = {
-		rm: Global.room,
-		rmn: Global.roomNum
-	};
+	var roomData = {};
 	var roomW = 1280;
 	var roomH = 860;
 	
@@ -34,6 +31,11 @@ function Magic() {
     //function setup() {
         createCanvas(1280, 860);
 		//Global.members.push(Global.username);
+		
+		roomData = {
+		    rm: Global.room,
+		    rmn: Global.roomNum
+	    };
 		
 		Global.socket.on('refreshAns',
 			function(data) {
