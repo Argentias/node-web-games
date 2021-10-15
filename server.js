@@ -163,7 +163,7 @@ io.sockets.on('connection',
 				var memberNum = rooms[roomNum].getMember(data.user);
 				if (memberNum === -1) {
 					// If not, check if there are fewer than the max number of members
-					var nm = rooms[roomNum].numMem;
+					var nm = rooms[roomNum].numMem();
 					var maxm = maxMembers[rooms[roomNum].type];
 				    if (nm < maxm) {
 				        //If not, join the room
