@@ -233,6 +233,7 @@ io.sockets.on('connection',
 			// Log request
 			console.log("Received: client " + socket.id + " -- 'refreshReq' " + data.rm);
 			
+			console.log(data.rm + " / " + data.rmn)
 			console.log(rooms[data.rmn].members);
 			
 			
