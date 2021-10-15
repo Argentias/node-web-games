@@ -213,6 +213,15 @@ SpellDeck.prototype.addUp = function(/*SpellCard*/ card) {
     this.deck.push(card);
 };
 
+SpellDeck.prototype.remove = function(/*int*/ index) {
+    if (arguments.length == 0) {
+        return this.deck.pop();
+    } else {
+        var spliced = this.deck.splice(index, 1);
+        return spliced[0];
+    }
+};
+
 SpellDeck.prototype.draw = function(x, y, size) {
     stroke(0);
     strokeWeight(1);
@@ -220,6 +229,10 @@ SpellDeck.prototype.draw = function(x, y, size) {
     for (var i = 0; i < l; ++ i) {
         this.deck[i].draw(x + (mCardWidth+5)*i*size, y, size);
     }
+};
+
+SpellDeck.prototype.clear = function() {
+    return this.deck.splice(0, this.deck.length);
 };
 
 SpellDeck.prototype.instantiate = function() {

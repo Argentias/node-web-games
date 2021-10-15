@@ -71,7 +71,11 @@ RectClickArea.prototype.clickCheck = function() {
 };
 
 RectClickArea.prototype.draw = function(t) {
-    fill(255);
+    if (this.clickCheck()) {
+        fill(150);
+    } else{
+        fill(255);
+    }
     rect(this.x, this.y, this.w, this.h, 5);
     textAlign(CENTER, CENTER);
     fill(0);
@@ -289,9 +293,38 @@ function enumHas(en, a1, a2) {
     return out;
 }
 
-
+/** @func loopN
+ * Takes a callback and a number, and calls the callback that many times
+ * @param n The number of times to loop
+ * @param func The callback to use
+**/
 function loopN(n, func) {
     for (var i = 0; i < n; ++i) {
         func();
     }
+}
+
+/** @func randomizeArray
+ *  Takes an array and randomizes the order of its elements
+ *  @param arr The array to randomize
+ *  @return A new array with the same elements as the original, but in a random order
+**/
+function randomizeArray(arr)
+    var newArr = [];
+    var len = arr.length;
+    // Instantiate the new array with nulls
+    for (var i = 0; i < len; ++i) {
+        newArr.push(null);
+    }
+    // Pick random empty spots and assign elements of the original array to those spots
+    var randomSpot;
+    for (var i = 0; i < len; ++i) {
+        do {
+            randomSpot = floor(random() * len);
+        } while (newArr[randomSpot] !== null);
+        
+        newArr[randomSpot] = arr[i];
+    }
+    // Return the randomized array
+    return newArr;
 }

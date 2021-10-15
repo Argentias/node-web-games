@@ -25,6 +25,35 @@ function Magic() {
 	var roomData = {};
 	var roomW = 1280;
 	var roomH = 860;
+    
+    // Track the personal board state
+    var player = new MagicPlayer(true, 25);
+    //player.hand.add(new SpellCard("", "", ""));
+    //player.hand.add(new SpellCard("Shock", "NRR", "Deal 2 damage to any opponent", true));
+    //player.hand.addUp(new SpellCard("Gods Willing", "NRBGWU", "Cantrip. Target enchantment you control gains protection until end of turn."));
+    
+    // Define the location of the personal board state and life inc/dec buttons
+    var selfX = roomW/50;
+    var selfY = roomH-(roomH/6);
+    var lifeUp = player.genLifePlus(selfX, selfY);
+    var lifeDown = player.genLifeMinus(selfX, selfY);
+    
+    // Track all players' board states
+    var turnOrder = [];
+    var playerStates = [player];
+    
+    // Create the deck
+    var deck = new SpellDeck();
+    deck.instantiate();
+    deck.shuffle();
+    
+    // Create game-playing variables
+    var turnNum = -1;
+    var magicGameStarted = false;
+    var handSize = 5;
+    var handLimit = 7;
+    
+    //var player2 = new MagicPlayer(false, 25);
 	
 	// Create the canvas and setup socket callbacks
     this.setup = function() {
@@ -45,10 +74,16 @@ function Magic() {
 		
 		Global.socket.on('syncAnswer',
 			function(data) {
-			    var s = getSelfInMem();
+			    mqgicGameStarted = data.started;
                 playerStates = data.players;
+                turnOrder = data.turns;
+			    var s = getSelfInTurn();
                 player = data.players[s];
                 deck = data.syncDeck;
+                playerTurn = data.pturn;
+                if (playerTurn === s && data.begin) {
+                    startTurn();
+                }
 			}
 		);
 		
@@ -69,30 +104,6 @@ function Magic() {
 	    Global.socket.emit('refreshReq', roomData);
     };
     
-	
-    // Create the personal board state
-    var player = new MagicPlayer(true, 25);
-    //player.hand.add(new SpellCard("", "", ""));
-    //player.hand.add(new SpellCard("Shock", "NRR", "Deal 2 damage to any opponent", true));
-    //player.hand.addUp(new SpellCard("Gods Willing", "NRBGWU", "Cantrip. Target enchantment you control gains protection until end of turn."));
-    var selfX = roomW/50;
-    var selfY = roomH-(roomH/6);
-    var lifeUp = player.genLifePlus(selfX, selfY);
-    var lifeDown = player.genLifeMinus(selfX, selfY);
-    //console.log(player);
-    //console.log(lifeUp);
-    //console.log(lifeDown);
-    
-    // Create all players' board states
-    var playerStates = [player];
-    
-    // Create the deck
-    var deck = new SpellDeck();
-    deck.instantiate();
-    deck.shuffle();
-    
-    var player2 = new MagicPlayer(false, 25);
-    
     // Find the index of yourself in the list of members
     function getSelfInMem() {
         for (var i = 0; i < Global.members.length; ++i) {
@@ -100,36 +111,84 @@ function Magic() {
                 return i;
             }
         }
+        return -1;
+    }
+    
+    // Find the index of yourself in the turn order
+    function getSelfInTurn() {
+        for (var i = 0; i < turnOrder.length; ++i) {
+            if (turnOrder[i] === Global.username) {
+                return i;
+            }
+        }
+        return -1;
     }
     
     // Sync the board state with the other players (do after every move)
-    function syncBoardState() {
+    function syncBoardState(beginTurn) {
         playerStates[i] = player;
         var outData = {
             syncDeck: deck,
-            players: playerStates
+            players: playerStates,
+            turns: turnOrder,
+            started: magicGameStarted,
+            pturn: playerTurn,
+            begin: beginTurn
         };
         Global.socket.emit('syncReq', outData);
     }
     
     // Start a game
     function startGame() {
-        playerStates = [];
+        // Create a copy of Global.members to store the turn order
         for (var m in Global.members) {
+            turnOrder.push(m);
+        }
+        turnOrder = randomizeArr(turnOrder);
+        
+        // Create a MagicPlayer for each player
+        playerStates = [];
+        for (var t in turnOrder) {
             playerStates.push(new MagicPlayer(false, 25));
         }
-        var s = getSelfInMem();
+        
+        // Separate self
+        var s = getSelfInTurn();
         playerStates[i].setSelf(true);
         player = playerStates[i];
+        
+        // Reset the deck
+        deck.clear();
+        deck.instantiate();
+        deck.shuffle();
+        
+        // Deal hands and start the game
+        dealHands();
+        magicGameStarted = true;
+        playerTurn = 0;
+        syncBoardState(false);
     }
 	
+	// Deal hands to each player
+	function dealHands() {
+	    loopN(handSize, () => {
+	        for (var s in playerStates) {
+	            s.hand.addUp(deck.remove());
+	        }
+	    });
+	}
+	
+	// Start your turn
+	function startTurn() {
+	    
+	}
 	
 	
-    // Create a RectClickArea to call the next card
-    var caller = new RectClickArea(290, 200, 160, 50);
+    // Create a RectClickArea to start the game
+    var starter = new RectClickArea(roomW-300, 50, 160, 50);
     
-	// Create a RectClickArea to refresh a board
-	var refresher = new RectClickArea(290, 270, 160, 50);
+	// Create a RectClickArea to pass the turn
+	var passer = new RectClickArea(roomW-300, 50, 160, 50);
 	/*
 	
 	// Create a RectClickArea to leave the room
@@ -211,8 +270,10 @@ function Magic() {
         
         var s = getSelfInMem();
         var ml = Global.members.length;
-        for (var i = 1; i < ml; ++i) {
-            playerStates[(s+i)%ml].draw(roomW/50, roomH/10+200*i);
+        if (magicGameStarted === true) {
+            for (var i = 1; i < ml; ++i) {
+                playerStates[(s+i)%ml].draw(roomW/50, roomH/10+200*i);
+            }
         }
         
         /*
@@ -247,23 +308,23 @@ function Magic() {
 		lifeUp.draw("+");
 		lifeDown.draw("-");
 		textSize(28);
-		//text("Turn Void", caller.x+caller.w/2-textWidth("Turn Void`")/2, caller.y+37);
-		//text("Add Mana", refresher.x+refresher.w/2-textWidth("Add Mana")/2, refresher.y+35);
-		caller.draw("Null to Void");
-		refresher.draw("Add Mana");
-		
+		if (!magicGameStarted) {
+		    starter.draw("Start Game");
+		} else if (s === playerTurn) {
+		    passer.draw("Pass Turn");
+		}
 		//text("Leave Room", leaver.x+leaver.w/2-textWidth("Leave Room")/2, leaver.y+35);
 		
 		textSize(24);
-		text("Room code: " + Global.room, roomW-300, 50);
+		text("Room code: " + Global.room, roomW-300, 250);
 		textSize(20);
-		text("Users in room: ", roomW-300, 90);
+		text("Users in room: ", roomW-300, 290);
 		for (var m = 0; m < Global.members.length; ++ m) {
 		    memText = Global.members[m][0];
 			if (m === 0) {
 				memText = memText + " [VIP]";
 			}
-			text(memText, roomW-300, 130+(25*m));
+			text(memText, roomW-300, 330+(25*m));
 		}
 		
     };
