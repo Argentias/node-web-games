@@ -32,11 +32,6 @@ function Magic() {
         createCanvas(1280, 860);
 		//Global.members.push(Global.username);
 		
-		roomData = {
-		    rm: Global.room,
-		    rmn: Global.roomNum
-	    };
-		
 		Global.socket.on('refreshAns',
 			function(data) {
 				Global.members = data.members;
@@ -65,6 +60,11 @@ function Magic() {
 				Global.smgr.showScene(Home);
 			}
 		);
+		
+		roomData = {
+		    rm: Global.room,
+		    rmn: Global.roomNum
+	    };
 		
 	    Global.socket.emit('refreshReq', roomData);
     };
@@ -259,11 +259,11 @@ function Magic() {
 		textSize(20);
 		text("Users in room: ", roomW-300, 90);
 		for (var m = 0; m < Global.members.length; ++ m) {
+		    memText = Global.members[m][0];
 			if (m === 0) {
-				text(Global.members[m] + " [VIP]", roomW-300, 130);
-			} else {
-				text(Global.members[m], roomW-300, 130 + (25 * m));
+				memText = memText + " [VIP]";
 			}
+			text(memText, roomW-300, 130+(25*m));
 		}
 		
     };
