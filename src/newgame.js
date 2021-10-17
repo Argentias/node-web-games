@@ -148,7 +148,7 @@ function Magic() {
         for (var m in Global.members) {
             turnOrder.push(m);
         }
-        turnOrder = randomizeArr(turnOrder);
+        turnOrder = randomizeArray(turnOrder);
         
         // Create a MagicPlayer for each player
         playerStates = [];

@@ -262,8 +262,9 @@ function createNestedEnum(values, attributes, avals) {
     return Object.freeze(enumObject);
 }
 
-/** @func enumHasVariant
+/** @func enumHas
  *  Returns the variant of the given enum with the given attribute if it exists
+ *  Note: Works only for nested enums
  *
 **/
 function enumHas(en, a1, a2) {
