@@ -149,6 +149,7 @@ function Magic() {
             turnOrder.push(m);
         }
         turnOrder = randomizeArray(turnOrder);
+        console.log(turnOrder);
         
         // Create a MagicPlayer for each player
         playerStates = [];
@@ -158,6 +159,7 @@ function Magic() {
         
         // Separate self
         var s = getSelfInTurn();
+        console.log(s);
         playerStates[s].setSelf(true);
         player = playerStates[s];
         
@@ -170,7 +172,7 @@ function Magic() {
         dealHands();
         magicGameStarted = true;
         playerTurn = 0;
-        syncBoardState(false);
+        syncBoardState(true);
     }
 	
 	// Deal hands to each player
