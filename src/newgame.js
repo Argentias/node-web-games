@@ -283,27 +283,25 @@ function Magic() {
         }
         toCall.drawDown(30, 30, false);
         called.drawHand(175, 30);
-        */
         
         fill(255);
-		/*
+        
 		if (callerUser) {
 			rect(restarter.x, restarter.y, restarter.w, restarter.h, 5);
 		}
-		*/
+		
 		rect(lifeUp.x, lifeUp.y, lifeUp.w, lifeUp.h, 5);
 		rect(lifeDown.x, lifeDown.y, lifeDown.w, lifeDown.h, 5);
 		rect(caller.x, caller.y, caller.w, caller.h, 5);
 		rect(refresher.x, refresher.y, refresher.w, refresher.h, 5);
 		//rect(leaver.x, leaver.y, leaver.w, leaver.h, 5);
 		
-        fill(0);
-		/*
 		if (callerUser) {
 			textSize(28);
 			text("New Game", restarter.x+restarter.w/2-textWidth("New Game")/2, restarter.y+35);
 		}
 		*/
+        fill(0);
 		textSize(36);
 		lifeUp.draw("+");
 		lifeDown.draw("-");
