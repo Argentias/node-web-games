@@ -158,8 +158,8 @@ function Magic() {
         
         // Separate self
         var s = getSelfInTurn();
-        playerStates[i].setSelf(true);
-        player = playerStates[i];
+        playerStates[s].setSelf(true);
+        player = playerStates[s];
         
         // Reset the deck
         deck.clear();
