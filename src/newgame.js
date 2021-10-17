@@ -283,24 +283,16 @@ function Magic() {
     //function draw() {
         background(125);
         
-        player.draw(roomW/50, roomH-roomH/6);
+        player.draw(roomW/50, roomH-roomH/6, true);
         //player2.draw(roomW/50, roomH/10);
         
-        var s = getSelfInMem();
-        var ml = Global.members.length;
+        var s = getSelfInTurn();
+        var tl = turnOrder.length;
         if (magicGameStarted === true) {
-            for (var i = 1; i < ml; ++i) {
-                playerStates[(s+i)%ml].draw(roomW/50, roomH/10+200*i);
+            for (var i = 1; i < tl; ++i) {
+                playerStates[(s+i)%ml].draw(roomW/50, roomH/10+200*(i-1), false);
             }
         }
-        
-        /*
-        for (var i = 0; i < hands.length; ++ i) {
-            //hands[i].drawHandUpDownSmall(clicks[i].x, clicks[i].y, false);
-			hands[i].drawGen(clicks[i].x, clicks[i].y, "Hand UpDown Small");
-        }
-        toCall.drawDown(30, 30, false);
-        called.drawHand(175, 30);
         
         fill(255);
         
@@ -323,8 +315,10 @@ function Magic() {
 		textSize(28);
 		if (!magicGameStarted) {
 		    starter.draw("Start Game");
-		} else if (s === playerTurn) {
-		    passer.draw("Pass Turn");
+		} else {
+		    if (s === playerTurn) {
+		        passer.draw("Pass Turn");
+    		}
     		textSize(36);
     		lifeUp.draw("+");
     		lifeDown.draw("-");

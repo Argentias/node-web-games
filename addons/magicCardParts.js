@@ -256,22 +256,17 @@ SpellDeck.prototype.shuffle = function() {
 };
 
 
-var MagicPlayer = function(isSelf, life) {
+var MagicPlayer = function(life) {
     this.mana = new ManaBase();
-    this.isSelf = isSelf;
     this.life = new IncDec(life, 0, 99, 1);
     this.turn = false;
     this.hand = new SpellDeck();
     this.battlefield = new SpellDeck();
 };
 
-MagicPlayer.prototype.setSelf = function(isSelf) {
-    this.isSelf = isSelf;
-};
-
-MagicPlayer.prototype.draw = function(x, y, plus, minus) {
+MagicPlayer.prototype.draw = function(x, y, isSelf, plus, minus) {
     var size;
-    if (this.isSelf === true) { size = 1.2; } else { size = 0.75; }
+    if (isSelf === true) { size = 1.2; } else { size = 0.75; }
     this.mana.draw(x, y, size);
     var handX = x+(mcHorzSpace*6+10)*size;
     var handY = y+mCardHeightS-mCardHeight+20;
