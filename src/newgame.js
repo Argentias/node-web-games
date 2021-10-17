@@ -132,6 +132,7 @@ function Magic() {
         var b;
         if (arguments.length === 0) { b = false; } else { b = beginTurn; }
         var outData = {
+            rm: Global.room,
             syncDeck: deck,
             players: playerStates,
             turns: turnOrder,
