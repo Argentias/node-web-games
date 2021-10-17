@@ -169,7 +169,7 @@ io.sockets.on('connection',
 				        //If not, join the room
     					socket.join(data.code);
     					rooms[roomNum].addMember(data.user, socket.id);
-    					console.log(rooms[roomNum]);
+    					//console.log(rooms[roomNum]);
     					var outData = rooms[roomNum];
     					//outData.num = roomNum;
     					//outData.user = data.user;
