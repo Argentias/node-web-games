@@ -189,6 +189,15 @@ function Magic() {
 	    syncBoardState(false);
 	}
 	
+	// Pass to the next player's turn
+	function passTurn() {
+	    ++playerTurn;
+	    if (playerTurn >= turnOrder.length) {
+	        playerTurn -= turnOrder.length;
+	    }
+	    syncBoardState(true);
+	}
+	
 	
     // Create a RectClickArea to start the game
     var starter = new RectClickArea(roomW-300, 50, 160, 50);
@@ -308,14 +317,14 @@ function Magic() {
 		}
 		*/
         fill(0);
-		textSize(36);
-		lifeUp.draw("+");
-		lifeDown.draw("-");
 		textSize(28);
 		if (!magicGameStarted) {
 		    starter.draw("Start Game");
 		} else if (s === playerTurn) {
 		    passer.draw("Pass Turn");
+    		textSize(36);
+    		lifeUp.draw("+");
+    		lifeDown.draw("-");
 		}
 		//text("Leave Room", leaver.x+leaver.w/2-textWidth("Leave Room")/2, leaver.y+35);
 		
@@ -352,20 +361,24 @@ function Magic() {
         }
         */
         
-        if (starter.clickCheck()) {
-            //player.mana.change("N", "W");
-        }
-        
-        if (passer.clickCheck()) {
-            //player.mana.N.add(new ManaCard());
-        }
-        if (lifeUp.clickCheck()) {
-            player.life.increment();
-            syncBoardState();
-        }
-        if (lifeDown.clickCheck()) {
-            player.life.decrement();
-            syncBoardState();
+        if (!magicGameStarted) {
+            if (starter.clickCheck()) {
+                //player.mana.change("N", "W");
+                startGame();
+            }
+        } else {
+            if (passer.clickCheck()) {
+                //player.mana.N.add(new ManaCard());
+                passTurn();
+            }
+            else if (lifeUp.clickCheck()) {
+                player.life.increment();
+                syncBoardState();
+            }
+            else if (lifeDown.clickCheck()) {
+                player.life.decrement();
+                syncBoardState();
+            }
         }
         /*
 		
@@ -382,7 +395,7 @@ function Magic() {
         if (key === 'q') {
             player.life.increment();
         }
-        if (key === 'a') {
+        else if (key === 'a') {
             player.life.decrement();
         }
         return false;

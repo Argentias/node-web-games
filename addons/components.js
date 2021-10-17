@@ -73,12 +73,12 @@ RectClickArea.prototype.clickCheck = function() {
 RectClickArea.prototype.draw = function(t) {
     if (this.clickCheck()) {
         if (mouseIsPressed) {
-            fill(35);
+            fill(125);
         } else {
-            fill(150);
+            fill(175);
         }
     } else{
-        fill(255);
+        fill(250);
     }
     rect(this.x, this.y, this.w, this.h, 5);
     textAlign(CENTER, CENTER);
