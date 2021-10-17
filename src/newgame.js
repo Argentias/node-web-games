@@ -179,7 +179,8 @@ function Magic() {
 	function dealHands() {
 	    loopN(handSize, () => {
 	        for (var s in playerStates) {
-	            s.hand.addUp(deck.remove());
+	            //console.log(s)
+	            playerStates[s].hand.addUp(deck.remove());
 	        }
 	    });
 	}
