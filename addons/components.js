@@ -72,7 +72,11 @@ RectClickArea.prototype.clickCheck = function() {
 
 RectClickArea.prototype.draw = function(t) {
     if (this.clickCheck()) {
-        fill(150);
+        if (mouseIsPressed) {
+            fill(35);
+        } else {
+            fill(150);
+        }
     } else{
         fill(255);
     }

@@ -40,6 +40,7 @@ function Magic() {
     
     // Track all players' board states
     var turnOrder = [];
+    var playerTurn = -1;
     var playerStates = [player];
     
     // Create the deck
@@ -126,14 +127,17 @@ function Magic() {
     
     // Sync the board state with the other players (do after every move)
     function syncBoardState(beginTurn) {
+        var i = getSelfInTurn();
         playerStates[i] = player;
+        var b;
+        if (arguments.length === 0) { b = false; } else { b = beginTurn; }
         var outData = {
             syncDeck: deck,
             players: playerStates,
             turns: turnOrder,
             started: magicGameStarted,
             pturn: playerTurn,
-            begin: beginTurn
+            begin: b
         };
         Global.socket.emit('syncReq', outData);
     }
@@ -180,7 +184,9 @@ function Magic() {
 	
 	// Start your turn
 	function startTurn() {
-	    
+	    player.hand.addUp(deck.remove());
+	    loopN(2, player.mana.N.add(new ManaCard()));
+	    syncBoardState(false);
 	}
 	
 	
@@ -346,20 +352,20 @@ function Magic() {
         }
         */
         
-        if (caller.clickCheck()) {
-            console.log("Clicked Change");
-            player.mana.change("N", "W");
+        if (starter.clickCheck()) {
+            //player.mana.change("N", "W");
         }
         
-        if (refresher.clickCheck()) {
-            console.log("Clicked Mana");
-            player.mana.N.add(new ManaCard());
+        if (passer.clickCheck()) {
+            //player.mana.N.add(new ManaCard());
         }
         if (lifeUp.clickCheck()) {
             player.life.increment();
+            syncBoardState();
         }
         if (lifeDown.clickCheck()) {
             player.life.decrement();
+            syncBoardState();
         }
         /*
 		

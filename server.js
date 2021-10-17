@@ -284,6 +284,7 @@ io.sockets.on('connection',
         while (ri < rooms.length) {
             var stillExists = rooms[ri].removeClient(socket.id);
             if (stillExists) {
+                io.in(rooms[ri].code).emit('memberRefresh', rooms[ri]);
                 ++ri;
             }
         }
