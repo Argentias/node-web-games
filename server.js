@@ -175,7 +175,7 @@ io.sockets.on('connection',
     					//outData.user = data.user;
     					socket.emit('joinSuccess', outData);
     					console.log("Client " + socket.id + " (username " + data.user + ") successfully joined room " + data.code);
-    					console.log(rooms);
+    					//console.log(rooms);
     					io.in(data.rm).emit('memberRefresh', rooms[roomNum]);
 				    } else {
 				        //If so, return an error
@@ -220,7 +220,7 @@ io.sockets.on('connection',
 				socket.emit('createSuccess', outData);
 				io.in(data.rm).emit('memberRefresh', rooms[rooms.length-1]);
 				console.log("Client " + socket.id + " (username " + data.user + ") successfully created room " + data.code);
-				console.log(rooms);
+				//console.log(rooms);
 			} else {
 				// If so, return an error
 				socket.emit('createFail', data);
@@ -235,12 +235,12 @@ io.sockets.on('connection',
 			// Log request
 			console.log("Received: client " + socket.id + " -- 'refreshReq' " + data.rm);
 			
-			console.log(data.rm + " / " + data.rmn)
+			//console.log(data.rm + " / " + data.rmn)
 			if (data.rmn < 0 || data.rmn >= rooms.length) {
 			    console.log("refreshReq failed -- no room with code " + data.rmn)
 			    return;
 			}
-			console.log(rooms[data.rmn].members);
+			//console.log(rooms[data.rmn].members);
 			
 			
 			// Emit response
