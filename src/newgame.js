@@ -146,7 +146,7 @@ function Magic() {
     function startGame() {
         // Create a copy of Global.members to store the turn order
         for (var m in Global.members) {
-            turnOrder.push(Global.members[m]);
+            turnOrder.push(Global.members[m][0]);
         }
         turnOrder = randomizeArray(turnOrder);
         console.log(turnOrder);
