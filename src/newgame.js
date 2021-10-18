@@ -294,7 +294,7 @@ function Magic() {
                 playerStates[(s+i)%ml].draw(roomW/50, roomH/10+200*(i-1), false);
             }
         }
-        
+        /*
         fill(255);
         
 		if (callerUser) {
