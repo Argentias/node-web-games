@@ -284,14 +284,14 @@ function Magic() {
     //function draw() {
         background(125);
         
-        player.draw(roomW/50, roomH-roomH/6, true);
+        var s = getSelfInTurn();
+        player.draw(roomW/50, roomH-roomH/6, true, (s === playerTurn));
         //player2.draw(roomW/50, roomH/10);
         
-        var s = getSelfInTurn();
         var tl = turnOrder.length;
         if (magicGameStarted === true) {
             for (var i = 1; i < tl; ++i) {
-                playerStates[(s+i)%tl].draw(roomW/50, roomH/10+200*(i-1), false);
+                playerStates[(s+i)%tl].draw(roomW/50, roomH/10+200*(i-1), false, (i === playerTurn));
             }
         }
         /*

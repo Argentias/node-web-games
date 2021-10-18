@@ -62,12 +62,10 @@ var ManaCard = function(attribute) {
 
 
 var ManaDeck = function(attribute) {
-    try {
-        new ManaCard(attribute);
-    } catch (e) {
-        throw e;
-    }
     this.attribute = enumHas(ManaType, attribute);
+    if (variant === null) {
+        throw ("Invalid Value Exception: " + attribute + " is not associated with a ManaType");
+    }
     this.deck = [];
 };
 
@@ -264,7 +262,7 @@ var MagicPlayer = function(life) {
     this.battlefield = new SpellDeck();
 };
 
-MagicPlayer.prototype.draw = function(x, y, isSelf, plus, minus) {
+MagicPlayer.prototype.draw = function(/*int*/x, /*int*/y, /*bool*/isSelf, /*bool*/isTurn) {
     var size;
     if (isSelf === true) { size = 1.2; } else { size = 0.75; }
     this.mana.draw(x, y, size);
@@ -282,7 +280,11 @@ MagicPlayer.prototype.draw = function(x, y, isSelf, plus, minus) {
     }
     
     strokeWeight(1*size);
-    fill(0, 255, 255);
+    if (!isTurn) {
+        fill(0, 255, 255);
+    } else {
+        fill(0, 255, 0);
+    }
     rect(x, y-mCardHeightS*size/2-5, mcHorzSpace*size*3+5*size, mCardHeightS*size/2, 8*size);
     fill(0);
     textSize(24*size);
@@ -290,17 +292,12 @@ MagicPlayer.prototype.draw = function(x, y, isSelf, plus, minus) {
 };
 
 MagicPlayer.prototype.genLifePlus = function(x, y) {
-    var size;
-    if (this.isSelf === true) { size = 1.2; } else { return; }
-    //console.log(mCardHeightS*size/3);
-    //console.log(10*size+2*size);
-    //console.log(y);
+    var size = 1.2;
     return new RectClickArea(x+mcHorzSpace*size+2*size, y-mCardHeightS*size/2-2*size, mcHorzSpace*size-8*size, mCardHeightS*size/2-4*size);
 };
 
 MagicPlayer.prototype.genLifeMinus = function(x, y) {
-    var size;
-    if (this.isSelf === true) { size = 1.2; } else { return; }
+    var size = 1.2;
     return new RectClickArea(x+mcHorzSpace*size*2+2*size, y-mCardHeightS*size/2-2*size, mcHorzSpace*size-8*size, mCardHeightS*size/2-4*size);
 };
 
