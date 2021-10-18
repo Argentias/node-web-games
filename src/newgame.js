@@ -160,8 +160,8 @@ function Magic() {
         
         // Separate self
         var s = getSelfInTurn();
-        console.log(s);
-        playerStates[s].setSelf(true);
+        //console.log(s);
+        //playerStates[s].setSelf(true);
         player = playerStates[s];
         
         // Reset the deck
@@ -291,7 +291,7 @@ function Magic() {
         var tl = turnOrder.length;
         if (magicGameStarted === true) {
             for (var i = 1; i < tl; ++i) {
-                playerStates[(s+i)%ml].draw(roomW/50, roomH/10+200*(i-1), false);
+                playerStates[(s+i)%tl].draw(roomW/50, roomH/10+200*(i-1), false);
             }
         }
         /*
