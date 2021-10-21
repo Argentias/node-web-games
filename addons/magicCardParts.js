@@ -63,7 +63,7 @@ var ManaCard = function(attribute) {
 
 var ManaDeck = function(attribute) {
     this.attribute = enumHas(ManaType, attribute);
-    if (variant === null) {
+    if (attribute === null) {
         throw ("Invalid Value Exception: " + attribute + " is not associated with a ManaType");
     }
     this.deck = [];
