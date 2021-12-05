@@ -59,6 +59,10 @@ var ManaCard = function(attribute) {
     }
 };
 
+ManaCard.prototype.clone = function(that) {
+    this.attribute = that.attribute;
+};
+
 
 
 var ManaDeck = function(attribute) {
@@ -97,6 +101,15 @@ ManaDeck.prototype.draw = function(x, y, size) {
     text(l, x+mCardWidthS*size/2-textWidth(l)/2, y+mCardHeightS*size+30*size);
 };
 
+ManaDeck.prototype.cloneGen = function(that) {
+	this.clear();
+	
+	for (var i = 0; i < that.deck.length; ++ i) {
+		var thatCard = new ManaCard();
+		thatCard.clone(that.deck[i]);
+		this.deck.push(thatCard);
+	}
+};
 
 
 var ManaBase = function() {
@@ -191,7 +204,11 @@ SpellCard.prototype.draw = function(x, y, size) {
     }
 };
 
-
+Card.prototype.clone = function(that) {
+	this.suit = that.suit;
+	this.rank = that.rank;
+	this.up = that.up;
+}
 
 var SpellDeck = function() {
     this.deck = [];
@@ -254,9 +271,9 @@ SpellDeck.prototype.shuffle = function() {
 };
 
 
-var MagicPlayer = function(life) {
+var MagicPlayer = function(lifeAmt) {
     this.mana = new ManaBase();
-    this.life = new IncDec(life, 0, 99, 1);
+    this.life = new IncDec(lifeAmt, 0, 99, 1);
     this.turn = false;
     this.hand = new SpellDeck();
     this.battlefield = new SpellDeck();
@@ -301,6 +318,14 @@ MagicPlayer.prototype.genLifeMinus = function(x, y) {
     return new RectClickArea(x+mcHorzSpace*size*2+2*size, y-mCardHeightS*size/2-2*size, mcHorzSpace*size-8*size, mCardHeightS*size/2-4*size);
 };
 
+MagicPlayer.prototype.cloneGen = function(that) {
+    newMP = new MagicPlayer(this.life.val()));
+    
+    newMP.mana = that.mana.clone();
+    this.turn = that.turn;
+    this.hand = that.hand.clone();
+    this.battlefield = that.battlefield.clone();
+};
 
 var SpellHandClickArea = function(x, y, dir, length, size, cut) {
     this.x = x;
