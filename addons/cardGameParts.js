@@ -2,9 +2,11 @@ var testForCardGameParts = function() { return true; };
 
 //new p5();
 
-var suits = ["Clubs", "Diamonds", "Hearts", "Spades"];
-var ranks = ["Joker", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"];
-var abbr = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+var suits = ["Clubs", "Diamonds", "Hearts", "Spades", "None"];
+var baseranks = ["Joker", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"];
+var wizranks = ["Jester", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Wizard"];
+var baseabbr = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+var wizabbr = ["JE", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "W"];
 var cardWidth = 100;
 var cardHeight = 150;
 var cardWidthS = 40;
@@ -58,7 +60,7 @@ var drawSpade = function (x, y, size) {
     triangle(x+size/2, y-o/4+size/2, x+2*size/3, y-o/4+size, x+size/3, y-o/4+size);
 };
 
-var Card = function(rank, suit, up) {
+var Card = function(rank, suit, up, wizard) {
     if (arguments.length === 0) {
 		this.suit = 0;
 		this.rank = 0;
@@ -67,6 +69,16 @@ var Card = function(rank, suit, up) {
 		this.suit = suit;
 		this.rank = rank;
 		this.up = up;
+		if (arguments.length === 4 && wizard === true) {
+		    this.abbr = wizabbr;
+		    this.ranks = wizranks;
+		    if (this.rank === 0 || this.rank === 14) {
+		        this.suit = 4;
+		    }
+		} else {
+		    this.abbr = baseabbr;
+		    this.ranks = baseranks;
+		}
 	}
 };
 
@@ -77,7 +89,7 @@ Card.prototype.draw = function(x, y) {
     rect(x, y, cardWidth, cardHeight, 10);
     fill(0);
     textSize(48);
-    text(abbr[this.rank-1], x+50-textWidth(abbr[this.rank-1])/2, y+50);
+    text(this.abbr[this.rank-1], x+50-textWidth(this.abbr[this.rank-1])/2, y+50);
     if (this.suit === 0) {
         drawClub(x+20, y+65, 60);
     } else if (this.suit === 1) {
@@ -96,7 +108,7 @@ Card.prototype.drawCorner = function(x, y) {
     rect(x, y, cardWidth, cardHeight, 10);
     fill(0);
     textSize(24);
-    text(abbr[this.rank-1], x+20-textWidth(abbr[this.rank-1])/2, y+25);
+    text(this.abbr[this.rank-1], x+20-textWidth(this.abbr[this.rank-1])/2, y+25);
     if (this.suit === 0) {
         drawClub(x+5, y+30, 30);
     } else if (this.suit === 1) {
@@ -115,7 +127,7 @@ Card.prototype.drawSmall = function(x, y) {
     rect(x, y, cardWidthS, cardHeightS, 10);
     fill(0);
     textSize(24);
-    text(abbr[this.rank-1], x+20-textWidth(abbr[this.rank-1])/2, y+25);
+    text(this.abbr[this.rank-1], x+20-textWidth(this.abbr[this.rank-1])/2, y+25);
     if (this.suit === 0) {
         drawClub(x+5, y+30, 30);
     } else if (this.suit === 1) {
@@ -197,7 +209,7 @@ Card.prototype.toString = function() {
     if (this.rank === 0) {
         return "Joker";
     } else {
-        return (ranks[this.rank] + " of " + suits[this.suit]);
+        return (this.ranks[this.rank] + " of " + suits[this.suit]);
     }
 };
 
@@ -236,15 +248,18 @@ Card.prototype.clone = function(that) {
 }
 
 
-var Deck = function(size) {
+var Deck = function(empty, wizard) {
     if (arguments.length > 0) {
         this.deck = [];
-        for (var i = 0; i < size; i ++) {
-            this.deck.push(null);
-        }
+        if (!empty) {
+            if (arguments.length > 1 && wizard == true) {
+                this.reload(1, true, false);
+            } else {
+                this.reload(1, false, false);
+            }
     } else {
         this.deck = [];
-        this.reload(1, false);
+        this.reload(1, false, false);
     }
 };
 
@@ -668,22 +683,36 @@ Deck.prototype.cloneGen = function(that) {
 	}
 }
 
-Deck.prototype.reload = function(a1, a2) {
+Deck.prototype.reload = function(a1, a2, a3) {
     this.clear();
     var numDeck = 1;
+    var wizard = false;
     var up = false;
+    
     if (arguments.length > 0) {
-        if (arguments.length === 2) {
+        if (arguments.length === 3) {
             numDeck = a1;
-            up = a2;
-        } else if (arguments.length === 1) {
+            wizard = a2;
+            up = a3;
+        } else if (arguments.length === 2) {
+            up = a1;
+            wizard = a2;
+        } else if (arguments.length == 1) {
             up = a1;
         }
     }
+    
+    var rstart = 1;
+    var rend = 13;
+    if (wizard) {
+        rstart = 0;
+        rend = 14;
+    }
+    
     for (var n = 0; n < numDeck; ++ n) {
         for (var suit = 0; suit < 4; ++ suit) {
-            for (var rank = 1; rank <= 13; ++ rank) {
-                var temp = new Card(rank, suit, up);
+            for (var rank = rstart; rank <= rend; ++ rank) {
+                var temp = new Card(rank, suit, up, wizard);
                 this.deck.push(temp);
             }
         }

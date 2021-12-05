@@ -71,7 +71,7 @@ function Bingo() {
     // Create hands to deal the cards into
     var hands = [];
     for (var i = 0; i < 5; i ++) {
-        hands.push(new Deck(0));
+        hands.push(new Deck(true));
     }
     
     // Get the size of the full deck
