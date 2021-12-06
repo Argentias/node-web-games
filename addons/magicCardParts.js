@@ -319,7 +319,7 @@ MagicPlayer.prototype.genLifeMinus = function(x, y) {
 };
 
 MagicPlayer.prototype.cloneGen = function(that) {
-    newMP = new MagicPlayer(this.life.val()));
+    newMP = new MagicPlayer(this.life.val());
     
     newMP.mana = that.mana.clone();
     this.turn = that.turn;

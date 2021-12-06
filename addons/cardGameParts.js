@@ -219,33 +219,33 @@ Card.prototype.getColor = function() {
     } else {
         return 'B';
     }
-}
+};
 
 Card.prototype.setUp = function(up) {
 	this.up = up;
-}
+};
 
 Card.prototype.setRank = function(rank) {
 	this.rank = rank;
-}
+};
 
 Card.prototype.getRank = function() {
 	return this.rank;
-}
+};
 
 Card.prototype.setSuit = function(suit) {
 	this.suit = suit;
-}
+};
 
 Card.prototype.getSuit = function() {
 	return this.suit;
-}
+};
 
 Card.prototype.clone = function(that) {
 	this.suit = that.suit;
 	this.rank = that.rank;
 	this.up = that.up;
-}
+};
 
 
 var Deck = function(empty, wizard) {
@@ -257,6 +257,7 @@ var Deck = function(empty, wizard) {
             } else {
                 this.reload(1, false, false);
             }
+        }
     } else {
         this.deck = [];
         this.reload(1, false, false);
@@ -733,7 +734,7 @@ Deck.prototype.shuffle = function() {
         newDeck[randomSpot] = this.deck[i];
     }
     this.deck = newDeck;
-   }
+}
    
 Deck.prototype.selectionSort = function() {
     var check;
