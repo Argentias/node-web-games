@@ -298,7 +298,7 @@ DeckBuilder.prototype.setUp = function(u) {
     this.up = u;
 }
 
-DeckBuilder.prototype.build = funtion() {
+DeckBuilder.prototype.build = function() {
     if (this.num == 0) {
         return new Deck(true);
     } else if (this.num == 1 && this.up = false) {

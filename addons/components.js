@@ -341,7 +341,7 @@ function randomizeArray(arr) {
  *  @return true if v is in ors, and false otherwise
 **/
 function manyOr(v, ors) {
-    for p in ors {
+    for (p in ors) {
         if (v === p) {
             return true;
         }
