@@ -896,6 +896,52 @@ CardHandClickArea.prototype.clickCheck = function() {
     return -1;
 }
 
-CardHandClickArea.prototype.matchLength = function(Deck) {
-    this.length = Deck.deck.length;
+CardHandClickArea.prototype.matchLength = function(d) {
+    this.length = d.deck.length;
+}
+
+
+var CardPlayer = function() {
+    this.score = 0;
+    this.bet = -1;
+    this.hand = new Deck(true);
+    this.handCheck = new CardHandClickArea(0, 0, "H", 0, "S", 75);
+    this.tricks = 0;
+}
+
+CardPlayer.prototype.reset = function() {
+    this = new CardPlayer();
+}
+
+CardPlayer.prototype.move = function(x, y) {
+    this.handCheck.x = x;
+    this.handCheck.y = y;
+}
+
+CardPlayer.prototype.score = function(s) {
+    this.score += s;
+}
+
+CardPlayer.prototype.bet = function(b) {
+    this.bet = b;
+}
+
+CardPlayer.prototype.trick = function() {
+    this.tricks += 1;
+}
+
+CardPlayer.prototype.getHand = function() {
+    return this.hand;
+}
+
+CardPlayer.prototype.play = function(deck) {
+    //TODO: play a card to the pile
+}
+
+CardPlayer.prototype.add = function(card) {
+    //TODO: add the given card to the hand (dealing)
+}
+
+CardPlayer.prototype.draw = function() {
+    //TODO: draw the cards at the
 }

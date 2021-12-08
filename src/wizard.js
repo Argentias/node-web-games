@@ -24,13 +24,10 @@ function Wizard() {
 	// Track all players' board states
     var turnOrder = [];
     var playerTurn = -1;
-    var hb = new DeckBuilder();
-    hb.config("Empty");
-    var hand = hb.build();
-    var tricks = 0;
-    var bet = -1;
-    var score = 0;
-    var playerStates = [[score, bet, tricks]];
+    var dealer = -1;
+    
+    var player = new CardPlayer();
+    var playerStates = [player];
     
     // Create the deck
     var db = new DeckBuilder();
@@ -174,8 +171,9 @@ function Wizard() {
 	
 	// Start your turn
 	function startTurn() {
-	    //player.hand.addUp(deck.remove());
-	    //loopN(2, player.mana.N.add(new ManaCard()));
+	    if (hand.getLength() === 0) {
+	        // Score and set up the next round
+	    }
 	    syncBoardState(false);
 	}
 	
@@ -190,6 +188,26 @@ function Wizard() {
     var starter = new RectClickArea(roomW-300, 50, 160, 50);
     
 	// Create a RectClickArea to pass the turn
-	var passer = new RectClickArea(roomW-300, 50, 160, 50);
+	//var passer = new RectClickArea(roomW-300, 50, 160, 50);
 
+
+    this.draw = function() {
+        background(125);
+        
+        var s = getSelfInTurn();
+        player.draw(roomW/50, roomH-roomH/6, true, (s === playerTurn));
+        
+        
+        var tl = turnOrder.length;
+        if (magicGameStarted === true) {
+            for (var i = 1; i < tl; ++i) {
+                playerStates[(s+i)%tl].draw(roomW/50, roomH/10+200*(i-1), false, (i === playerTurn));
+            }
+        }
+        
+    }
+    
+    this.mouseClicked = function() {
+        // Check for playing turn
+    }
 }
