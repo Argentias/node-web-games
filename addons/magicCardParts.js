@@ -286,7 +286,7 @@ MagicPlayer.prototype.draw = function(/*int*/x, /*int*/y, /*bool*/isSelf, /*bool
     var handX = x+(mcHorzSpace*6+10)*size;
     var handY = y+mCardHeightS-mCardHeight+20;
     // Draw hand or hand size
-    if (this.isSelf) {
+    if (isSelf) {
         this.hand.draw(handX, handY, size);
     } else {
         drawMagicCardBack(handX, handY, size);
