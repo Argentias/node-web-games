@@ -248,6 +248,68 @@ Card.prototype.clone = function(that) {
 };
 
 
+var DeckConfig = createEnum("Empty", "Base", "Wizard", "Base2", "Wizard2", "BaseUp", "WizardUp");
+
+var DeckBuilder = function() {
+    this.type = "base";
+    this.num = 0;
+    this.up = false;
+};
+
+DeckBuilder.prototype.config = function(c) {
+    var variant = enumHas(c);
+    if (variant === null) {
+        throw ("Invalid Value Exception: " + c + " is not a valid DeckConfig");
+    }
+    // Check for empty
+    if (variant === DeckConfig.Empty) {
+        this.num = 0;
+        return;
+    }
+    // Check for type
+    if (manyOr(variant, [DeckConfig.Base, DeckConfig.Base2, DeckConfig.BaseUp])) {
+        this.type = "base";
+    } else if (manyOr(variant, [DeckConfig.Wizard, DeckConfig.Wizard2, DeckConfig.WizardUp])) {
+        this.type = "wizard";
+    }
+    // Check for number
+    if (manyOr(variant, [DeckConfig.Base2, DeckConfig.Wizard2])) {
+        this.num = 2;
+    } else {
+        this.num = 1;
+    }
+    // Check for up
+    if (manyOr(variant, [DeckConfig.BaseUp, DeckConfig.WizardUp])) {
+        this.up = true;
+    } else {
+        this.up = false;
+    }
+}
+
+DeckBuilder.prototype.setNum = function(n) {
+    this.num = n;
+}
+
+DeckBuilder.prototype.setType = function(t) {
+    this.type = t;
+}
+
+DeckBuilder.prototype.setUp = function(u) {
+    this.up = u;
+}
+
+DeckBuilder.prototype.build = funtion() {
+    if (this.num == 0) {
+        return new Deck(true);
+    } else if (this.num == 1 && this.up = false) {
+        return new Deck(false, (this.type === "wizard"));
+    } else {
+        n = new Deck();
+        n.reload(this.up, this.num, (this.type === "wizard"));
+    }
+};
+
+
 var Deck = function(empty, wizard) {
     if (arguments.length > 0) {
         this.deck = [];
@@ -684,7 +746,7 @@ Deck.prototype.cloneGen = function(that) {
 	}
 }
 
-Deck.prototype.reload = function(/*up:bool*/a1, /*wizard:int*/a2, /*numDeck:bool*/a3) {
+Deck.prototype.reload = function(/*up:bool*/a1, /*wizard:bool*/a2, /*numDeck:uint*/a3) {
     this.clear();
     var numDeck = 1;
     var wizard = false;

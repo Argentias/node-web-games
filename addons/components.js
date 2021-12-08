@@ -333,3 +333,18 @@ function randomizeArray(arr) {
     // Return the randomized array
     return newArr;
 }
+
+/** @func manyOr
+ *  Takes a value and a number of options for that value as an array, and returns the OR of all of them
+ *  @param v The value to check
+ *  @param ors The array of possible values
+ *  @return true if v is in ors, and false otherwise
+**/
+function manyOr(v, ors) {
+    for p in ors {
+        if (v === p) {
+            return true;
+        }
+    }
+    return false;
+}

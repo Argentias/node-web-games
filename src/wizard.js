@@ -27,10 +27,18 @@ function Wizard() {
 	// Track all players' board states
     var turnOrder = [];
     var playerTurn = -1;
-    var playerStates = [player];
+    var hb = new DeckBuilder();
+    hb.config("Empty");
+    var hand = hb.build();
+    var tricks = 0;
+    var bet = -1;
+    var score = 0;
+    var playerStates = [[score, bet, tricks]];
     
     // Create the deck
-    var deck = new Deck(/*empty:bool*/false, /*wizard:bool*/true);
+    var db = new DeckBuilder();
+    db.config(DeckConfig.Wizard);
+    var deck = db.build();
     deck.shuffle();
     
     // Create game-playing variables
@@ -137,7 +145,7 @@ function Wizard() {
         // Create a MagicPlayer for each player
         playerStates = [];
         for (var t in turnOrder) {
-            playerStates.push(new MagicPlayer(false, 25));
+            playerStates.push(new Deck(true));
         }
         
         // Separate self
