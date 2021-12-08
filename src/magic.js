@@ -27,7 +27,7 @@ function Magic() {
 	var roomH = 860;
     
     // Track the personal board state
-    var player = new MagicPlayer(true, 25);
+    var player = new MagicPlayer(25);
     //player.hand.add(new SpellCard("", "", ""));
     //player.hand.add(new SpellCard("Shock", "NRR", "Deal 2 damage to any opponent", true));
     //player.hand.addUp(new SpellCard("Gods Willing", "NRBGWU", "Cantrip. Target enchantment you control gains protection until end of turn."));

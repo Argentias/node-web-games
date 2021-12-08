@@ -285,6 +285,7 @@ MagicPlayer.prototype.draw = function(/*int*/x, /*int*/y, /*bool*/isSelf, /*bool
     this.mana.draw(x, y, size);
     var handX = x+(mcHorzSpace*6+10)*size;
     var handY = y+mCardHeightS-mCardHeight+20;
+    // Draw hand or hand size
     if (this.isSelf) {
         this.hand.draw(handX, handY, size);
     } else {
@@ -295,13 +296,14 @@ MagicPlayer.prototype.draw = function(/*int*/x, /*int*/y, /*bool*/isSelf, /*bool
         var hl = this.hand.deck.length;
         text(hl, handX+mCardWidth*size/2-textWidth(hl)/2, handY+mCardHeight*size/2+16);
     }
-    
+    // Draw whether it is your turn
     strokeWeight(1*size);
     if (!isTurn) {
         fill(0, 255, 255);
     } else {
         fill(0, 255, 0);
     }
+    // Draw Life Total
     rect(x, y-mCardHeightS*size/2-5, mcHorzSpace*size*3+5*size, mCardHeightS*size/2, 8*size);
     fill(0);
     textSize(24*size);
