@@ -75,7 +75,7 @@ function Magic() {
 		
 		Global.socket.on('syncAnswer',
 			function(data) {
-			    mqgicGameStarted = data.started;
+			    magicGameStarted = data.started;
                 playerStates = data.players;
                 turnOrder = data.turns;
 			    var s = getSelfInTurn();

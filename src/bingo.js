@@ -28,7 +28,7 @@ function Bingo() {
 	
     // Create the hand Deck and the caller Decks
     var handDeck = new Deck();
-    handDeck.reload(true);
+    handDeck.reload(/*up:bool*/true);
     var toCall = new Deck();
     var called = new Deck();
     called.clear();
@@ -71,7 +71,7 @@ function Bingo() {
     // Create hands to deal the cards into
     var hands = [];
     for (var i = 0; i < 5; i ++) {
-        hands.push(new Deck(true));
+        hands.push(new Deck(/*empty:bool*/true));
     }
     
     // Get the size of the full deck

@@ -17,8 +17,12 @@ function Wizard() {
     }
     
 	// Create room variables
-	var callerUser = false;
+	 // Create room variables
+	Global.members = [];
+	var VIP = false;
 	var roomData = {};
+	var roomW = 1280;
+	var roomH = 860;
 	
 	// Track all players' board states
     var turnOrder = [];
@@ -26,22 +30,18 @@ function Wizard() {
     var playerStates = [player];
     
     // Create the deck
-    var deck = new SpellDeck();
-    deck.instantiate();
+    var deck = new Deck(/*empty:bool*/false, /*wizard:bool*/true);
     deck.shuffle();
     
     // Create game-playing variables
     var turnNum = -1;
-    var magicGameStarted = false;
-    var handSize = 5;
-    var handLimit = 7;
-    
-    //var player2 = new MagicPlayer(false, 25);
+    var wizardGameStarted = false;
+    var handSize = 1;
 	
 	// Create the canvas and setup socket callbacks
     this.setup = function() {
     //function setup() {
-        createCanvas(1280, 860);
+        createCanvas(roomW, roomH);
 		//Global.members.push(Global.username);
 		
 		Global.socket.on('refreshAns',
@@ -57,7 +57,7 @@ function Wizard() {
 		
 		Global.socket.on('syncAnswer',
 			function(data) {
-			    mqgicGameStarted = data.started;
+			    wizardGameStarted = data.started;
                 playerStates = data.players;
                 turnOrder = data.turns;
 			    var s = getSelfInTurn();
@@ -118,7 +118,7 @@ function Wizard() {
             syncDeck: deck,
             players: playerStates,
             turns: turnOrder,
-            started: magicGameStarted,
+            started: wizardGameStarted,
             pturn: playerTurn,
             begin: b
         };
@@ -147,13 +147,12 @@ function Wizard() {
         player = playerStates[s];
         
         // Reset the deck
-        deck.clear();
-        deck.instantiate();
+        deck.reload(/*up:bool*/false, /*wizard:bool*/true);
         deck.shuffle();
         
         // Deal hands and start the game
         dealHands();
-        magicGameStarted = true;
+        wizardGameStarted = true;
         playerTurn = 0;
         syncBoardState(true);
     }
@@ -170,17 +169,14 @@ function Wizard() {
 	
 	// Start your turn
 	function startTurn() {
-	    player.hand.addUp(deck.remove());
-	    loopN(2, player.mana.N.add(new ManaCard()));
+	    //player.hand.addUp(deck.remove());
+	    //loopN(2, player.mana.N.add(new ManaCard()));
 	    syncBoardState(false);
 	}
 	
 	// Pass to the next player's turn
 	function passTurn() {
-	    ++playerTurn;
-	    if (playerTurn >= turnOrder.length) {
-	        playerTurn -= turnOrder.length;
-	    }
+	    playerTurn = ++playerTurn%turnOrder.length;
 	    syncBoardState(true);
 	}
 	

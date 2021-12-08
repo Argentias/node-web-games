@@ -28,6 +28,7 @@ function Home() {
         roomType.size(90);
         //roomType.option("Bingo");
         roomType.option("Magic");
+        //roomType.option("Wizard");
         roomType.hide();
         
         roomJoin = createButton("Join Room");
@@ -69,9 +70,11 @@ function Home() {
     			//Global.username = data.user;
     			console.log("Joined room " + data.code + " (number " + data.num + ") as username " + Global.username);
     			if (data.type === "Bingo") {
-    				//Global.smgr.showScene(Bingo);
+    				Global.smgr.showScene(Bingo);
     			} else if (data.type === "Magic") {
     			    Global.smgr.showScene(Magic);
+    			} else if (data.type === "Wizard") {
+    			    Global.smgr.showScene(Wizard);
     			}
     		}
     	);
@@ -92,9 +95,11 @@ function Home() {
     			//console.log("Created room " + data.code + " (number " + data.num + ") under username " + data.user);
     			console.log("Created room " + Global.room + " (number " + Global.roomNum + ") under username " + Global.username);
     			if (data.type === "Bingo") {
-    				//Global.smgr.showScene(Bingo);
+    			    Global.smgr.showScene(Bingo);
     			} else if (data.type === "Magic") {
     			    Global.smgr.showScene(Magic);
+    			} else if (data.type === "Wizard") {
+    			    Global.smgr.showScene(Wizard);
     			}
     		}
     	);

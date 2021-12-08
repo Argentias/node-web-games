@@ -264,7 +264,7 @@ var Deck = function(empty, wizard) {
     }
 };
 
-/*** ~~~~~~~ Deck Draw Functions ~~~~~~~ ***/
+/*** ~~~~~~~~~~~~~~~~~~~~~~~~ Deck Draw Functions ~~~~~~~~~~~~~~~~~~~~~~~~ ***/
 
 Deck.prototype.drawGen = function(x, y, options) {
 	if (options.includes("Hand")) {
@@ -598,7 +598,7 @@ Deck.prototype.drawColumnUpDownSmall = function(x, y) {
     }
 }
 
-/*** ~~~~~~~ End Deck Draw Functions ~~~~~~~ ***/
+/*** ~~~~~~~~~~~~~~~~~~~~~~~~ End Deck Draw Functions ~~~~~~~~~~~~~~~~~~~~~~~~ ***/
 
 Deck.prototype.getLength = function() {
     return this.deck.length;
@@ -684,7 +684,7 @@ Deck.prototype.cloneGen = function(that) {
 	}
 }
 
-Deck.prototype.reload = function(a1, a2, a3) {
+Deck.prototype.reload = function(/*up:bool*/a1, /*wizard:int*/a2, /*numDeck:bool*/a3) {
     this.clear();
     var numDeck = 1;
     var wizard = false;
@@ -692,9 +692,9 @@ Deck.prototype.reload = function(a1, a2, a3) {
     
     if (arguments.length > 0) {
         if (arguments.length === 3) {
-            numDeck = a1;
+            up = a1;
             wizard = a2;
-            up = a3;
+            numDeck = a3;
         } else if (arguments.length === 2) {
             up = a1;
             wizard = a2;
