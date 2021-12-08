@@ -155,7 +155,7 @@ function Magic() {
         // Create a MagicPlayer for each player
         playerStates = [];
         for (var t in turnOrder) {
-            playerStates.push(new MagicPlayer(false, 25));
+            playerStates.push(new MagicPlayer(25));
         }
         
         // Separate self
