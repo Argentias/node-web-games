@@ -3,6 +3,8 @@ var testForCardGameParts = function() { return true; };
 //new p5();
 
 var suits = ["Clubs", "Diamonds", "Hearts", "Spades", "None"];
+var CardSuit = createEnum(["Clubs", "Diamonds", "Hearts", "Spades", "None"]);
+
 var baseranks = ["Joker", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"];
 var wizranks = ["Jester", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Wizard"];
 var baseabbr = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
@@ -68,13 +70,13 @@ var Card = function(rank, suit, up, wizard) {
 	} else {
 		this.suit = suit;
 		this.rank = rank;
-		this.up = up;
+	    this.up = up;
+	    if (this.rank === 0 || this.rank === 14) {
+	        this.suit = 4;
+	    }
 		if (arguments.length === 4 && wizard === true) {
 		    this.abbr = wizabbr;
 		    this.ranks = wizranks;
-		    if (this.rank === 0 || this.rank === 14) {
-		        this.suit = 4;
-		    }
 		} else {
 		    this.abbr = baseabbr;
 		    this.ranks = baseranks;
@@ -206,8 +208,8 @@ Card.prototype.compareRankSuit = function(rank, suit) {
 };
    
 Card.prototype.toString = function() {
-    if (this.rank === 0) {
-        return "Joker";
+    if (this.suit === 4) {
+        return this.ranks[this.rank];
     } else {
         return (this.ranks[this.rank] + " of " + suits[this.suit]);
     }
@@ -823,6 +825,28 @@ Deck.prototype.toString = function() {
     return out;
 }
 
+
+// A Trick is just a special case of a Deck that starts empty and has a lead suit and lead player
+var Trick = function(s, p) {
+    Deck.call(this, true);
+    if (arguments.length === 0) {
+        this.leadSuit =
+    } else {
+        this.leadSuit = enumHas(CardSuit, s);
+        this.leadPlayer = p;
+    }
+}
+
+// Inherit methods from Deck
+Trick.prototype = Object.create(Deck.prototype);
+Object.defineProperty(Trick.prototype, 'constructor', {
+    value: Trick,
+    enumerable: false,
+    writable: true });
+
+
+
+
 var CardHandClickArea = function(x, y, dir, length, size, cut) {
     this.x = x;
     this.y = y;
@@ -906,7 +930,13 @@ var CardPlayer = function() {
     this.bet = -1;
     this.hand = new Deck(true);
     this.handCheck = new CardHandClickArea(0, 0, "H", 0, "S", 75);
-    this.tricks = 0;
+    this.tricks = [];
+}
+
+CardPlayer.prototype.empty = function() {
+    var s = this.score;
+    this = new CardPlayer();
+    this.score = s;
 }
 
 CardPlayer.prototype.reset = function() {
@@ -926,8 +956,8 @@ CardPlayer.prototype.bet = function(b) {
     this.bet = b;
 }
 
-CardPlayer.prototype.trick = function() {
-    this.tricks += 1;
+CardPlayer.prototype.trick = function(deck) {
+    this.tricks.push(deck);
 }
 
 CardPlayer.prototype.getHand = function() {
@@ -935,13 +965,15 @@ CardPlayer.prototype.getHand = function() {
 }
 
 CardPlayer.prototype.play = function(deck) {
-    //TODO: play a card to the pile
+    var card = this.handCheck.clickCheck();
+    if (deck.getLength == 0)
+    //deck.add(this.hand.remove(card));
 }
 
 CardPlayer.prototype.add = function(card) {
-    //TODO: add the given card to the hand (dealing)
+    this.hand.add(card);
 }
 
-CardPlayer.prototype.draw = function() {
-    //TODO: draw the cards at the
+CardPlayer.prototype.draw = function(x, y, isSelf, isTurn) {
+    //TODO: Draw the hand, number of tricks, and if it's your turn
 }

@@ -39,6 +39,8 @@ function Wizard() {
     var turnNum = -1;
     var wizardGameStarted = false;
     var handSize = 1;
+    var trick = new Trick();
+    var trump = -1;
 	
 	// Create the canvas and setup socket callbacks
     this.setup = function() {
@@ -118,6 +120,7 @@ function Wizard() {
         var outData = {
             rm: Global.room,
             syncDeck: deck,
+            syncTrick: trick,
             players: playerStates,
             turns: turnOrder,
             started: wizardGameStarted,
@@ -136,20 +139,22 @@ function Wizard() {
         turnOrder = randomizeArray(turnOrder);
         console.log(turnOrder);
         
-        // Create a MagicPlayer for each player
+        // Create a CardPlayer for each player
         playerStates = [];
         for (var t in turnOrder) {
-            playerStates.push(new Deck(true));
+            playerStates.push(new CardPlayer());
         }
+        
+        // Create the trick pile
+        trick = new Trick();
         
         // Separate self
         var s = getSelfInTurn();
         //console.log(s);
-        //playerStates[s].setSelf(true);
         player = playerStates[s];
         
         // Reset the deck
-        deck.reload(/*up:bool*/false, /*wizard:bool*/true);
+        deck = db.build;
         deck.shuffle();
         
         // Deal hands and start the game
@@ -164,9 +169,12 @@ function Wizard() {
 	    loopN(handSize, () => {
 	        for (var s in playerStates) {
 	            //console.log(s)
-	            playerStates[s].hand.addUp(deck.remove());
+	            playerStates[s].add(deck.remove());
 	        }
 	    });
+	    for (var s in playerStates) {
+	        playerStates[s].selectionSort();
+	    }
 	}
 	
 	// Start your turn
@@ -194,10 +202,11 @@ function Wizard() {
     this.draw = function() {
         background(125);
         
+        // Draw self
         var s = getSelfInTurn();
         player.draw(roomW/50, roomH-roomH/6, true, (s === playerTurn));
         
-        
+        // Draw other players' tricks
         var tl = turnOrder.length;
         if (magicGameStarted === true) {
             for (var i = 1; i < tl; ++i) {
@@ -205,9 +214,13 @@ function Wizard() {
             }
         }
         
-    }
+        // Draw the trump suit
+        
+        // Draw the trick pile
+        
+    };
     
     this.mouseClicked = function() {
         // Check for playing turn
-    }
+    };
 }
