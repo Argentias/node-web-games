@@ -981,7 +981,10 @@ var CardPlayer = function() {
 
 CardPlayer.prototype.empty = function() {
     var s = this.score;
-    this = new CardPlayer();
+    c = new CardPlayer();
+    this.bet = -1;
+    this.hand = new Deck(true);
+    this.handCHeck = new CardHandClickArea(0, 0, "H", 0, "S", 75);
     this.score = s;
 }
 
@@ -1047,6 +1050,7 @@ CardPlayer.prototype.add = function(card) {
 
 CardPlayer.prototype.draw = function(x, y, isSelf, isTurn) {
     //TODO: Draw the hand, number of tricks, and if it's your turn
+    this.move(x, y);
     if (isSelf) {
         this.hand.drawGen(x, y, "Hand UpDown");
     } else {
