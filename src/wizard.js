@@ -8,13 +8,8 @@ function Wizard() {
     // Check that animationObjects.js is available
     //try { testForAnimationObjects() } catch(e) { throw "Library Exception: Module \"wizard\" requires library \"animationObjects\"."; }
     
-    // Throw error if libraries are not available
-    if (libs === false) {
-        throw "Library Exception: You are not accessing all necessary libraries.";
-    }
     
-	// Create room variables
-	 // Create room variables
+    // Create room variables
 	Global.members = [];
 	var VIP = false;
 	var roomData = {};
