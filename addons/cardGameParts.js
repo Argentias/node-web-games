@@ -981,15 +981,16 @@ var CardPlayer = function() {
 
 CardPlayer.prototype.empty = function() {
     var s = this.score;
-    c = new CardPlayer();
-    this.bet = -1;
-    this.hand = new Deck(true);
-    this.handCHeck = new CardHandClickArea(0, 0, "H", 0, "S", 75);
-    this.score = s;
+    this.reset();
+    this.score(s);
 }
 
 CardPlayer.prototype.reset = function() {
-    this = new CardPlayer();
+    this.score = 0;
+    this.bet = -1;
+    this.hand = new Deck(true);
+    this.handCHeck = new CardHandClickArea(0, 0, "H", 0, "S", 75);
+    this.tricks = [];
 }
 
 CardPlayer.prototype.move = function(x, y) {
