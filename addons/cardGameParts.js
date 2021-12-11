@@ -253,7 +253,7 @@ Card.prototype.clone = function(that) {
 
 /** ************************************************************************************** **/
 
-var DeckConfig = createEnum("Empty", "Base", "Wizard", "Base2", "Wizard2", "BaseUp", "WizardUp");
+var DeckConfig = createEnum(["Empty", "Base", "Wizard", "Base2", "Wizard2", "BaseUp", "WizardUp"]);
 
 var DeckBuilder = function() {
     this.type = "base";
