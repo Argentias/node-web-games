@@ -262,7 +262,7 @@ var DeckBuilder = function() {
 };
 
 DeckBuilder.prototype.config = function(c) {
-    var variant = enumHas(c);
+    var variant = enumHas(DeckConfig, c);
     if (variant === null) {
         throw ("Invalid Value Exception: " + c + " is not a valid DeckConfig");
     }
