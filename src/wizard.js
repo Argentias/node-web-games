@@ -26,7 +26,7 @@ function Wizard() {
     
     // Create the deck
     var db = new DeckBuilder();
-    db.config(DeckConfig.Wizard);
+    db.config("Wizard");
     var deck = db.build();
     deck.shuffle();
     
