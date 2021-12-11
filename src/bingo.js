@@ -113,8 +113,8 @@ function Bingo() {
 	// Check if the card can be flipped, and flip if so
     var checkFlip = function(card) {
         for (var i = 0; i < called.getLength(); ++ i) {
-			//console.log(called.getCard(i));
-			if (card.equals(called.getCard(i))) {
+			//console.log(called.get(i));
+			if (card.equals(called.get(i))) {
 				card.setUp(false);
 			}
 		}
@@ -224,7 +224,7 @@ function Bingo() {
         for (var i = 0; i < clicks.length; i ++) {
             var cardClick = clicks[i].clickCheck();
             if (cardClick != -1) {
-				var clickCard = hands[i].getCard(cardClick);
+				var clickCard = hands[i].get(cardClick);
 				//console.log(clickCard);
 				checkFlip(clickCard);
             }

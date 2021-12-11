@@ -217,6 +217,7 @@ function Wizard() {
         // Draw the trump suit
         
         // Draw the trick pile
+        trick.drawGen(300, 300, "Hand Up Small");
         
     };
     
