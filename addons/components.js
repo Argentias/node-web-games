@@ -236,9 +236,12 @@ function createEnum(values, attributes, avals) {
 function createNestedEnum(values, attributes, avals) {
     const enumObject = {};
     var vlen = values.length;
-    var alen = attributes.length;
-    if (alen != avals.length) {
-        throw "Enum Exception: The given number of attributes doesn't match the number of value sets";
+    var alen = 0;
+    if (arguments.length > 1) {
+        alen = attributes.length;
+        if (alen != avals.length) {
+            throw "Enum Exception: The given number of attributes doesn't match the number of value sets";
+        }
     }
         
     for (var i = 0; i < vlen; ++i) {

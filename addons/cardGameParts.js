@@ -3,7 +3,7 @@ var testForCardGameParts = function() { return true; };
 //new p5();
 
 var suits = ["Clubs", "Diamonds", "Hearts", "Spades", "None"];
-var CardSuit = createEnum(["Clubs", "Diamonds", "Hearts", "Spades", "None"]);
+var CardSuit = createNestedEnum(["Clubs", "Diamonds", "Hearts", "Spades", "None"]);
 
 var baseranks = ["Joker", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"];
 var wizranks = ["Jester", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Wizard"];
@@ -253,7 +253,7 @@ Card.prototype.clone = function(that) {
 
 /** ************************************************************************************** **/
 
-var DeckConfig = createEnum(["Empty", "Base", "Wizard", "Base2", "Wizard2", "BaseUp", "WizardUp"]);
+var DeckConfig = createNestedEnum(["Empty", "Base", "Wizard", "Base2", "Wizard2", "BaseUp", "WizardUp"]);
 
 var DeckBuilder = function() {
     this.type = "base";
