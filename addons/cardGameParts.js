@@ -306,7 +306,7 @@ DeckBuilder.prototype.setUp = function(u) {
 DeckBuilder.prototype.build = function() {
     if (this.num == 0) {
         return new Deck(true);
-    } else if (this.num == 1 && this.up = false) {
+    } else if (this.num === 1 && this.up === false) {
         return new Deck(false, (this.type === "wizard"));
     } else {
         n = new Deck();

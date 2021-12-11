@@ -204,11 +204,11 @@ SpellCard.prototype.draw = function(x, y, size) {
     }
 };
 
-Card.prototype.clone = function(that) {
+/*Card.prototype.clone = function(that) {
 	this.suit = that.suit;
 	this.rank = that.rank;
 	this.up = that.up;
-}
+}*/
 
 var SpellDeck = function() {
     this.deck = [];
