@@ -1064,7 +1064,7 @@ CardPlayer.prototype.draw = function(x, y, isSelf, isTurn) {
     }
     
     // Draw whether it is your turn
-    strokeWeight(1*size);
+    strokeWeight(1);
     if (!isTurn) {
         fill(0, 255, 255);
     } else {
