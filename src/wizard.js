@@ -203,7 +203,7 @@ function Wizard() {
         
         // Draw other players' tricks
         var tl = turnOrder.length;
-        if (magicGameStarted === true) {
+        if (wizardGameStarted === true) {
             for (var i = 1; i < tl; ++i) {
                 playerStates[(s+i)%tl].draw(roomW/50, roomH/10+200*(i-1), false, (i === playerTurn));
             }
