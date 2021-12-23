@@ -1,12 +1,12 @@
 function Bingo() {
     // Check that components.js is available
-    try { testForComponents() } catch(e) { throw "Library Exception: Module \"wizard\" requires library \"components\"."; }
+    try { testForComponents() } catch(e) { throw "Library Exception: Module \"bingo\" requires library \"components\"."; }
     
     // Check that cardGameParts.js is available
-    try { testForCardGameParts() } catch(e) { throw "Library Exception: Module \"wizard\" requires library \"cardGameParts\"."; }
+    try { testForCardGameParts() } catch(e) { throw "Library Exception: Module \"bingo\" requires library \"cardGameParts\"."; }
     
     // Check that animationObjects.js is available
-    //try { testForAnimationObjects() } catch(e) { throw "Library Exception: Module \"wizard\" requires library \"animationObjects\"."; }
+    //try { testForAnimationObjects() } catch(e) { throw "Library Exception: Module \"bingo\" requires library \"animationObjects\"."; }
     
 	// Create room variables
 	var callerUser = false;

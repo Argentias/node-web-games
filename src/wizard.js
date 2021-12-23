@@ -1,4 +1,4 @@
-//function Wizard() {
+function Wizard() {
     // Check that components.js is available
     try { testForComponents() } catch(e) { throw "Library Exception: Module \"wizard\" requires library \"components\"."; }
     
@@ -322,4 +322,4 @@
             }
         }
     };
-//}
+}

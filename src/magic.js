@@ -1,23 +1,15 @@
 function Magic() {
-    // Variable for checking libraries
-    var libs = true;
-    
     // Check that components.js is available
-    try { testForComponents() } catch(e) { libs = false; }
+    try { testForComponents() } catch(e) { throw "Library Exception: Module \"magic\" requires library \"components\"."; }
     
     // Check that cardGameParts.js is available
-    try { testForCardGameParts() } catch(e) { libs = false; }
+    try { testForCardGameParts() } catch(e) { throw "Library Exception: Module \"magic\" requires library \"cardGameParts\"."; }
     
     // Check that magicCardParts.js is available
-    try { testForMagicCardParts() } catch(e) { libs = false; }
+    try { testForMagicCardParts() } catch(e) { throw "Library Exception: Module \"magic\" requires library \"magicCardParts\"."; }
     
     // Check that animationObjects.js is available
-    //try { testForAnimationObjects() } catch(e) { libs = false; }
-    
-    // Throw error if libraries are not available
-    if (libs === false) {
-        throw "Library Exception: You are not accessing all necessary libraries.";
-    }
+    //try { testForAnimationObjects() } catch(e) { throw "Library Exception: Module \"magic\" requires library \"animationObjects\"."; }
     
     // Create room variables
 	Global.members = [];
