@@ -150,7 +150,7 @@ function Wizard() {
             begin: b
         };
         Global.socket.emit('syncReq', outData);
-        console.log("Sent sync request (begin = " + );
+        console.log("Sent sync request (begin = " + b + ")");
     }
     
     // Start a game
