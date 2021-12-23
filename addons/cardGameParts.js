@@ -1,9 +1,9 @@
 var testForCardGameParts = function() { return true; };
 
-//new p5();
+new p5();
 
 var suits = ["Clubs", "Diamonds", "Hearts", "Spades", "None"];
-var CardSuit = createNestedEnum(["Clubs", "Diamonds", "Hearts", "Spades", "None"]);
+var CardSuit = createNestedEnum(["Clubs", "Diamonds", "Hearts", "Spades", "None"], ["num"], [[0, 1, 2, 3, 4]]);
 
 var baseranks = ["Joker", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"];
 var wizranks = ["Jester", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Wizard"];
@@ -62,6 +62,20 @@ var drawSpade = function (x, y, size) {
     triangle(x+size/2, y-o/4+size/2, x+2*size/3, y-o/4+size, x+size/3, y-o/4+size);
 };
 
+var drawSuit = function(suit, x, y, size) {
+    if (suit === 0) {
+        drawClub(x, y, size);
+    } else if (suit === 1) {
+        drawDiamond(x, y, size);
+    } else if (suit === 2) {
+        drawHeart(x, y, size);
+    } else if (suit === 3) {
+        drawSpade(x, y, size);
+    } else if (suit === 4) {
+        text("None", x, y+size/2);
+    }
+};
+
 var Card = function(rank, suit, up, wizard) {
     if (arguments.length === 0) {
 		this.suit = 0;
@@ -82,7 +96,7 @@ var Card = function(rank, suit, up, wizard) {
 		    this.ranks = baseranks;
 		}
 	}
-	this.stype = enumHas(CardSuit, suits[suit]);
+	this.stype = enumHas(CardSuit, suits[this.suit]);
 };
 
 Card.prototype.draw = function(x, y) {
@@ -99,7 +113,7 @@ Card.prototype.draw = function(x, y) {
         drawDiamond(x+20, y+65, 60);
     } else if (this.suit === 2) {
         drawHeart(x+20, y+65, 60);
-    } else {
+    } else if (this.suit === 3) {
         drawSpade(x+20, y+65, 60);
     }
 };
@@ -118,7 +132,7 @@ Card.prototype.drawCorner = function(x, y) {
         drawDiamond(x+5, y+30, 30);
     } else if (this.suit === 2) {
         drawHeart(x+5, y+30, 30);
-    } else {
+    } else if (this.suit === 3) {
         drawSpade(x+5, y+30, 30);
     }
 };
@@ -137,7 +151,7 @@ Card.prototype.drawSmall = function(x, y) {
         drawDiamond(x+5, y+30, 30);
     } else if (this.suit === 2) {
         drawHeart(x+5, y+30, 30);
-    } else {
+    } else if (this.suit === 3) {
         drawSpade(x+5, y+30, 30);
     }
 };
@@ -245,6 +259,10 @@ Card.prototype.getSuit = function() {
 	return this.suit;
 };
 
+Card.prototype.getType = function() {
+    return this.stype;
+};
+
 Card.prototype.clone = function(that) {
 	this.suit = that.suit;
 	this.rank = that.rank;
@@ -321,14 +339,14 @@ var Deck = function(empty, wizard) {
         this.deck = [];
         if (!empty) {
             if (arguments.length > 1 && wizard == true) {
-                this.reload(1, true, false);
+                this.reload(false, true, 1);
             } else {
-                this.reload(1, false, false);
+                this.reload(false, false, 1);
             }
         }
     } else {
         this.deck = [];
-        this.reload(1, false, false);
+        this.reload(false, false, 1);
     }
 };
 
@@ -693,10 +711,10 @@ Deck.prototype.indexesRank = function(r) {
     return out;
 }
 
-Deck.prototype.indexesSuitName = function(sstr) {
+Deck.prototype.indexesSuit = function(suitobj) {
     var out = [];
     for (var i = 0; i < this.deck.length; ++i) {
-        if (this.deck[i].stype === sstr) {
+        if (this.deck[i].stype === suitobj) {
             out.push(i);
         }
     }
@@ -720,7 +738,14 @@ Deck.prototype.add = function(card) {
 }
 
 Deck.prototype.remove = function(index) {
-    var spliced = this.deck.splice(index, 1);
+    if (this.getLength() == 0) {
+        return null;
+    }
+    var i = 0;
+    if (arguments.length != 0) {
+        i = index;
+    }
+    var spliced = this.deck.splice(i, 1);
     return spliced[0];
 }
 
@@ -857,11 +882,11 @@ var Trick = function(s, p) {
     if (arguments.length === 0) {
         this.leadSuit = CardSuit.None;
         this.leadPlayer = -1;
-        this.hasLead == true;
+        this.hasLead = true;
     } else {
         this.leadSuit = enumHas(CardSuit, s);
         this.leadPlayer = p;
-        this.hasLead == true;
+        this.hasLead = true;
         if (this.leadSuit === null) {
             throw "Invalid Value Exception: " + s + " is not a CardSuit";
         }
@@ -904,9 +929,18 @@ var CardHandClickArea = function(x, y, dir, length, size, cut) {
     }
     if (arguments.length < 6) {
         if (dir === "H") {
-            this.cut = cardHeight;
+            if (size === "S") {
+                this.cut = cardHeightS;
+            } else {
+                this.cut = cardHeight;
+            }
         } else if (dir === "V") {
-            this.cut = cardWidth;
+            if (size === "S") {
+                this.cut = cardWidthS;
+            } else {
+                this.cut = cardWidth;
+                
+            }
         }
     } else {
         this.cut = cut;
@@ -975,7 +1009,7 @@ var CardPlayer = function() {
     this.score = 0;
     this.bet = -1;
     this.hand = new Deck(true);
-    this.handCheck = new CardHandClickArea(0, 0, "H", 0, "S", 75);
+    this.handCheck = new CardHandClickArea(0, 0, "H", 0);
     this.tricks = [];
 }
 
@@ -989,7 +1023,7 @@ CardPlayer.prototype.reset = function() {
     this.score = 0;
     this.bet = -1;
     this.hand = new Deck(true);
-    this.handCHeck = new CardHandClickArea(0, 0, "H", 0, "S", 75);
+    this.handCHeck = new CardHandClickArea(0, 0, "H", 0);
     this.tricks = [];
 }
 
@@ -1017,6 +1051,7 @@ CardPlayer.prototype.getHand = function() {
 CardPlayer.prototype.play = function(trick, player) {
     var hi = this.handCheck.clickCheck();
     if (hi === -1) return;
+    console.log("Clicked:" + hi)
     var okay = false;
     var card = this.hand.get(hi);
     
@@ -1024,7 +1059,7 @@ CardPlayer.prototype.play = function(trick, player) {
         if (card.rank === 14) {
             trick.hasLead = false;
         } else if (trick.hasLead === true) {
-            trick.setSuit(card.stype);
+            trick.setSuit(card.stype.val);
         }
         okay = true;
         
@@ -1043,17 +1078,23 @@ CardPlayer.prototype.play = function(trick, player) {
         trick.add(this.hand.remove(hi));
         this.handCheck.matchLength(this.hand);
     }
+    return okay;
 }
 
 CardPlayer.prototype.add = function(card) {
     this.hand.add(card);
+    this.handCheck.matchLength(this.hand);
+}
+
+CardPlayer.prototype.sort = function() {
+    this.hand.selectionSort();
 }
 
 CardPlayer.prototype.draw = function(x, y, isSelf, isTurn) {
     //TODO: Draw the hand, number of tricks, and if it's your turn
     this.move(x, y);
     if (isSelf) {
-        this.hand.drawGen(x, y, "Hand UpDown");
+        this.hand.drawGen(x, y, "Hand Up");
     } else {
         Card.drawBack(x, y);
         strokeWeight(1);
@@ -1069,10 +1110,22 @@ CardPlayer.prototype.draw = function(x, y, isSelf, isTurn) {
         fill(0, 255, 255);
     } else {
         fill(0, 255, 0);
-        rect(x, y+cardHeight+10, 75, 20, 6);
-        textSize(4);
-        text("Turn", x+3, y+cardHeight+12);
+        rect(x, y+cardHeight+10, 75, 40, 6);
+        fill(0);
+        textSize(24);
+        text("Turn", x+5, y+cardHeight+36);
     }
+    
+    fill(0, 255, 255);
+    rect(x+100, y+cardHeight+10, 200, 40, 6);
+    fill(0);
+    textSize(24);
+    var b = "";
+    if (this.bet != -1) {
+        b = "" + this.bet;
+    }
+    
+    text("Score: " + this.score + "  Bet: " + b, x+105, y+cardHeight+36)
     // Draw Turn Indicator
     //rect(x, y-mCardHeightS*size/2-5, mcHorzSpace*size*3+5*size, mCardHeightS*size/2, 8*size);
 }

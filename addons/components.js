@@ -12,7 +12,7 @@ var Incrementer = function(value, min, max, step) {
 Incrementer.prototype.increment = function() {
     this.value += this.step;
     if (this.value > this.max) {
-        this.value = this.min;
+        this.value -= (this.max-this.min);
     }
 };
 
@@ -51,6 +51,8 @@ Toggler.prototype.toggle = function() {
     if (this.value === false) {
         this.value = true;
     } else if (this.value === true) {
+        this.value = false;
+    } else {
         this.value = false;
     }
 };
@@ -345,7 +347,7 @@ function randomizeArray(arr) {
 **/
 function manyOr(v, ors) {
     for (p in ors) {
-        if (v === p) {
+        if (v === ors[p]) {
             return true;
         }
     }
