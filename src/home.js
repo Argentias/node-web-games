@@ -26,7 +26,7 @@ function Home() {
         roomType = createSelect();
         roomType.position(500, 20);
         roomType.size(90);
-        //roomType.option("Bingo");
+        roomType.option("Bingo");
         roomType.option("Magic");
         roomType.option("Wizard");
         roomType.hide();
