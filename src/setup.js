@@ -21,7 +21,7 @@ function setup() {
     Global.smgr = new SceneManager();
     Global.smgr.wire();
     Global.smgr.addScene(Home);
-    //Global.smgr.addScene(Bingo);
+    Global.smgr.addScene(Bingo);
     Global.smgr.addScene(Magic);
     Global.smgr.showScene(Home);
 }
