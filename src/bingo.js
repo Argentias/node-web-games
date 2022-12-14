@@ -137,8 +137,8 @@ function Bingo() {
         called.clear();
 		
 		sdata = {
-			rm: room,
-			rmn: roomNum,
+			rm: Global.room,
+			rmn: Global.roomNum,
 			toCallDeck: toCall,
 			calledDeck: called
 		};
@@ -198,7 +198,7 @@ function Bingo() {
 		text("Leave Room", leaver.x+leaver.w/2-textWidth("Leave Room")/2, leaver.y+35);
 		
 		textSize(24);
-		text("Room name: " + room, 300, 350);
+		text("Room name: " + Global.room, 300, 350);
 		textSize(20);
 		text("Users in room: ", 300, 385);
 		for (var m = 0; m < Global.members.length; ++ m) {
