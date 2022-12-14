@@ -89,6 +89,7 @@ function Home() {
     	Global.socket.on('createSuccess',
     		function(data) {
     			hideHome();
+                Global.showHome = showHome
     			Global.roomNum = data.num;
     			Global.room = data.code;
     			//Global.username = data.user;
