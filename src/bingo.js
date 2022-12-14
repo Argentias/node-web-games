@@ -56,9 +56,10 @@ function Bingo() {
 				Global.smgr.showScene(Home);
 			}
 		);
+	    
+	Global.socket.emit('refreshReq', roomData);
     };
     
-	Global.socket.emit('refreshReq', roomData);
 	
     // Create hands to deal the cards into
     var hands = [];
