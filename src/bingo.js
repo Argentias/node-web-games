@@ -52,7 +52,7 @@ function Bingo() {
 			function(data) {
 				Global.room = "";
 				Global.roomNum = -1;
-				showHome();
+				Global.showHome();
 				Global.smgr.showScene(Home);
 			}
 		);
