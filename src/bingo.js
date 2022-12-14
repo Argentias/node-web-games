@@ -50,8 +50,8 @@ function Bingo() {
 		
 		Global.socket.on('leaveRoom',
 			function(data) {
-				room = "";
-				roomNum = -1;
+				Global.room = "";
+				Global.roomNum = -1;
 				showHome();
 				Global.smgr.showScene(Home);
 			}
@@ -122,8 +122,8 @@ function Bingo() {
         }
 		
 		var data = {
-			rm: room,
-			rmn: roomNum,
+			rm: Global.room,
+			rmn: Global.roomNum,
 			toCallDeck: toCall,
 			calledDeck: called
 		};
@@ -160,9 +160,9 @@ function Bingo() {
 	// Leave the room
 	var leaveRoom = function() {
 		var ldata = {
-			rm: room,
-			rmn: roomNum,
-			user: username
+			rm: Global.room,
+			rmn: Global.roomNum,
+			user: Global.username
 		};
 		Global.socket.emit('leaveReq', ldata);
 	};
